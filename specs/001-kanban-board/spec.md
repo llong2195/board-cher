@@ -5,7 +5,7 @@
 **Status**: Draft  
 **Input**: User description: "Build an application: Trello clone (kanban board) with collaborative features"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Create and Organize Work Items (Priority: P1) 🎯 MVP
 
@@ -144,7 +144,7 @@ Users need to see a complete history of changes made to cards and boards to unde
 - How does the system handle deleted users who created cards/comments? (Display "[Deleted User]" but preserve content)
 - What happens when a user's session expires during editing? (Auto-save drafts, prompt to re-authenticate without losing work)
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -189,7 +189,7 @@ Users need to see a complete history of changes made to cards and boards to unde
 - **Activity**: Represents audit log entry; has action type, actor, timestamp, description, metadata; belongs to card or board
 - **Permission**: Represents access control; has role type (owner/admin/member/guest); links users to organizations or boards
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

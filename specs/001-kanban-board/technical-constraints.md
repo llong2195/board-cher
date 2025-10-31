@@ -9,9 +9,10 @@
 ## Mandated Technology Stack
 
 ### Backend
+
 - **Framework**: NestJS
 - **ORM**: TypeORM
-- **Database**: 
+- **Database**:
   - Development: SQLite
   - Production-ready: Design for PostgreSQL compatibility
 - **Caching & Pub/Sub**: ioredis (Redis)
@@ -24,6 +25,7 @@
   - Domain events
 
 ### Frontend
+
 - **Framework**: React with TypeScript
 - **Package Manager**: pnpm
 - **Monorepo**: pnpm workspaces
@@ -31,6 +33,7 @@
 - **Real-time**: WebSocket client
 
 ### Development Tooling
+
 - **Monorepo**: pnpm workspaces
 - **Containerization**: Dockerfile + docker-compose for local development
 - **Linting**: ESLint
@@ -38,6 +41,7 @@
 - **Testing**: Vitest or Jest
 
 ### Authentication & Authorization
+
 - **Method**: JWT with refresh tokens
 - **Permissions**: Role-based access control (RBAC)
   - Owner: Full control
@@ -48,6 +52,7 @@
 ## Performance Requirements
 
 ### Target Metrics
+
 - **Throughput**: ~1000 requests/second sustained load
 - **Scalability**: Horizontal scaling capability
 - **Optimization Strategies**:
@@ -57,6 +62,7 @@
   - Load balancing support
 
 ### Real-time Architecture
+
 - **Protocol**: WebSocket for board/list/card updates
 - **Scaling**: Redis pub/sub for multi-instance synchronization
 - **Features**:
@@ -67,6 +73,7 @@
 ## Persistence Layer
 
 ### Database Design
+
 - **ORM**: TypeORM entities
 - **Migrations**: Version-controlled database migrations
 - **DDD Mapping**: Clear mapping between domain models and persistence
@@ -75,6 +82,7 @@
 ## Feature Requirements (Technical View)
 
 ### Core Entities
+
 - Users
 - Organizations/Teams
 - Boards
@@ -87,11 +95,13 @@
 - Activity feed
 
 ### Collaboration Features
+
 - Multi-user board access with real-time updates
 - Change broadcasting across all connected clients
 - Optimistic updates with rollback capability
 
 ### User Interface
+
 - Drag & drop for lists and cards
 - Card modal with:
   - Details
@@ -106,11 +116,13 @@
   - By text content
 
 ### Performance Optimizations
+
 - Pagination for board lists and large card lists
 - Lazy loading for attachments
 - Efficient real-time update mechanism
 
 ### System Features
+
 - Audit logs using domain events
 - Domain events for create/update/delete operations
 - Rate limiting
@@ -119,6 +131,7 @@
 ## Project Structure
 
 ### Monorepo Layout
+
 ```
 packages/
 ├── backend/      # NestJS application
@@ -127,6 +140,7 @@ packages/
 ```
 
 ### Backend Structure (DDD)
+
 ```
 packages/backend/
 ├── src/
@@ -152,10 +166,12 @@ packages/backend/
 ## Deliverables
 
 ### 1. Monorepo Skeleton
+
 - Complete pnpm workspace configuration
 - Package structure: backend, frontend, shared
 
 ### 2. Backend Implementation
+
 - NestJS app with DDD folder structure
 - TypeORM entities for core aggregates
 - Repository pattern implementations
@@ -168,6 +184,7 @@ packages/backend/
 - Integration tests for critical flows
 
 ### 3. Frontend Implementation
+
 - React app with TypeScript
 - shadcn/ui component integration
 - Drag-and-drop board interface
@@ -180,6 +197,7 @@ packages/backend/
 - Responsive UI design
 
 ### 4. Development Environment
+
 - Docker Compose configuration:
   - Backend service
   - Frontend service
@@ -187,6 +205,7 @@ packages/backend/
   - SQLite volume management
 
 ### 5. Documentation
+
 - README with instructions:
   - Running locally
   - Building for production
@@ -199,6 +218,7 @@ packages/backend/
   - WebSocket event examples
 
 ### 6. Development Scripts
+
 - `pnpm install` - Install dependencies
 - `pnpm dev:backend` - Run backend in development mode
 - `pnpm dev:frontend` - Run frontend in development mode
@@ -207,6 +227,7 @@ packages/backend/
 - `pnpm lint` - Run linting checks
 
 ### 7. Sample Data
+
 - SQL seed scripts for demo data
 - Fixture data for testing
 
@@ -253,6 +274,7 @@ packages/backend/
 ## Testing Requirements
 
 ### Backend Tests
+
 - Unit tests for:
   - Domain entities and value objects
   - Application services
@@ -264,6 +286,7 @@ packages/backend/
   - Redis operations
 
 ### Frontend Tests
+
 - Component tests
 - Integration tests for key user flows
 - E2E tests for critical paths (optional but recommended)
@@ -271,6 +294,7 @@ packages/backend/
 ## Compliance & Security
 
 ### Security Measures
+
 - JWT token security best practices
 - Refresh token rotation
 - Rate limiting per user/IP
@@ -281,6 +305,7 @@ packages/backend/
 - Helmet.js security headers
 
 ### Audit & Monitoring
+
 - Domain events for all state changes
 - Activity log persistence
 - Error tracking and logging
@@ -289,6 +314,7 @@ packages/backend/
 ## Migration Path
 
 ### From SQLite to PostgreSQL
+
 - Use TypeORM migrations
 - Abstract SQL dialect differences
 - Test against both databases in CI

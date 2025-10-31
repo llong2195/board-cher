@@ -1,6 +1,5 @@
 ---
-
-description: "Task list template for feature implementation"
+description: 'Task list template for feature implementation'
 ---
 
 # Tasks: [FEATURE NAME]
@@ -25,21 +24,21 @@ description: "Task list template for feature implementation"
 - **Mobile**: `api/src/`, `ios/src/` or `android/src/`
 - Paths shown below assume single project - adjust based on plan.md structure
 
-<!-- 
+<!--
   ============================================================================
   IMPORTANT: The tasks below are SAMPLE TASKS for illustration purposes only.
-  
+
   The /speckit.tasks command MUST replace these with actual tasks based on:
   - User stories from spec.md (with their priorities P1, P2, P3...)
   - Feature requirements from plan.md
   - Entities from data-model.md
   - Endpoints from contracts/
-  
+
   Tasks MUST be organized by user story so each story can be:
   - Implemented independently
   - Tested independently
   - Delivered as an MVP increment
-  
+
   DO NOT keep these sample tasks in the generated tasks.md file.
   ============================================================================
 -->
@@ -84,9 +83,9 @@ Examples of foundational tasks (adjust based on your project):
 > **CRITICAL: Write these tests FIRST, ensure they FAIL, then implement to make them pass**
 > Per Constitution Principle II: Tests are non-negotiable and must precede implementation
 
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
-- [ ] T012 [P] [US1] Unit tests for [core business logic] in tests/unit/test_[name].py
+- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test\_[name].py
+- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test\_[name].py
+- [ ] T012 [P] [US1] Unit tests for [core business logic] in tests/unit/test\_[name].py
 
 ### Implementation for User Story 1
 
@@ -112,9 +111,9 @@ Examples of foundational tasks (adjust based on your project):
 
 > **CRITICAL: Write these tests FIRST, ensure they FAIL, then implement to make them pass**
 
-- [ ] T020 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T021 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
-- [ ] T022 [P] [US2] Unit tests for [core business logic] in tests/unit/test_[name].py
+- [ ] T020 [P] [US2] Contract test for [endpoint] in tests/contract/test\_[name].py
+- [ ] T021 [P] [US2] Integration test for [user journey] in tests/integration/test\_[name].py
+- [ ] T022 [P] [US2] Unit tests for [core business logic] in tests/unit/test\_[name].py
 
 ### Implementation for User Story 2
 
@@ -138,9 +137,9 @@ Examples of foundational tasks (adjust based on your project):
 
 > **CRITICAL: Write these tests FIRST, ensure they FAIL, then implement to make them pass**
 
-- [ ] T028 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T029 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
-- [ ] T030 [P] [US3] Unit tests for [core business logic] in tests/unit/test_[name].py
+- [ ] T028 [P] [US3] Contract test for [endpoint] in tests/contract/test\_[name].py
+- [ ] T029 [P] [US3] Integration test for [user journey] in tests/integration/test\_[name].py
+- [ ] T030 [P] [US3] Unit tests for [core business logic] in tests/unit/test\_[name].py
 
 ### Implementation for User Story 3
 

@@ -23,9 +23,10 @@ Build a collaborative Trello-like kanban board application enabling teams to org
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 **I. Code Quality & Maintainability**:
+
 - [x] TypeScript with strict mode enabled and configured
 - [x] ESLint and Prettier configured with pre-commit hooks
 - [x] SOLID principles and DDD patterns documented in architecture
@@ -33,6 +34,7 @@ Build a collaborative Trello-like kanban board application enabling teams to org
 - [x] Public API documentation strategy defined (OpenAPI spec + inline JSDoc)
 
 **II. Test-First Development**:
+
 - [x] TDD workflow documented in plan
 - [x] Unit test coverage targets: 80% overall, 90% critical paths
 - [x] Integration test strategy for API, database, WebSocket, cross-service interactions
@@ -40,6 +42,7 @@ Build a collaborative Trello-like kanban board application enabling teams to org
 - [x] Performance test plan for stated requirements (1000 req/s load testing with k6/artillery)
 
 **III. User Experience Consistency**:
+
 - [x] Design system (shadcn/ui) integration planned
 - [x] Accessibility requirements (WCAG 2.1 AA) addressed (keyboard nav, ARIA labels, screen reader support)
 - [x] Error handling strategy defined (user-friendly messages, toast notifications, error boundaries)
@@ -47,6 +50,7 @@ Build a collaborative Trello-like kanban board application enabling teams to org
 - [x] Responsive design approach documented (mobile-first CSS, breakpoints for tablet/desktop)
 
 **IV. Performance & Scalability**:
+
 - [x] Performance budget defined (API <200ms p95, page load <3s, real-time <1s)
 - [x] Horizontal scaling strategy documented (stateless API, Redis pub/sub for WebSocket)
 - [x] Database optimization plan (indexes on FK, position, timestamps; query analysis with EXPLAIN)
@@ -159,6 +163,7 @@ packages/
 ```
 
 **Structure Decision**: Web application monorepo structure selected. This layout supports:
+
 - Clear separation of concerns with DDD layers in backend
 - Shared types package for type safety between frontend/backend
 - Independent testing of each package
@@ -172,6 +177,7 @@ packages/
 **Status**: ✅ No violations - all constitution requirements satisfied
 
 All principles are met:
+
 - TypeScript strict mode + DDD patterns + code quality tooling configured
 - Comprehensive test strategy with TDD workflow and coverage targets
 - shadcn/ui design system + accessibility + responsive design planned

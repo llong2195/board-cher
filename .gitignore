@@ -1,0 +1,77 @@
+# Node.js / TypeScript / pnpm monorepo
+node_modules/
+dist/
+build/
+out/
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Build artifacts
+*.tsbuildinfo
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vuepress/dist
+.temp/
+.serverless/
+.fusebox/
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+.jest-cache/
+test-results/
+playwright-report/
+
+# IDE / Editor
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# TypeORM / Database
+*.sqlite
+*.sqlite3
+*.db
+migrations/*.js
+migrations/*.js.map
+
+# Uploads / Files
+uploads/
+temp/
+tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+desktop.ini
+$RECYCLE.BIN/
+
+# Lock files (keep pnpm-lock.yaml but ignore others)
+package-lock.json
+yarn.lock
+
+# Misc
+*.bak
+*.orig
+*.rej
+.history/

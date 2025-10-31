@@ -25,6 +25,7 @@ pnpm install
 Create environment files:
 
 **`packages/backend/.env`**:
+
 ```env
 # Application
 NODE_ENV=development
@@ -56,6 +57,7 @@ RATE_LIMIT_MAX=100
 ```
 
 **`packages/frontend/.env`**:
+
 ```env
 VITE_API_URL=http://localhost:3000/api/v1
 VITE_WS_URL=http://localhost:3000
@@ -64,12 +66,14 @@ VITE_WS_URL=http://localhost:3000
 ### 3. Start Dependencies
 
 **Option A: Using Docker Compose**
+
 ```bash
 # Start Redis
 docker-compose up -d redis
 ```
 
 **Option B: Local Redis**
+
 ```bash
 # Install and start Redis locally
 # macOS
@@ -119,6 +123,7 @@ pnpm dev
 ## Quick Test Flow
 
 ### 1. Register User
+
 ```bash
 curl -X POST http://localhost:3000/api/v1/auth/register \
   -H "Content-Type: application/json" \
@@ -130,6 +135,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 ```
 
 **Response**:
+
 ```json
 {
   "accessToken": "eyJhbGc...",
@@ -142,6 +148,7 @@ curl -X POST http://localhost:3000/api/v1/auth/register \
 ```
 
 ### 2. Create Organization
+
 ```bash
 TOKEN="<access_token from above>"
 
@@ -155,6 +162,7 @@ curl -X POST http://localhost:3000/api/v1/organizations \
 ```
 
 ### 3. Create Board
+
 ```bash
 ORG_ID="<org_id from above>"
 
@@ -168,6 +176,7 @@ curl -X POST http://localhost:3000/api/v1/boards \
 ```
 
 ### 4. Create Lists
+
 ```bash
 BOARD_ID="<board_id from above>"
 
@@ -191,6 +200,7 @@ curl -X POST http://localhost:3000/api/v1/boards/$BOARD_ID/lists \
 ```
 
 ### 5. Create Card
+
 ```bash
 LIST_ID="<list_id from above>"
 
@@ -203,12 +213,13 @@ curl -X POST http://localhost:3000/api/v1/lists/$LIST_ID/cards \
 ```
 
 ### 6. Test Real-time (Browser Console)
+
 ```javascript
 // Open browser console at http://localhost:5173
 import { io } from 'socket.io-client';
 
 const socket = io('http://localhost:3000', {
-  auth: { token: 'Bearer <access_token>' }
+  auth: { token: 'Bearer <access_token>' },
 });
 
 socket.on('connect', () => {
@@ -385,16 +396,19 @@ pnpm build
 After running `pnpm run seed`, you'll have:
 
 **Users**:
+
 - alice@example.com / password123
 - bob@example.com / password123
 - carol@example.com / password123
 
 **Organization**: "Acme Corp"
+
 - Alice (Owner)
 - Bob (Admin)
 - Carol (Member)
 
 **Board**: "Marketing Campaign Q1"
+
 - Lists: Backlog, In Progress, Complete
 - Sample cards with labels, assignees, comments
 
@@ -453,6 +467,7 @@ k6 run load-test.js
 ## Support
 
 For issues or questions:
+
 1. Check troubleshooting section above
 2. Review project documentation
 3. Open an issue on GitHub

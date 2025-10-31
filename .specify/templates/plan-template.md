@@ -29,9 +29,10 @@
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 **I. Code Quality & Maintainability**:
+
 - [ ] TypeScript with strict mode enabled and configured
 - [ ] ESLint and Prettier configured with pre-commit hooks
 - [ ] SOLID principles and DDD patterns documented in architecture
@@ -39,6 +40,7 @@
 - [ ] Public API documentation strategy defined
 
 **II. Test-First Development**:
+
 - [ ] TDD workflow documented in plan
 - [ ] Unit test coverage targets: 80% overall, 90% critical paths
 - [ ] Integration test strategy for API, database, WebSocket, cross-service interactions
@@ -46,6 +48,7 @@
 - [ ] Performance test plan for stated requirements (e.g., 1000 req/s)
 
 **III. User Experience Consistency**:
+
 - [ ] Design system (shadcn/ui) integration planned
 - [ ] Accessibility requirements (WCAG 2.1 AA) addressed
 - [ ] Error handling strategy defined (user-friendly messages)
@@ -53,6 +56,7 @@
 - [ ] Responsive design approach documented
 
 **IV. Performance & Scalability**:
+
 - [ ] Performance budget defined (API <200ms p95, page load <3s, real-time <1s)
 - [ ] Horizontal scaling strategy documented
 - [ ] Database optimization plan (indexing, query optimization, connection pooling)
@@ -75,6 +79,7 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
+
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
   for this feature. Delete unused options and expand the chosen structure with
@@ -125,7 +130,7 @@ directories captured above]
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| Violation                  | Why Needed         | Simpler Alternative Rejected Because |
+| -------------------------- | ------------------ | ------------------------------------ |
+| [e.g., 4th project]        | [current need]     | [why 3 projects insufficient]        |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient]  |

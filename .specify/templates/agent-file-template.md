@@ -25,6 +25,7 @@ Auto-generated from all feature plans. Last updated: [DATE]
 **CRITICAL**: All development MUST comply with `.specify/memory/constitution.md`
 
 **Key Requirements**:
+
 - TypeScript strict mode with ESLint/Prettier pre-commit hooks
 - TDD mandatory: Write tests first, minimum 80% coverage
 - Accessibility: WCAG 2.1 AA compliance required

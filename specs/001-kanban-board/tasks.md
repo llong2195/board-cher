@@ -21,16 +21,16 @@
 
 **Purpose**: Project initialization and basic monorepo structure
 
-- [ ] T001 Create monorepo structure with pnpm workspace in root `pnpm-workspace.yaml` with packages: backend, frontend, shared
-- [ ] T002 [P] Initialize backend package at `packages/backend/` with NestJS CLI: `nest new backend --package-manager pnpm`
-- [ ] T003 [P] Initialize frontend package at `packages/frontend/` with Vite + React + TypeScript: `pnpm create vite frontend --template react-ts`
-- [ ] T004 [P] Initialize shared package at `packages/shared/` with minimal `package.json` and `tsconfig.json`
-- [ ] T005 [P] Configure TypeScript strict mode in all packages: `packages/backend/tsconfig.json`, `packages/frontend/tsconfig.json`, `packages/shared/tsconfig.json`
-- [ ] T006 [P] Setup ESLint + Prettier in root `.eslintrc.js`, `.prettierrc` with TypeScript rules
-- [ ] T007 [P] Configure Husky pre-commit hooks in `.husky/pre-commit` to run `lint-staged` with ESLint + Prettier
-- [ ] T008 Setup Docker Compose in `docker-compose.yml` with services: postgres, redis, backend, frontend
-- [ ] T009 Create root `README.md` with project overview, setup instructions, and architecture diagram
-- [ ] T010 [P] Create environment templates: `packages/backend/.env.example`, `packages/frontend/.env.example`
+- [x] T001 Create monorepo structure with pnpm workspace in root `pnpm-workspace.yaml` with packages: backend, frontend, shared
+- [x] T002 [P] Initialize backend package at `packages/backend/` with NestJS CLI: `nest new backend --package-manager pnpm`
+- [x] T003 [P] Initialize frontend package at `packages/frontend/` with Vite + React + TypeScript: `pnpm create vite frontend --template react-ts`
+- [x] T004 [P] Initialize shared package at `packages/shared/` with minimal `package.json` and `tsconfig.json`
+- [x] T005 [P] Configure TypeScript strict mode in all packages: `packages/backend/tsconfig.json`, `packages/frontend/tsconfig.json`, `packages/shared/tsconfig.json`
+- [x] T006 [P] Setup ESLint + Prettier in root `.eslintrc.js`, `.prettierrc` with TypeScript rules
+- [x] T007 [P] Configure Husky pre-commit hooks in `.husky/pre-commit` to run `lint-staged` with ESLint + Prettier
+- [x] T008 Setup Docker Compose in `docker-compose.yml` with services: postgres, redis, backend, frontend
+- [x] T009 Create root `README.md` with project overview, setup instructions, and architecture diagram
+- [x] T010 [P] Create environment templates: `packages/backend/.env.example`, `packages/frontend/.env.example`
 
 ---
 
@@ -42,10 +42,10 @@
 
 ### Database & ORM Setup
 
-- [ ] T011 Install TypeORM dependencies in backend: `typeorm@0.3.x`, `@nestjs/typeorm`, `pg`, `sqlite3`
-- [ ] T012 Configure TypeORM module in `packages/backend/src/config/database.config.ts` with SQLite (dev) and PostgreSQL (prod) support
-- [ ] T013 Setup TypeORM migrations in `packages/backend/migrations/` with npm script `migration:generate` and `migration:run`
-- [ ] T014 Create base abstract entity in `packages/backend/src/infrastructure/persistence/base.entity.ts` with id, createdAt, updatedAt fields
+- [x] T011 Install TypeORM dependencies in backend: `typeorm@0.3.x`, `@nestjs/typeorm`, `pg`, `sqlite3`
+- [x] T012 Configure TypeORM module in `packages/backend/src/config/database.config.ts` with SQLite (dev) and PostgreSQL (prod) support
+- [x] T013 Setup TypeORM migrations in `packages/backend/migrations/` with npm script `migration:generate` and `migration:run`
+- [x] T014 Create base abstract entity in `packages/backend/src/infrastructure/persistence/base.entity.ts` with id, createdAt, updatedAt fields
 
 ### Authentication & Authorization Framework
 
@@ -586,16 +586,19 @@
 ### Parallel Opportunities Within Phases
 
 **Setup Phase**:
+
 - T002 (backend init), T003 (frontend init), T004 (shared init) can run in parallel
 - T005 (TypeScript), T006 (ESLint), T007 (Husky), T010 (env templates) can run in parallel
 
 **Foundational Phase**:
+
 - Database tasks T011-T014 can proceed independently
 - Auth tasks T016 (entity), T017 (domain), T023 (DTOs) can run in parallel
 - Redis tasks T024-T027 can proceed independently
 - Error handling tasks T028-T030 can run in parallel
 
 **User Story 1 Implementation**:
+
 - All data layer entities T064-T069 can be created in parallel
 - All domain models T071-T073, repositories T074-T076 can be created in parallel
 - All command/query handlers T080-T088 can be created in parallel after domain layer
@@ -604,6 +607,7 @@
 - Frontend components T107-T111 can be created in parallel
 
 **User Story 2 Implementation**:
+
 - All entities T123-T128 can be created in parallel
 - All domain models T131-T134 can be created in parallel
 - All command handlers T137-T143 can be created in parallel
@@ -612,6 +616,7 @@
 - Frontend components T161-T166 can be created in parallel
 
 **Polish Phase**:
+
 - Most tasks marked [P] can run in parallel: performance, security, UX, documentation tasks are independent
 
 ### Critical Path (MVP)
@@ -623,6 +628,7 @@ Setup → Foundational → US3 (Real-time) → US1 (Create/Organize) → Polish 
 ```
 
 This MVP allows users to:
+
 - Register/login (Foundational)
 - Create boards and lists (US1)
 - Create and move cards (US1)

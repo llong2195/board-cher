@@ -18,6 +18,7 @@ Changes:
 All code MUST adhere to strict quality standards to ensure long-term maintainability and team productivity.
 
 **Rules**:
+
 - TypeScript MUST be used with strict mode enabled; no `any` types without explicit justification
 - ESLint and Prettier MUST be configured and enforced in pre-commit hooks
 - Code MUST follow SOLID principles and established design patterns (DDD where applicable)
@@ -36,6 +37,7 @@ All code MUST adhere to strict quality standards to ensure long-term maintainabi
 Testing is not optional; it is the foundation of reliable software delivery and confident iteration.
 
 **Rules**:
+
 - TDD cycle MUST be followed: Write test → Verify it fails → Implement → Verify it passes → Refactor
 - Unit test coverage MUST meet minimum 80% for business logic; 90%+ for critical paths
 - Every functional requirement in specs MUST have corresponding acceptance tests
@@ -55,6 +57,7 @@ Testing is not optional; it is the foundation of reliable software delivery and 
 User interface and interaction patterns MUST be consistent, predictable, and delightful across the entire application.
 
 **Rules**:
+
 - Design system (shadcn/ui) MUST be used for all UI components; custom components require design review
 - Visual hierarchy, spacing, and typography MUST follow established design tokens
 - Accessibility MUST meet WCAG 2.1 AA standards: keyboard navigation, screen reader support, color contrast
@@ -75,6 +78,7 @@ User interface and interaction patterns MUST be consistent, predictable, and del
 The application MUST be designed for performance and horizontal scalability from day one, not bolted on later.
 
 **Rules**:
+
 - Performance budget MUST be established and monitored: API response time p95 <200ms, page load <3s, real-time updates <1s latency
 - Target throughput: 1000 requests/second sustained; architecture MUST support horizontal scaling
 - Database queries MUST be optimized: proper indexing, query analysis, N+1 prevention
@@ -95,6 +99,7 @@ The application MUST be designed for performance and horizontal scalability from
 All changes MUST pass these gates before being merged to the main branch.
 
 **Pre-Merge Requirements**:
+
 - All tests pass (unit, integration, E2E)
 - Code coverage meets minimum thresholds (80% overall, 90% critical paths)
 - ESLint and Prettier checks pass with zero warnings
@@ -105,6 +110,7 @@ All changes MUST pass these gates before being merged to the main branch.
 - Documentation updated for public API changes
 
 **Code Review Checklist**:
+
 - Adheres to constitution principles
 - Tests are comprehensive and meaningful (not just coverage gaming)
 - No unnecessary complexity or over-engineering
@@ -118,6 +124,7 @@ All changes MUST pass these gates before being merged to the main branch.
 ## Development Workflow
 
 **Feature Development Process**:
+
 1. Create feature spec using `/speckit.specify` (focus on WHAT and WHY)
 2. Plan implementation using `/speckit.plan` (technical approach, HOW)
 3. Break down into tasks using `/speckit.tasks`
@@ -127,11 +134,13 @@ All changes MUST pass these gates before being merged to the main branch.
 7. Address feedback and merge only when all gates pass
 
 **Branch Strategy**:
+
 - Feature branches: `###-feature-name` format
 - Main branch is protected; requires PR approval
 - Squash commits on merge to keep history clean
 
 **Continuous Integration**:
+
 - Run full test suite on every commit
 - Performance tests on nightly builds
 - Security scanning on dependencies weekly
@@ -142,6 +151,7 @@ All changes MUST pass these gates before being merged to the main branch.
 ## Governance
 
 **Amendment Process**:
+
 - Constitution changes require team consensus and documented rationale
 - Breaking changes to principles require migration plan for existing code
 - Version follows semantic versioning:
@@ -150,12 +160,14 @@ All changes MUST pass these gates before being merged to the main branch.
   - PATCH: Clarifications, typo fixes, non-breaking refinements
 
 **Compliance Verification**:
+
 - All PRs MUST reference constitution principles that apply
 - Violations MUST be justified in writing and approved by tech lead
 - Regular audits to ensure codebase compliance
 - Constitution supersedes all other practices in case of conflict
 
 **Living Document**:
+
 - Constitution reviewed quarterly for relevance
 - Team retrospectives may propose amendments
 - Amendments logged with version, date, and rationale

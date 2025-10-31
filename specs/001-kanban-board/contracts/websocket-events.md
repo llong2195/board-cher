@@ -9,24 +9,27 @@
 ### Handshake
 
 **Client → Server**:
+
 ```javascript
 import { io } from 'socket.io-client';
 
 const socket = io('http://localhost:3000', {
   auth: {
-    token: 'Bearer <JWT_ACCESS_TOKEN>'
+    token: 'Bearer <JWT_ACCESS_TOKEN>',
   },
-  transports: ['websocket', 'polling']
+  transports: ['websocket', 'polling'],
 });
 ```
 
 **Server Response**:
+
 - `connect`: Connection established
 - `error`: Authentication failed or connection error
 
 ### Disconnect
 
 **Client → Server**:
+
 ```javascript
 socket.disconnect();
 ```
@@ -38,6 +41,7 @@ socket.disconnect();
 ### Join Board Room
 
 **Client → Server**: `board:join`
+
 ```json
 {
   "boardId": "uuid"
@@ -45,6 +49,7 @@ socket.disconnect();
 ```
 
 **Server → Client**: `board:joined`
+
 ```json
 {
   "boardId": "uuid",
@@ -60,6 +65,7 @@ socket.disconnect();
 ```
 
 **Error Response**: `board:join:error`
+
 ```json
 {
   "message": "Board not found or access denied",
@@ -72,6 +78,7 @@ socket.disconnect();
 ### Leave Board Room
 
 **Client → Server**: `board:leave`
+
 ```json
 {
   "boardId": "uuid"
@@ -79,6 +86,7 @@ socket.disconnect();
 ```
 
 **Server → All Clients in Room**: `board:member:left`
+
 ```json
 {
   "boardId": "uuid",
@@ -91,6 +99,7 @@ socket.disconnect();
 ### Board Updated
 
 **Server → All Clients in Room**: `board:updated`
+
 ```json
 {
   "boardId": "uuid",
@@ -109,6 +118,7 @@ socket.disconnect();
 ### List Created
 
 **Server → All Clients in Room**: `list:created`
+
 ```json
 {
   "list": {
@@ -127,6 +137,7 @@ socket.disconnect();
 ### List Updated
 
 **Server → All Clients in Room**: `list:updated`
+
 ```json
 {
   "list": {
@@ -144,6 +155,7 @@ socket.disconnect();
 ### List Moved
 
 **Server → All Clients in Room**: `list:moved`
+
 ```json
 {
   "listId": "uuid",
@@ -159,6 +171,7 @@ socket.disconnect();
 ### List Deleted
 
 **Server → All Clients in Room**: `list:deleted`
+
 ```json
 {
   "listId": "uuid",
@@ -174,6 +187,7 @@ socket.disconnect();
 ### Card Created
 
 **Server → All Clients in Room**: `card:created`
+
 ```json
 {
   "card": {
@@ -196,6 +210,7 @@ socket.disconnect();
 ### Card Updated
 
 **Server → All Clients in Room**: `card:updated`
+
 ```json
 {
   "card": {
@@ -214,6 +229,7 @@ socket.disconnect();
 ### Card Moved
 
 **Server → All Clients in Room**: `card:moved`
+
 ```json
 {
   "cardId": "uuid",
@@ -233,6 +249,7 @@ socket.disconnect();
 ### Card Deleted
 
 **Server → All Clients in Room**: `card:deleted`
+
 ```json
 {
   "cardId": "uuid",
@@ -249,6 +266,7 @@ socket.disconnect();
 ### Comment Added
 
 **Server → All Clients in Room**: `card:comment:added`
+
 ```json
 {
   "comment": {
@@ -268,6 +286,7 @@ socket.disconnect();
 ### Comment Updated
 
 **Server → All Clients in Room**: `card:comment:updated`
+
 ```json
 {
   "comment": {
@@ -285,6 +304,7 @@ socket.disconnect();
 ### Comment Deleted
 
 **Server → All Clients in Room**: `card:comment:deleted`
+
 ```json
 {
   "commentId": "uuid",
@@ -299,6 +319,7 @@ socket.disconnect();
 ### Attachment Added
 
 **Server → All Clients in Room**: `card:attachment:added`
+
 ```json
 {
   "attachment": {
@@ -319,6 +340,7 @@ socket.disconnect();
 ### Label Applied
 
 **Server → All Clients in Room**: `card:label:applied`
+
 ```json
 {
   "cardId": "uuid",
@@ -337,6 +359,7 @@ socket.disconnect();
 ### Label Removed
 
 **Server → All Clients in Room**: `card:label:removed`
+
 ```json
 {
   "cardId": "uuid",
@@ -351,6 +374,7 @@ socket.disconnect();
 ### User Assigned
 
 **Server → All Clients in Room**: `card:assigned`
+
 ```json
 {
   "cardId": "uuid",
@@ -369,6 +393,7 @@ socket.disconnect();
 ### User Unassigned
 
 **Server → All Clients in Room**: `card:unassigned`
+
 ```json
 {
   "cardId": "uuid",
@@ -383,6 +408,7 @@ socket.disconnect();
 ### Checklist Item Toggled
 
 **Server → All Clients in Room**: `card:checklist:item:toggled`
+
 ```json
 {
   "cardId": "uuid",
@@ -401,6 +427,7 @@ socket.disconnect();
 ### User Typing (Optional Feature)
 
 **Client → Server**: `card:typing:start`
+
 ```json
 {
   "cardId": "uuid"
@@ -408,6 +435,7 @@ socket.disconnect();
 ```
 
 **Server → Other Clients in Room**: `card:typing:user`
+
 ```json
 {
   "cardId": "uuid",
@@ -417,6 +445,7 @@ socket.disconnect();
 ```
 
 **Client → Server**: `card:typing:stop`
+
 ```json
 {
   "cardId": "uuid"
@@ -430,6 +459,7 @@ socket.disconnect();
 ### General Error
 
 **Server → Client**: `error`
+
 ```json
 {
   "event": "card:moved",
@@ -442,6 +472,7 @@ socket.disconnect();
 ### Rate Limit Exceeded
 
 **Server → Client**: `rate_limit_exceeded`
+
 ```json
 {
   "message": "Too many events sent. Please slow down.",
@@ -478,14 +509,18 @@ socket.emit('card:create', { listId, title }, (response) => {
 ```
 
 **Success Response**:
+
 ```json
 {
   "success": true,
-  "card": { /* card object */ }
+  "card": {
+    /* card object */
+  }
 }
 ```
 
 **Error Response**:
+
 ```json
 {
   "success": false,
@@ -510,6 +545,7 @@ socket.emit('card:create', { listId, title }, (response) => {
 ### Conflict Resolution
 
 **Strategy**: Last Write Wins (LWW)
+
 - Server uses timestamp to resolve conflicts
 - Activity log preserves all changes
 - Clients notified of conflicts via activity updates
@@ -519,6 +555,7 @@ socket.emit('card:create', { listId, title }, (response) => {
 ## Rate Limiting
 
 **Per Connection**:
+
 - 100 events per minute
 - 10 board joins per minute
 - Exceeded limit triggers `rate_limit_exceeded` event
@@ -541,7 +578,7 @@ socket.emit('card:create', { listId, title }, (response) => {
 ```typescript
 // Socket.io Gateway (NestJS)
 @WebSocketGateway({
-  cors: { origin: process.env.FRONTEND_URL }
+  cors: { origin: process.env.FRONTEND_URL },
 })
 export class BoardGateway {
   @WebSocketServer()
@@ -550,7 +587,7 @@ export class BoardGateway {
   @SubscribeMessage('board:join')
   async handleJoinBoard(
     @ConnectedSocket() client: Socket,
-    @MessageBody() { boardId }: JoinBoardDto
+    @MessageBody() { boardId }: JoinBoardDto,
   ): Promise<WsResponse<any>> {
     // Verify user has access to board
     // Add client to room
@@ -571,7 +608,7 @@ class SocketService {
 
   connect(token: string) {
     this.socket = io(API_URL, {
-      auth: { token: `Bearer ${token}` }
+      auth: { token: `Bearer ${token}` },
     });
 
     this.socket.on('connect', () => {
@@ -619,14 +656,14 @@ describe('BoardGateway', () => {
 
   beforeEach(async () => {
     socket = io('http://localhost:3000', {
-      auth: { token: `Bearer ${testToken}` }
+      auth: { token: `Bearer ${testToken}` },
     });
     await waitForConnection(socket);
   });
 
   it('should broadcast card creation to all board members', (done) => {
     socket.emit('board:join', { boardId: testBoardId });
-    
+
     socket.on('card:created', (data) => {
       expect(data.card.title).toBe('Test Card');
       done();
