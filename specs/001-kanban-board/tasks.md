@@ -49,10 +49,10 @@
 
 ### Authentication & Authorization Framework
 
-- [ ] T015 Install auth dependencies in backend: `@nestjs/jwt`, `@nestjs/passport`, `passport-jwt`, `bcrypt`, `class-validator`
-- [ ] T016 [P] Create User entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/user.entity.ts` with email, passwordHash, name, avatarUrl
-- [ ] T017 [P] Create User domain model in `packages/backend/src/domain/user/user.model.ts` with validation logic
-- [ ] T018 Create User repository interface in `packages/backend/src/domain/user/user.repository.ts` and implementation in `packages/backend/src/infrastructure/persistence/repositories/user.repository.impl.ts`
+- [x] T015 Install auth dependencies in backend: `@nestjs/jwt`, `@nestjs/passport`, `passport-jwt`, `bcrypt`, `class-validator`
+- [x] T016 [P] Create User entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/user.entity.ts` with email, passwordHash, name, avatarUrl
+- [x] T017 [P] Create User domain model in `packages/backend/src/domain/user/user.model.ts` with validation logic
+- [x] T018 Create User repository interface in `packages/backend/src/domain/user/user.repository.ts` and implementation in `packages/backend/src/infrastructure/persistence/repositories/user.repository.impl.ts`
 - [ ] T019 Create AuthService in `packages/backend/src/application/services/auth.service.ts` with register, login, validateToken methods
 - [ ] T020 Create JWT strategy in `packages/backend/src/infrastructure/auth/jwt.strategy.ts` with token validation
 - [ ] T021 Create JwtAuthGuard in `packages/backend/src/infrastructure/auth/jwt-auth.guard.ts` for protecting endpoints
@@ -61,7 +61,7 @@
 
 ### Redis Cache & Pub/Sub Setup
 
-- [ ] T024 Install Redis dependencies in backend: `ioredis@5.x`, `@nestjs/cache-manager`, `cache-manager-ioredis-yet`
+- [x] T024 Install Redis dependencies in backend: `ioredis@5.x`, `@nestjs/cache-manager`, `cache-manager-ioredis-yet`
 - [ ] T025 Configure Redis module in `packages/backend/src/config/redis.config.ts` with connection settings
 - [ ] T026 Create CacheService in `packages/backend/src/infrastructure/cache/cache.service.ts` with get, set, delete, invalidate methods
 - [ ] T027 Configure Cache module in `packages/backend/src/infrastructure/cache/cache.module.ts` with TTL defaults
@@ -75,7 +75,7 @@
 
 ### Configuration Management
 
-- [ ] T032 Install config dependencies: `@nestjs/config`, `joi`
+- [x] T032 Install config dependencies: `@nestjs/config`, `joi`
 - [ ] T033 Create config schema validation in `packages/backend/src/config/config.schema.ts` using Joi for environment variables
 - [ ] T034 Create config module in `packages/backend/src/config/config.module.ts` with database, redis, jwt, file storage settings
 
