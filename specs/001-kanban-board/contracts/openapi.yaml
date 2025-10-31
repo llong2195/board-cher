@@ -1,0 +1,830 @@
+openapi: 3.0.3
+info:
+  title: Collaborative Kanban Board API
+  description: REST API for Trello-like kanban board application with real-time collaboration
+  version: 1.0.0
+  contact:
+    name: API Support
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Local development
+  - url: https://api.kanban.example.com/v1
+    description: Production
+
+tags:
+  - name: Auth
+    description: Authentication and authorization
+  - name: Organizations
+    description: Organization management
+  - name: Boards
+    description: Board operations
+  - name: Lists
+    description: List operations within boards
+  - name: Cards
+    description: Card operations
+  - name: Comments
+    description: Card comments
+  - name: Attachments
+    description: File attachments
+
+paths:
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDto'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Email already exists
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /organizations:
+    get:
+      tags: [Organizations]
+      summary: List user's organizations
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Organizations retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+    post:
+      tags: [Organizations]
+      summary: Create organization
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationDto'
+      responses:
+        '201':
+          description: Organization created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+
+  /boards:
+    get:
+      tags: [Boards]
+      summary: List boards accessible to user
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrganizationIdQuery'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Boards retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBoards'
+    post:
+      tags: [Boards]
+      summary: Create board
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBoardDto'
+      responses:
+        '201':
+          description: Board created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Board'
+
+  /boards/{boardId}:
+    get:
+      tags: [Boards]
+      summary: Get board details
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BoardId'
+      responses:
+        '200':
+          description: Board retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Boards]
+      summary: Update board
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BoardId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBoardDto'
+      responses:
+        '200':
+          description: Board updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Board'
+    delete:
+      tags: [Boards]
+      summary: Delete board
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BoardId'
+      responses:
+        '204':
+          description: Board deleted
+
+  /boards/{boardId}/lists:
+    get:
+      tags: [Lists]
+      summary: Get board lists
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BoardId'
+      responses:
+        '200':
+          description: Lists retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/List'
+    post:
+      tags: [Lists]
+      summary: Create list
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/BoardId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateListDto'
+      responses:
+        '201':
+          description: List created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+
+  /lists/{listId}:
+    put:
+      tags: [Lists]
+      summary: Update list
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ListId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateListDto'
+      responses:
+        '200':
+          description: List updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/List'
+    delete:
+      tags: [Lists]
+      summary: Delete list
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ListId'
+      responses:
+        '204':
+          description: List deleted
+
+  /lists/{listId}/cards:
+    get:
+      tags: [Cards]
+      summary: Get list cards
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ListId'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Cards retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCards'
+    post:
+      tags: [Cards]
+      summary: Create card
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ListId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCardDto'
+      responses:
+        '201':
+          description: Card created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+
+  /cards/{cardId}:
+    get:
+      tags: [Cards]
+      summary: Get card details
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CardId'
+      responses:
+        '200':
+          description: Card retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardDetail'
+    put:
+      tags: [Cards]
+      summary: Update card
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CardId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCardDto'
+      responses:
+        '200':
+          description: Card updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+    delete:
+      tags: [Cards]
+      summary: Delete card
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CardId'
+      responses:
+        '204':
+          description: Card deleted
+
+  /cards/{cardId}/move:
+    post:
+      tags: [Cards]
+      summary: Move card to different list/position
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CardId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveCardDto'
+      responses:
+        '200':
+          description: Card moved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+
+  /cards/{cardId}/comments:
+    get:
+      tags: [Comments]
+      summary: Get card comments
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CardId'
+      responses:
+        '200':
+          description: Comments retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+    post:
+      tags: [Comments]
+      summary: Add comment
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/CardId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentDto'
+      responses:
+        '201':
+          description: Comment added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    BoardId:
+      name: boardId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ListId:
+      name: listId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    CardId:
+      name: cardId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    OrganizationIdQuery:
+      name: organizationId
+      in: query
+      schema:
+        type: string
+        format: uuid
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+    Cursor:
+      name: cursor
+      in: query
+      description: Cursor for pagination
+      schema:
+        type: string
+
+  schemas:
+    RegisterDto:
+      type: object
+      required: [email, password, name]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        name:
+          type: string
+          minLength: 2
+
+    LoginDto:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        name:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        role:
+          type: string
+          enum: [owner, admin, member]
+
+    CreateOrganizationDto:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    Board:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organizationId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        color:
+          type: string
+          nullable: true
+
+    BoardDetail:
+      allOf:
+        - $ref: '#/components/schemas/Board'
+        - type: object
+          properties:
+            lists:
+              type: array
+              items:
+                $ref: '#/components/schemas/ListWithCards'
+
+    CreateBoardDto:
+      type: object
+      required: [organizationId, name]
+      properties:
+        organizationId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        color:
+          type: string
+
+    UpdateBoardDto:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        color:
+          type: string
+
+    List:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        boardId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        position:
+          type: integer
+
+    ListWithCards:
+      allOf:
+        - $ref: '#/components/schemas/List'
+        - type: object
+          properties:
+            cards:
+              type: array
+              items:
+                $ref: '#/components/schemas/Card'
+
+    CreateListDto:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+
+    UpdateListDto:
+      type: object
+      properties:
+        name:
+          type: string
+        position:
+          type: integer
+
+    Card:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        listId:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        position:
+          type: integer
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+
+    CardDetail:
+      allOf:
+        - $ref: '#/components/schemas/Card'
+        - type: object
+          properties:
+            labels:
+              type: array
+              items:
+                $ref: '#/components/schemas/Label'
+            assignees:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+            comments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Comment'
+            attachments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Attachment'
+
+    CreateCardDto:
+      type: object
+      required: [title]
+      properties:
+        title:
+          type: string
+
+    UpdateCardDto:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        dueDate:
+          type: string
+          format: date-time
+
+    MoveCardDto:
+      type: object
+      required: [targetListId, position]
+      properties:
+        targetListId:
+          type: string
+          format: uuid
+        position:
+          type: integer
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cardId:
+          type: string
+          format: uuid
+        user:
+          $ref: '#/components/schemas/User'
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateCommentDto:
+      type: object
+      required: [content]
+      properties:
+        content:
+          type: string
+
+    Label:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        color:
+          type: string
+
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        filename:
+          type: string
+        mimeType:
+          type: string
+        fileSize:
+          type: integer
+        downloadUrl:
+          type: string
+
+    PaginatedBoards:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Board'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    PaginatedCards:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Card'
+        pagination:
+          $ref: '#/components/schemas/CursorPagination'
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+
+    CursorPagination:
+      type: object
+      properties:
+        nextCursor:
+          type: string
+          nullable: true
+        hasMore:
+          type: boolean
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+        details:
+          type: object
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

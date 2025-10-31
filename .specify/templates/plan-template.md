@@ -17,21 +17,48 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: [e.g., Node.js 22.x, TypeScript 5.x]  
+**Primary Dependencies**: [e.g., NestJS/Fastify, React, Shadcn/ui]  
+**Storage**: [PostgreSQL]  
+**Testing**: [Jest, Nestjs Testing Module]  
+**Target Platform**: [web, iOS, Android]
+**Project Type**: [single/web/mobile - determines source structure]
+**Performance Goals**: [domain-specific, e.g., 10000 req/s, 10000 lines/sec]
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
+**Scale/Scope**: [domain-specific, e.g., 10000 users, 1000000 LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**I. Code Quality & Maintainability**:
+- [ ] TypeScript with strict mode enabled and configured
+- [ ] ESLint and Prettier configured with pre-commit hooks
+- [ ] SOLID principles and DDD patterns documented in architecture
+- [ ] Code complexity limits enforced (max cyclomatic complexity: 10)
+- [ ] Public API documentation strategy defined
+
+**II. Test-First Development**:
+- [ ] TDD workflow documented in plan
+- [ ] Unit test coverage targets: 80% overall, 90% critical paths
+- [ ] Integration test strategy for API, database, WebSocket, cross-service interactions
+- [ ] E2E test plan for critical user journeys
+- [ ] Performance test plan for stated requirements (e.g., 1000 req/s)
+
+**III. User Experience Consistency**:
+- [ ] Design system (shadcn/ui) integration planned
+- [ ] Accessibility requirements (WCAG 2.1 AA) addressed
+- [ ] Error handling strategy defined (user-friendly messages)
+- [ ] Loading states and optimistic updates planned
+- [ ] Responsive design approach documented
+
+**IV. Performance & Scalability**:
+- [ ] Performance budget defined (API <200ms p95, page load <3s, real-time <1s)
+- [ ] Horizontal scaling strategy documented
+- [ ] Database optimization plan (indexing, query optimization, connection pooling)
+- [ ] Caching strategy defined (Redis integration)
+- [ ] WebSocket scaling approach (Redis pub/sub)
+- [ ] Pagination/lazy loading for large datasets
 
 ## Project Structure
 

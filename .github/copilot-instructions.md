@@ -1,24 +1,25 @@
-# [PROJECT NAME] Development Guidelines
+# trello-vibe-coding Development Guidelines
 
-Auto-generated from all feature plans. Last updated: [DATE]
+Auto-generated from all feature plans. Last updated: 2025-10-31
 
 ## Active Technologies
 
-[EXTRACTED FROM ALL PLAN.MD FILES]
+- TypeScript 5.3+, Node.js 20.x LTS + NestJS 10.x, React 18.x, TypeORM 0.3.x, ioredis 5.x, Socket.io 4.x, shadcn/ui (001-kanban-board)
 
 ## Project Structure
 
 ```text
-[ACTUAL STRUCTURE FROM PLANS]
+src/
+tests/
 ```
 
 ## Commands
 
-[ONLY COMMANDS FOR ACTIVE TECHNOLOGIES]
+npm test && npm run lint
 
 ## Code Style
 
-[LANGUAGE-SPECIFIC, ONLY FOR LANGUAGES IN USE]
+TypeScript 5.3+, Node.js 20.x LTS: Follow standard conventions
 
 ## Constitution Principles
 
@@ -33,7 +34,7 @@ Auto-generated from all feature plans. Last updated: [DATE]
 
 ## Recent Changes
 
-[LAST 3 FEATURES AND WHAT THEY ADDED]
+- 001-kanban-board: Added TypeScript 5.3+, Node.js 20.x LTS + NestJS 10.x, React 18.x, TypeORM 0.3.x, ioredis 5.x, Socket.io 4.x, shadcn/ui
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
