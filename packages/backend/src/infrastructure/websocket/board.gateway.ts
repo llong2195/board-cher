@@ -215,13 +215,13 @@ export class BoardGateway
   }
 
   @SubscribeMessage(WS_EVENTS.BOARD_LEAVE)
-  handleBoardLeave(
+  async handleBoardLeave(
     @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() data: BoardLeaveEvent,
-  ): { success: boolean } {
+  ): Promise<{ success: boolean }> {
     try {
       const { boardId } = data;
-      this.leaveRoom(client, boardId);
+      await this.leaveRoom(client, boardId);
 
       return { success: true };
     } catch (error: unknown) {

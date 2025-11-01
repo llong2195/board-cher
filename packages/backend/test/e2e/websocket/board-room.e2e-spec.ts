@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { io, Socket } from 'socket.io-client';
 import { AppModule } from '../../../src/app.module';
@@ -17,7 +17,13 @@ describe('Board Room Management (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [
+        AppModule,
+        JwtModule.register({
+          secret: 'test-secret-key',
+          signOptions: { expiresIn: '1h' },
+        }),
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
