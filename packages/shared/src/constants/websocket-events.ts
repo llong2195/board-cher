@@ -10,6 +10,7 @@ export const WS_EVENTS = {
   BOARD_LEAVE: 'board:leave',
   BOARD_USER_JOINED: 'board:user:joined',
   BOARD_USER_LEFT: 'board:user:left',
+  BOARD_CREATED: 'board:created',
   BOARD_UPDATED: 'board:updated',
 
   // List events

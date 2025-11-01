@@ -1,0 +1,9 @@
+/speckit.implement
+name: Build & Test until success
+description: Run build and test repeatedly until no errors remain
+steps:
+  - run: pnpm build && pnpm test
+  - if: hasErrors()
+    then:
+      - fix: automatically analyze and resolve build/test errors
+      - repeat: until no errors remain
