@@ -32,9 +32,12 @@ NODE_ENV=development
 PORT=3000
 FRONTEND_URL=http://localhost:5173
 
-# Database
-DATABASE_TYPE=sqlite
-DATABASE_PATH=./dev.db
+# Database - PostgreSQL
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=trello
+DATABASE_PASSWORD=trello
+DATABASE_NAME=trello
 
 # JWT Secrets (generate with: openssl rand -base64 32)
 JWT_ACCESS_SECRET=your-secret-key-here

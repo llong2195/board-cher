@@ -15,36 +15,19 @@ export const configSchema = Joi.object({
     otherwise: Joi.required(),
   }),
 
-  // Database
-  DATABASE_TYPE: Joi.string().valid('sqlite', 'postgres').default('sqlite'),
-  DATABASE_PATH: Joi.string().when('DATABASE_TYPE', {
-    is: 'sqlite',
-    then: Joi.when('NODE_ENV', {
-      is: 'test',
-      then: Joi.optional().default('./test.sqlite3'),
-      otherwise: Joi.required(),
-    }),
+  // Database - PostgreSQL only
+  DATABASE_HOST: Joi.string().default('localhost'),
+  DATABASE_PORT: Joi.number().default(5432),
+  DATABASE_USER: Joi.string().default('postgres'),
+  DATABASE_PASSWORD: Joi.string().default('password'),
+  DATABASE_NAME: Joi.string().when('NODE_ENV', {
+    is: 'test',
+    then: Joi.optional().default('trello_test'),
+    otherwise: Joi.optional().default('trello'),
   }),
-  DATABASE_HOST: Joi.string().when('DATABASE_TYPE', {
-    is: 'postgres',
-    then: Joi.required(),
-  }),
-  DATABASE_PORT: Joi.number().when('DATABASE_TYPE', {
-    is: 'postgres',
-    then: Joi.required(),
-  }),
-  DATABASE_USER: Joi.string().when('DATABASE_TYPE', {
-    is: 'postgres',
-    then: Joi.required(),
-  }),
-  DATABASE_PASSWORD: Joi.string().when('DATABASE_TYPE', {
-    is: 'postgres',
-    then: Joi.required(),
-  }),
-  DATABASE_NAME: Joi.string().when('DATABASE_TYPE', {
-    is: 'postgres',
-    then: Joi.required(),
-  }),
+  DATABASE_SSL: Joi.boolean().default(false),
+  DATABASE_SYNCHRONIZE: Joi.boolean().default(false),
+  DATABASE_LOGGING: Joi.boolean().default(false),
 
   // JWT
   JWT_ACCESS_SECRET: Joi.string().when('NODE_ENV', {

@@ -13,7 +13,7 @@ Build a collaborative Trello-like kanban board application enabling teams to org
 
 **Language/Version**: TypeScript 5.3+, Node.js 20.x LTS  
 **Primary Dependencies**: NestJS 10.x, React 18.x, TypeORM 0.3.x, ioredis 5.x, Socket.io 4.x, shadcn/ui  
-**Storage**: SQLite (dev), PostgreSQL 15+ (prod-ready)  
+**Storage**: PostgreSQL 15+  
 **Testing**: Jest 29.x, Vitest 1.x, NestJS Testing Module, React Testing Library  
 **Target Platform**: Web (responsive: desktop, tablet, mobile browsers)  
 **Project Type**: Web application (monorepo: backend + frontend + shared)  

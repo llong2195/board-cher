@@ -5,9 +5,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 export const databaseConfig = registerAs(
   'database',
   (): TypeOrmModuleOptions => {
-    // eslint-disable-line complexity
     const isDevelopment = process.env.NODE_ENV !== 'production';
-    const databaseType = process.env.DATABASE_TYPE || 'sqlite';
 
     const baseConfig: Partial<TypeOrmModuleOptions> = {
       entities: [
@@ -19,27 +17,19 @@ export const databaseConfig = registerAs(
       logging: process.env.DATABASE_LOGGING === 'true' || isDevelopment,
     };
 
-    if (databaseType === 'postgres') {
-      return {
-        ...baseConfig,
-        type: 'postgres',
-        host: process.env.DATABASE_HOST || 'localhost',
-        port: parseInt(process.env.DATABASE_PORT || '5432', 10),
-        username: process.env.DATABASE_USER || 'trello',
-        password: process.env.DATABASE_PASSWORD || 'trello123',
-        database: process.env.DATABASE_NAME || 'trello_vibe',
-        ssl:
-          process.env.DATABASE_SSL === 'true'
-            ? { rejectUnauthorized: false }
-            : false,
-      } as TypeOrmModuleOptions;
-    }
-
-    // SQLite for development
+    // PostgreSQL configuration
     return {
       ...baseConfig,
-      type: 'sqlite',
-      database: process.env.DATABASE_NAME || './dev.sqlite3',
+      type: 'postgres',
+      host: process.env.DATABASE_HOST || 'localhost',
+      port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+      username: process.env.DATABASE_USER || 'trello',
+      password: process.env.DATABASE_PASSWORD || 'trello',
+      database: process.env.DATABASE_NAME || 'trello',
+      ssl:
+        process.env.DATABASE_SSL === 'true'
+          ? { rejectUnauthorized: false }
+          : false,
     } as TypeOrmModuleOptions;
   },
 );
@@ -50,19 +40,12 @@ let appDataSource: DataSource | null = null;
 export const getAppDataSource = (): DataSource => {
   if (!appDataSource) {
     appDataSource = new DataSource({
-      type:
-        process.env.DATABASE_TYPE === 'postgres'
-          ? 'postgres'
-          : 'better-sqlite3',
+      type: 'postgres',
       host: process.env.DATABASE_HOST || 'localhost',
       port: parseInt(process.env.DATABASE_PORT || '5432', 10),
-      username: process.env.DATABASE_USER || 'trello',
-      password: process.env.DATABASE_PASSWORD || 'trello123',
-      database:
-        process.env.DATABASE_NAME ||
-        (process.env.DATABASE_TYPE === 'postgres'
-          ? 'trello_vibe'
-          : './dev.sqlite3'),
+      username: process.env.DATABASE_USER || 'postgres',
+      password: process.env.DATABASE_PASSWORD || 'password',
+      database: process.env.DATABASE_NAME || 'trello',
       entities: [
         __dirname +
           '/../infrastructure/persistence/entities/**/*.entity{.ts,.js}',
@@ -70,6 +53,10 @@ export const getAppDataSource = (): DataSource => {
       migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
       synchronize: false,
       logging: process.env.DATABASE_LOGGING === 'true' || false,
+      ssl:
+        process.env.DATABASE_SSL === 'true'
+          ? { rejectUnauthorized: false }
+          : false,
     } as DataSourceOptions);
   }
   return appDataSource;

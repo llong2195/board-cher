@@ -10,7 +10,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { WS_EVENTS } from '@shared/constants';
+import { WS_EVENTS } from '@trello-vibe/shared';
 import {
   type BoardJoinEvent,
   type BoardJoinResponse,
@@ -18,7 +18,7 @@ import {
   type BoardUserJoinedEvent,
   type BoardUserLeftEvent,
   type EventActor,
-} from '@shared/types';
+} from '@trello-vibe/shared';
 import { Server, Socket } from 'socket.io';
 
 type AuthenticatedSocket = Omit<Socket, 'data'> & {

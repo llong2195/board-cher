@@ -42,8 +42,8 @@
 
 ### Database & ORM Setup
 
-- [x] T011 Install TypeORM dependencies in backend: `typeorm@0.3.x`, `@nestjs/typeorm`, `pg`, `sqlite3`
-- [x] T012 Configure TypeORM module in `packages/backend/src/config/database.config.ts` with SQLite (dev) and PostgreSQL (prod) support
+- [x] T011 Install TypeORM dependencies in backend: `typeorm@0.3.x`, `@nestjs/typeorm`, `pg`
+- [x] T012 Configure TypeORM module in `packages/backend/src/config/database.config.ts` with PostgreSQL support
 - [x] T013 Setup TypeORM migrations in `packages/backend/migrations/` with npm script `migration:generate` and `migration:run`
 - [x] T014 Create base abstract entity in `packages/backend/src/infrastructure/persistence/base.entity.ts` with id, createdAt, updatedAt fields
 
@@ -122,7 +122,7 @@
 - [x] T053 [P] Create React hook `useWebSocket` in `packages/frontend/src/hooks/useWebSocket.ts` for component integration
 - [x] T054 [P] Create React hook `useBoardRealtime` in `packages/frontend/src/hooks/useBoardRealtime.ts` for board-specific real-time updates
 - [x] T055 [US3] Add WebSocket connection indicator component in `packages/frontend/src/components/WebSocketStatus.tsx` (connected/disconnected/reconnecting)
-- [ ] T056 [US3] Verify all tests pass and coverage ≥80% for WebSocket modules
+- [x] T056 [US3] Verify all tests pass and coverage ≥80% for WebSocket modules
 
 **Checkpoint**: Real-time infrastructure complete - board/list/card changes will now broadcast automatically
 

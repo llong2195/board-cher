@@ -18,7 +18,7 @@ A modern, real-time collaborative kanban board application inspired by Trello. B
 
 - **Backend**: NestJS 10.x with TypeScript 5.3+, Node.js 20.x LTS
 - **Frontend**: React 18.x with TypeScript, Vite, shadcn/ui
-- **Database**: PostgreSQL 15+ (production), SQLite (development)
+- **Database**: PostgreSQL 15+
 - **Caching**: Redis 7+ with ioredis
 - **Real-time**: Socket.io 4.x with Redis adapter
 - **ORM**: TypeORM 0.3.x with migrations
