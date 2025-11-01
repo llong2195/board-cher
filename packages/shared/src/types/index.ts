@@ -77,3 +77,8 @@ export interface Organization {
   createdAt: Date;
   updatedAt: Date;
 }
+
+/**
+ * WebSocket event types
+ */
+export * from './websocket-events';

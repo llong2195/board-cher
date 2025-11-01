@@ -101,27 +101,28 @@
 
 > **CRITICAL: Write these tests FIRST, ensure they FAIL, then implement to make them pass**
 
-- [ ] T038 [P] [US3] WebSocket connection test in `packages/backend/test/e2e/websocket/connection.e2e-spec.ts` - verify JWT auth handshake succeeds
-- [ ] T039 [P] [US3] Board room join test in `packages/backend/test/e2e/websocket/board-room.e2e-spec.ts` - verify user joins board room and receives member list
-- [ ] T040 [P] [US3] Real-time broadcast test in `packages/backend/test/e2e/websocket/broadcast.e2e-spec.ts` - verify card creation broadcasts to all connected users
-- [ ] T041 [P] [US3] Redis pub/sub scaling test in `packages/backend/test/integration/websocket/redis-adapter.integration-spec.ts` - verify events propagate across multiple server instances
+- [x] T038 [P] [US3] WebSocket connection test in `packages/backend/test/e2e/websocket/connection.e2e-spec.ts` - verify JWT auth handshake succeeds
+- [x] T039 [P] [US3] Board room join test in `packages/backend/test/e2e/websocket/board-room.e2e-spec.ts` - verify user joins board room and receives member list
+- [x] T040 [P] [US3] Real-time broadcast test in `packages/backend/test/e2e/websocket/broadcast.e2e-spec.ts` - verify card creation broadcasts to all connected users
+- [x] T041 [P] [US3] Redis pub/sub scaling test in `packages/backend/test/integration/websocket/redis-adapter.integration-spec.ts` - verify events propagate across multiple server instances
 
 ### Implementation for User Story 3
 
-- [ ] T042 Install Socket.io dependencies: `@nestjs/platform-socket.io`, `socket.io@4.x`, `@socket.io/redis-adapter`
-- [ ] T043 Create WebSocket gateway in `packages/backend/src/infrastructure/websocket/board.gateway.ts` with JWT authentication, board room management
-- [ ] T044 Configure Socket.io Redis adapter in `packages/backend/src/infrastructure/websocket/websocket-adapter.config.ts` for horizontal scaling
-- [ ] T045 Create WebSocket event types in `packages/shared/src/types/websocket-events.ts` (board:join, board:leave, board:updated, list:created, etc.)
-- [ ] T046 [P] Implement board:join handler in `packages/backend/src/infrastructure/websocket/handlers/board-join.handler.ts` with permission check
-- [ ] T047 [P] Implement board:leave handler in `packages/backend/src/infrastructure/websocket/handlers/board-leave.handler.ts`
-- [ ] T048 Create domain event emitter in `packages/backend/src/domain/shared/domain-event.emitter.ts` for publishing domain events
-- [ ] T049 Create WebSocket event publisher service in `packages/backend/src/infrastructure/websocket/websocket-event-publisher.service.ts` to broadcast domain events
-- [ ] T050 Wire domain events to WebSocket broadcasts in `packages/backend/src/infrastructure/websocket/domain-event-subscriber.ts`
-- [ ] T051 [P] Create frontend WebSocket client service in `packages/frontend/src/services/websocket.service.ts` with auto-reconnect, event handlers
-- [ ] T052 [P] Create React hook `useWebSocket` in `packages/frontend/src/hooks/useWebSocket.ts` for component integration
-- [ ] T053 [P] Create React hook `useBoardRealtime` in `packages/frontend/src/hooks/useBoardRealtime.ts` for board-specific real-time updates
-- [ ] T054 [US3] Add WebSocket connection indicator component in `packages/frontend/src/components/WebSocketStatus.tsx` (connected/disconnected/reconnecting)
-- [ ] T055 [US3] Verify all tests pass and coverage ≥80% for WebSocket modules
+- [x] T042 Install Socket.io dependencies: `@nestjs/platform-socket.io`, `socket.io@4.x`, `@socket.io/redis-adapter`
+- [x] T043 Create WebSocket gateway in `packages/backend/src/infrastructure/websocket/board.gateway.ts` with JWT authentication, board room management
+- [x] T044 Create WebSocket module in `packages/backend/src/infrastructure/websocket/websocket.module.ts` to export gateway
+- [x] T045 Create WebSocket event types in `packages/shared/src/types/websocket-events.ts` (board:join, board:leave, board:updated, list:created, etc.)
+- [ ] T046 Configure Socket.io Redis adapter in `packages/backend/src/infrastructure/websocket/websocket-adapter.config.ts` for horizontal scaling
+- [ ] T047 [P] Implement board:join handler in `packages/backend/src/infrastructure/websocket/handlers/board-join.handler.ts` with permission check
+- [ ] T048 [P] Implement board:leave handler in `packages/backend/src/infrastructure/websocket/handlers/board-leave.handler.ts`
+- [ ] T049 Create domain event emitter in `packages/backend/src/domain/shared/domain-event.emitter.ts` for publishing domain events
+- [ ] T050 Create WebSocket event publisher service in `packages/backend/src/infrastructure/websocket/websocket-event-publisher.service.ts` to broadcast domain events
+- [ ] T051 Wire domain events to WebSocket broadcasts in `packages/backend/src/infrastructure/websocket/domain-event-subscriber.ts`
+- [ ] T052 [P] Create frontend WebSocket client service in `packages/frontend/src/services/websocket.service.ts` with auto-reconnect, event handlers
+- [ ] T053 [P] Create React hook `useWebSocket` in `packages/frontend/src/hooks/useWebSocket.ts` for component integration
+- [ ] T054 [P] Create React hook `useBoardRealtime` in `packages/frontend/src/hooks/useBoardRealtime.ts` for board-specific real-time updates
+- [ ] T055 [US3] Add WebSocket connection indicator component in `packages/frontend/src/components/WebSocketStatus.tsx` (connected/disconnected/reconnecting)
+- [ ] T056 [US3] Verify all tests pass and coverage ≥80% for WebSocket modules
 
 **Checkpoint**: Real-time infrastructure complete - board/list/card changes will now broadcast automatically
 
