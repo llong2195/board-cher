@@ -28,14 +28,17 @@ import { DomainEventSubscriber } from './domain-event-subscriber';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_ACCESS_SECRET'),
-        signOptions: {
-          expiresIn:
-            (configService.get<string>('JWT_ACCESS_EXPIRY') as any) || '15m',
-        },
-        global: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const expiresIn =
+          configService.get<string>('JWT_ACCESS_EXPIRY') || '15m';
+        return {
+          secret: configService.get<string>('JWT_ACCESS_SECRET'),
+          signOptions: {
+            expiresIn: expiresIn as `${number}${'s' | 'm' | 'h' | 'd'}`,
+          },
+          global: true,
+        };
+      },
     }),
   ],
   providers: [

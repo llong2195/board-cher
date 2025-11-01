@@ -115,9 +115,9 @@
 - [x] T046 Configure Socket.io Redis adapter in `packages/backend/src/infrastructure/websocket/websocket-adapter.config.ts` for horizontal scaling
 - [x] T047 [P] Implement board:join handler in `packages/backend/src/infrastructure/websocket/handlers/board-join.handler.ts` with permission check
 - [x] T048 [P] Implement board:leave handler in `packages/backend/src/infrastructure/websocket/handlers/board-leave.handler.ts`
-- [ ] T049 Create domain event emitter in `packages/backend/src/domain/shared/domain-event.emitter.ts` for publishing domain events
-- [ ] T050 Create WebSocket event publisher service in `packages/backend/src/infrastructure/websocket/websocket-event-publisher.service.ts` to broadcast domain events
-- [ ] T051 Wire domain events to WebSocket broadcasts in `packages/backend/src/infrastructure/websocket/domain-event-subscriber.ts`
+- [x] T049 Create domain event emitter in `packages/backend/src/domain/shared/domain-event.emitter.ts` for publishing domain events
+- [x] T050 Create WebSocket event publisher service in `packages/backend/src/infrastructure/websocket/websocket-event-publisher.service.ts` to broadcast domain events
+- [x] T051 Wire domain events to WebSocket broadcasts in `packages/backend/src/infrastructure/websocket/domain-event-subscriber.ts`
 - [ ] T052 [P] Create frontend WebSocket client service in `packages/frontend/src/services/websocket.service.ts` with auto-reconnect, event handlers
 - [ ] T053 [P] Create React hook `useWebSocket` in `packages/frontend/src/hooks/useWebSocket.ts` for component integration
 - [ ] T054 [P] Create React hook `useBoardRealtime` in `packages/frontend/src/hooks/useBoardRealtime.ts` for board-specific real-time updates

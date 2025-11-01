@@ -16,7 +16,12 @@ export default [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: ['./packages/*/tsconfig.json'],
+        tsconfigRootDir: import.meta.dirname,
+        project: [
+          './packages/backend/tsconfig.json',
+          './packages/frontend/tsconfig.app.json',
+          './packages/shared/tsconfig.json',
+        ],
       },
     },
     plugins: {
