@@ -5,6 +5,7 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 export const databaseConfig = registerAs(
   'database',
   (): TypeOrmModuleOptions => {
+    // eslint-disable-line complexity
     const isDevelopment = process.env.NODE_ENV !== 'production';
     const databaseType = process.env.DATABASE_TYPE || 'sqlite';
 
@@ -43,22 +44,37 @@ export const databaseConfig = registerAs(
   },
 );
 
-// DataSource for migrations CLI
-export const AppDataSource = new DataSource({
-  type: process.env.DATABASE_TYPE === 'postgres' ? 'postgres' : 'sqlite',
-  host: process.env.DATABASE_HOST || 'localhost',
-  port: parseInt(process.env.DATABASE_PORT || '5432', 10),
-  username: process.env.DATABASE_USER || 'trello',
-  password: process.env.DATABASE_PASSWORD || 'trello123',
-  database:
-    process.env.DATABASE_NAME ||
-    (process.env.DATABASE_TYPE === 'postgres'
-      ? 'trello_vibe'
-      : './dev.sqlite3'),
-  entities: [
-    __dirname + '/../infrastructure/persistence/entities/**/*.entity{.ts,.js}',
-  ],
-  migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
-  synchronize: false,
-  logging: process.env.DATABASE_LOGGING === 'true' || false,
-} as DataSourceOptions);
+// DataSource for migrations CLI - created lazily
+let appDataSource: DataSource | null = null;
+
+export const getAppDataSource = (): DataSource => {
+  if (!appDataSource) {
+    appDataSource = new DataSource({
+      type:
+        process.env.DATABASE_TYPE === 'postgres'
+          ? 'postgres'
+          : 'better-sqlite3',
+      host: process.env.DATABASE_HOST || 'localhost',
+      port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+      username: process.env.DATABASE_USER || 'trello',
+      password: process.env.DATABASE_PASSWORD || 'trello123',
+      database:
+        process.env.DATABASE_NAME ||
+        (process.env.DATABASE_TYPE === 'postgres'
+          ? 'trello_vibe'
+          : './dev.sqlite3'),
+      entities: [
+        __dirname +
+          '/../infrastructure/persistence/entities/**/*.entity{.ts,.js}',
+      ],
+      migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
+      synchronize: false,
+      logging: process.env.DATABASE_LOGGING === 'true' || false,
+    } as DataSourceOptions);
+  }
+  return appDataSource;
+};
+
+// Export for migrations - but don't eagerly create it
+// Use: `getAppDataSource()` in migration scripts
+export { getAppDataSource as AppDataSource };

@@ -118,10 +118,10 @@
 - [x] T049 Create domain event emitter in `packages/backend/src/domain/shared/domain-event.emitter.ts` for publishing domain events
 - [x] T050 Create WebSocket event publisher service in `packages/backend/src/infrastructure/websocket/websocket-event-publisher.service.ts` to broadcast domain events
 - [x] T051 Wire domain events to WebSocket broadcasts in `packages/backend/src/infrastructure/websocket/domain-event-subscriber.ts`
-- [ ] T052 [P] Create frontend WebSocket client service in `packages/frontend/src/services/websocket.service.ts` with auto-reconnect, event handlers
-- [ ] T053 [P] Create React hook `useWebSocket` in `packages/frontend/src/hooks/useWebSocket.ts` for component integration
-- [ ] T054 [P] Create React hook `useBoardRealtime` in `packages/frontend/src/hooks/useBoardRealtime.ts` for board-specific real-time updates
-- [ ] T055 [US3] Add WebSocket connection indicator component in `packages/frontend/src/components/WebSocketStatus.tsx` (connected/disconnected/reconnecting)
+- [x] T052 [P] Create frontend WebSocket client service in `packages/frontend/src/services/websocket.service.ts` with auto-reconnect, event handlers
+- [x] T053 [P] Create React hook `useWebSocket` in `packages/frontend/src/hooks/useWebSocket.ts` for component integration
+- [x] T054 [P] Create React hook `useBoardRealtime` in `packages/frontend/src/hooks/useBoardRealtime.ts` for board-specific real-time updates
+- [x] T055 [US3] Add WebSocket connection indicator component in `packages/frontend/src/components/WebSocketStatus.tsx` (connected/disconnected/reconnecting)
 - [ ] T056 [US3] Verify all tests pass and coverage ≥80% for WebSocket modules
 
 **Checkpoint**: Real-time infrastructure complete - board/list/card changes will now broadcast automatically

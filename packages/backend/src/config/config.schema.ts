@@ -9,13 +9,21 @@ export const configSchema = Joi.object({
     .valid('development', 'production', 'test')
     .default('development'),
   PORT: Joi.number().default(3000),
-  FRONTEND_URL: Joi.string().required(),
+  FRONTEND_URL: Joi.string().when('NODE_ENV', {
+    is: 'test',
+    then: Joi.optional().default('http://localhost:3001'),
+    otherwise: Joi.required(),
+  }),
 
   // Database
   DATABASE_TYPE: Joi.string().valid('sqlite', 'postgres').default('sqlite'),
   DATABASE_PATH: Joi.string().when('DATABASE_TYPE', {
     is: 'sqlite',
-    then: Joi.required(),
+    then: Joi.when('NODE_ENV', {
+      is: 'test',
+      then: Joi.optional().default('./test.sqlite3'),
+      otherwise: Joi.required(),
+    }),
   }),
   DATABASE_HOST: Joi.string().when('DATABASE_TYPE', {
     is: 'postgres',
@@ -39,8 +47,16 @@ export const configSchema = Joi.object({
   }),
 
   // JWT
-  JWT_ACCESS_SECRET: Joi.string().required(),
-  JWT_REFRESH_SECRET: Joi.string().required(),
+  JWT_ACCESS_SECRET: Joi.string().when('NODE_ENV', {
+    is: 'test',
+    then: Joi.optional().default('test-secret'),
+    otherwise: Joi.required(),
+  }),
+  JWT_REFRESH_SECRET: Joi.string().when('NODE_ENV', {
+    is: 'test',
+    then: Joi.optional().default('test-refresh-secret'),
+    otherwise: Joi.required(),
+  }),
   JWT_ACCESS_EXPIRY: Joi.string().default('15m'),
   JWT_REFRESH_EXPIRY: Joi.string().default('7d'),
 
@@ -53,7 +69,11 @@ export const configSchema = Joi.object({
   STORAGE_TYPE: Joi.string().valid('local', 's3').default('local'),
   STORAGE_PATH: Joi.string().when('STORAGE_TYPE', {
     is: 'local',
-    then: Joi.required(),
+    then: Joi.when('NODE_ENV', {
+      is: 'test',
+      then: Joi.optional().default('./test-storage'),
+      otherwise: Joi.required(),
+    }),
   }),
 
   // Rate Limiting

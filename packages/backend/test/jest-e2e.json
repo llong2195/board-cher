@@ -5,5 +5,10 @@
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
-  }
+  },
+  "moduleNameMapper": {
+    "^@shared/(.*)$": "<rootDir>/../../shared/src/$1",
+    "^@trello-vibe/shared$": "<rootDir>/../../shared/src/index.ts"
+  },
+  "setupFiles": ["<rootDir>/setup-e2e.ts"]
 }
