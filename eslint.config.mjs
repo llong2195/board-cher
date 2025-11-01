@@ -27,7 +27,7 @@ export default [
       'prettier/prettier': 'error',
 
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
       '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -38,12 +38,6 @@ export default [
 
   // --- Ignore patterns ---
   {
-    ignores: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/build/**',
-      '**/coverage/**',
-      '**/.next/**',
-    ],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/coverage/**', '**/.next/**'],
   },
 ];

@@ -62,3 +62,5 @@ export function hasOrganizationPermission(role: OrganizationRole, permission: st
 export function hasBoardPermission(role: BoardRole, permission: string): boolean {
   return BOARD_PERMISSIONS[role]?.includes(permission as any) || false;
 }
+
+export * from './websocket-events';

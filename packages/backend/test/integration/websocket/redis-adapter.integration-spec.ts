@@ -70,8 +70,10 @@ describe('Redis Adapter Scaling (integration)', () => {
   });
 
   it('should propagate events across multiple server instances', (done) => {
-    const port1 = (app1.getHttpServer().address() as any).port;
-    const port2 = (app2.getHttpServer().address() as any).port;
+    const port1 = (app1.getHttpServer().address() as import('net').AddressInfo)
+      .port;
+    const port2 = (app2.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     // Client 1 connects to Server 1
     clientSocket1 = io(`http://localhost:${port1}`, {
@@ -122,8 +124,10 @@ describe('Redis Adapter Scaling (integration)', () => {
   }, 10000);
 
   it('should handle multiple server instances joining and leaving', (done) => {
-    const port1 = (app1.getHttpServer().address() as any).port;
-    const port2 = (app2.getHttpServer().address() as any).port;
+    const port1 = (app1.getHttpServer().address() as import('net').AddressInfo)
+      .port;
+    const port2 = (app2.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket1 = io(`http://localhost:${port1}`, {
       auth: { token: `Bearer ${validToken1}` },
@@ -165,8 +169,10 @@ describe('Redis Adapter Scaling (integration)', () => {
   }, 5000);
 
   it('should broadcast to correct rooms across instances', (done) => {
-    const port1 = (app1.getHttpServer().address() as any).port;
-    const port2 = (app2.getHttpServer().address() as any).port;
+    const port1 = (app1.getHttpServer().address() as import('net').AddressInfo)
+      .port;
+    const port2 = (app2.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const board1 = 'board-1';
     const board2 = 'board-2';
     let receivedUnwantedEvent = false;
@@ -213,13 +219,15 @@ describe('Redis Adapter Scaling (integration)', () => {
   }, 5000);
 
   it('should verify Redis pub/sub channels are created', async () => {
-    const channels = await redisClient.pubsub('channels', 'socket.io-*');
+    const channels = await redisClient.pubsub('CHANNELS', 'socket.io-*');
     expect(channels.length).toBeGreaterThan(0);
   });
 
   it('should handle high load across multiple instances', (done) => {
-    const port1 = (app1.getHttpServer().address() as any).port;
-    const port2 = (app2.getHttpServer().address() as any).port;
+    const port1 = (app1.getHttpServer().address() as import('net').AddressInfo)
+      .port;
+    const port2 = (app2.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const messageCount = 50;
     const receivedMessages: any[] = [];
 
@@ -274,8 +282,10 @@ describe('Redis Adapter Scaling (integration)', () => {
   }, 15000);
 
   it('should maintain room state across instance failures', (done) => {
-    const port1 = (app1.getHttpServer().address() as any).port;
-    const port2 = (app2.getHttpServer().address() as any).port;
+    const port1 = (app1.getHttpServer().address() as import('net').AddressInfo)
+      .port;
+    const port2 = (app2.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket1 = io(`http://localhost:${port1}`, {
       auth: { token: `Bearer ${validToken1}` },
@@ -334,8 +344,10 @@ describe('Redis Adapter Scaling (integration)', () => {
   }, 10000);
 
   it('should handle concurrent updates from multiple instances', (done) => {
-    const port1 = (app1.getHttpServer().address() as any).port;
-    const port2 = (app2.getHttpServer().address() as any).port;
+    const port1 = (app1.getHttpServer().address() as import('net').AddressInfo)
+      .port;
+    const port2 = (app2.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const receivedMessages1: any[] = [];
     const receivedMessages2: any[] = [];
 

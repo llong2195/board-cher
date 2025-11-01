@@ -112,9 +112,9 @@
 - [x] T043 Create WebSocket gateway in `packages/backend/src/infrastructure/websocket/board.gateway.ts` with JWT authentication, board room management
 - [x] T044 Create WebSocket module in `packages/backend/src/infrastructure/websocket/websocket.module.ts` to export gateway
 - [x] T045 Create WebSocket event types in `packages/shared/src/types/websocket-events.ts` (board:join, board:leave, board:updated, list:created, etc.)
-- [ ] T046 Configure Socket.io Redis adapter in `packages/backend/src/infrastructure/websocket/websocket-adapter.config.ts` for horizontal scaling
-- [ ] T047 [P] Implement board:join handler in `packages/backend/src/infrastructure/websocket/handlers/board-join.handler.ts` with permission check
-- [ ] T048 [P] Implement board:leave handler in `packages/backend/src/infrastructure/websocket/handlers/board-leave.handler.ts`
+- [x] T046 Configure Socket.io Redis adapter in `packages/backend/src/infrastructure/websocket/websocket-adapter.config.ts` for horizontal scaling
+- [x] T047 [P] Implement board:join handler in `packages/backend/src/infrastructure/websocket/handlers/board-join.handler.ts` with permission check
+- [x] T048 [P] Implement board:leave handler in `packages/backend/src/infrastructure/websocket/handlers/board-leave.handler.ts`
 - [ ] T049 Create domain event emitter in `packages/backend/src/domain/shared/domain-event.emitter.ts` for publishing domain events
 - [ ] T050 Create WebSocket event publisher service in `packages/backend/src/infrastructure/websocket/websocket-event-publisher.service.ts` to broadcast domain events
 - [ ] T051 Wire domain events to WebSocket broadcasts in `packages/backend/src/infrastructure/websocket/domain-event-subscriber.ts`

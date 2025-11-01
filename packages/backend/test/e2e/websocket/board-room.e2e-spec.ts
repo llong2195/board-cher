@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 import { io, Socket } from 'socket.io-client';
 import { AppModule } from '../../../src/app.module';
-import { JwtService } from '@nestjs/jwt';
 
 describe('Board Room Management (e2e)', () => {
   let app: INestApplication;
@@ -50,7 +50,8 @@ describe('Board Room Management (e2e)', () => {
   });
 
   it('should allow user to join a board room', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket1 = io(`http://localhost:${port}`, {
       auth: { token: `Bearer ${validToken1}` },
@@ -74,7 +75,8 @@ describe('Board Room Management (e2e)', () => {
   });
 
   it('should notify existing users when new user joins board', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     let user1Joined = false;
 
     clientSocket1 = io(`http://localhost:${port}`, {
@@ -109,7 +111,8 @@ describe('Board Room Management (e2e)', () => {
   }, 5000);
 
   it('should provide list of active members when joining board', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket1 = io(`http://localhost:${port}`, {
       auth: { token: `Bearer ${validToken1}` },
@@ -130,7 +133,8 @@ describe('Board Room Management (e2e)', () => {
   });
 
   it('should handle user leaving board room', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket1 = io(`http://localhost:${port}`, {
       auth: { token: `Bearer ${validToken1}` },
@@ -139,8 +143,6 @@ describe('Board Room Management (e2e)', () => {
     clientSocket2 = io(`http://localhost:${port}`, {
       auth: { token: `Bearer ${validToken2}` },
     });
-
-    let user2Joined = false;
 
     clientSocket1.on('connect', () => {
       clientSocket1.emit('board:join', { boardId: mockBoardId });
@@ -155,7 +157,6 @@ describe('Board Room Management (e2e)', () => {
     clientSocket2.on('connect', () => {
       setTimeout(() => {
         clientSocket2.emit('board:join', { boardId: mockBoardId }, () => {
-          user2Joined = true;
           clientSocket2.emit('board:leave', { boardId: mockBoardId });
         });
       }, 500);
@@ -163,7 +164,8 @@ describe('Board Room Management (e2e)', () => {
   }, 5000);
 
   it('should reject joining board without permission', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const unauthorizedBoardId = 'unauthorized-board';
 
     clientSocket1 = io(`http://localhost:${port}`, {
@@ -184,7 +186,8 @@ describe('Board Room Management (e2e)', () => {
   });
 
   it('should automatically leave room on disconnection', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket1 = io(`http://localhost:${port}`, {
       auth: { token: `Bearer ${validToken1}` },
@@ -213,7 +216,8 @@ describe('Board Room Management (e2e)', () => {
   }, 5000);
 
   it('should allow user to join multiple board rooms', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const board1 = 'board-1';
     const board2 = 'board-2';
     let joinedCount = 0;
@@ -244,7 +248,8 @@ describe('Board Room Management (e2e)', () => {
   });
 
   it('should not allow joining same board room twice', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket1 = io(`http://localhost:${port}`, {
       auth: { token: `Bearer ${validToken1}` },

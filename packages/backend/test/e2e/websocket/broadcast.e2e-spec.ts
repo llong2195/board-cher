@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 import { io, Socket } from 'socket.io-client';
 import { AppModule } from '../../../src/app.module';
-import { JwtService } from '@nestjs/jwt';
 
 describe('Real-time Broadcast (e2e)', () => {
   let app: INestApplication;
@@ -50,7 +50,8 @@ describe('Real-time Broadcast (e2e)', () => {
   });
 
   it('should broadcast card creation to all board members', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const mockCard = {
       id: 'card-123',
       title: 'New Card',
@@ -65,13 +66,11 @@ describe('Real-time Broadcast (e2e)', () => {
       auth: { token: `Bearer ${validToken2}` },
     });
 
-    let bothJoined = false;
     let joinCount = 0;
 
     const checkBothJoined = () => {
       joinCount++;
       if (joinCount === 2) {
-        bothJoined = true;
         // User1 creates a card
         clientSocket1.emit('card:create', {
           boardId: mockBoardId,
@@ -107,7 +106,8 @@ describe('Real-time Broadcast (e2e)', () => {
   }, 5000);
 
   it('should broadcast card movement to all board members', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const mockCardMove = {
       cardId: 'card-123',
       sourceListId: 'list-1',
@@ -159,7 +159,8 @@ describe('Real-time Broadcast (e2e)', () => {
   }, 5000);
 
   it('should broadcast list creation to all board members', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const mockList = {
       id: 'list-123',
       name: 'New List',
@@ -210,7 +211,8 @@ describe('Real-time Broadcast (e2e)', () => {
   }, 5000);
 
   it('should not broadcast to users in different boards', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const board1 = 'board-1';
     const board2 = 'board-2';
 
@@ -257,7 +259,8 @@ describe('Real-time Broadcast (e2e)', () => {
   }, 5000);
 
   it('should broadcast card updates to all board members', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const mockCardUpdate = {
       cardId: 'card-123',
       title: 'Updated Title',
@@ -308,7 +311,8 @@ describe('Real-time Broadcast (e2e)', () => {
   }, 5000);
 
   it('should include actor information in broadcasts', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket1 = io(`http://localhost:${port}`, {
       auth: { token: `Bearer ${validToken1}` },
@@ -355,7 +359,8 @@ describe('Real-time Broadcast (e2e)', () => {
   }, 5000);
 
   it('should handle high-frequency updates without message loss', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     const messageCount = 10;
     const receivedMessages: any[] = [];
 

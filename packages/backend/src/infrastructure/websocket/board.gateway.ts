@@ -10,16 +10,25 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { WS_EVENTS } from '@shared/constants';
 import {
-  BoardJoinEvent,
-  BoardJoinResponse,
-  BoardLeaveEvent,
-  BoardUserJoinedEvent,
-  BoardUserLeftEvent,
-  EventActor,
-  WS_EVENTS,
+  type BoardJoinEvent,
+  type BoardJoinResponse,
+  type BoardLeaveEvent,
+  type BoardUserJoinedEvent,
+  type BoardUserLeftEvent,
+  type EventActor,
 } from '@shared/types';
 import { Server, Socket } from 'socket.io';
+
+type AuthenticatedSocket = Omit<Socket, 'data'> & {
+  data: ClientData;
+};
+
+interface ClientData {
+  userId: string;
+  email?: string;
+}
 
 @WebSocketGateway({
   cors: {
@@ -39,7 +48,7 @@ export class BoardGateway
 
   constructor(private readonly jwtService: JwtService) {}
 
-  afterInit(server: Server) {
+  afterInit(_server: Server) {
     this.logger.log('WebSocket Gateway initialized');
   }
 
@@ -68,9 +77,11 @@ export class BoardGateway
       }
 
       // Store user info in socket data
-      client.data.userId = payload.sub;
-      client.data.email = payload.email;
-
+      const clientData: ClientData = {
+        userId: payload.sub,
+        email: payload.email,
+      };
+      client.data = clientData;
       // Track user socket
       if (!this.userSockets.has(payload.sub)) {
         this.userSockets.set(payload.sub, new Set());
@@ -84,7 +95,12 @@ export class BoardGateway
         `Client connected: ${client.id} (user: ${payload.sub}, email: ${payload.email})`,
       );
     } catch (error) {
-      this.logger.error(`Connection error: ${error.message}`, error.stack);
+      if (error instanceof Error) {
+        this.logger.error(`Connection error: ${error.message}`, error.stack);
+      } else {
+        this.logger.error(`Connection error: `, error);
+      }
+
       client.emit(WS_EVENTS.CONNECT_ERROR, {
         message: 'Authentication error',
       });
@@ -92,15 +108,15 @@ export class BoardGateway
     }
   }
 
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: AuthenticatedSocket) {
     const userId = client.data.userId;
     const socketId = client.id;
 
     // Leave all rooms
     const rooms = this.socketRooms.get(socketId) || new Set();
-    rooms.forEach((boardId) => {
-      this.leaveRoom(client, boardId);
-    });
+    for (const boardId of rooms) {
+      await this.leaveRoom(client, boardId);
+    }
 
     // Remove socket from user tracking
     if (userId && this.userSockets.has(userId)) {
@@ -118,9 +134,17 @@ export class BoardGateway
     );
   }
 
+  @SubscribeMessage(WS_EVENTS.PING)
+  handlePing(@ConnectedSocket() client: AuthenticatedSocket): {
+    message: string;
+  } {
+    console.log('🚀 ~ BoardGateway ~ handlePing ~ client:', client.id);
+    return { message: 'pong' };
+  }
+
   @SubscribeMessage(WS_EVENTS.BOARD_JOIN)
   async handleBoardJoin(
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() data: BoardJoinEvent,
   ): Promise<BoardJoinResponse> {
     try {
@@ -177,7 +201,12 @@ export class BoardGateway
         activeMembers,
       };
     } catch (error) {
-      this.logger.error(`Board join error: ${error.message}`, error.stack);
+      if (error instanceof Error) {
+        this.logger.error(`Board join error: ${error.message}`, error.stack);
+      } else {
+        this.logger.error(`Board join error: `, error);
+      }
+
       return {
         success: false,
         error: 'Failed to join board',
@@ -186,33 +215,32 @@ export class BoardGateway
   }
 
   @SubscribeMessage(WS_EVENTS.BOARD_LEAVE)
-  async handleBoardLeave(
-    @ConnectedSocket() client: Socket,
+  handleBoardLeave(
+    @ConnectedSocket() client: AuthenticatedSocket,
     @MessageBody() data: BoardLeaveEvent,
-  ): Promise<{ success: boolean }> {
+  ): { success: boolean } {
     try {
       const { boardId } = data;
       this.leaveRoom(client, boardId);
 
       return { success: true };
-    } catch (error) {
-      this.logger.error(`Board leave error: ${error.message}`, error.stack);
-      return { success: false };
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        this.logger.error(`Board leave error: ${error?.message}`, error?.stack);
+      } else {
+        this.logger.error(`Board leave error: `, error);
+      }
+      return { success: false }; // Ensure a return value in case of an error
     }
   }
 
-  @SubscribeMessage(WS_EVENTS.PING)
-  handlePing(@ConnectedSocket() client: Socket): { message: string } {
-    return { message: 'pong' };
-  }
-
   // Helper method to leave a room
-  private leaveRoom(client: Socket, boardId: string) {
+  private async leaveRoom(client: AuthenticatedSocket, boardId: string) {
     const userId = client.data.userId;
     const socketId = client.id;
 
     // Leave the socket.io room
-    client.leave(boardId);
+    await client.leave(boardId);
 
     // Update tracking
     const rooms = this.socketRooms.get(socketId);
@@ -253,7 +281,7 @@ export class BoardGateway
   // Helper to extract token from socket handshake
   private extractToken(client: Socket): string | null {
     const auth = client.handshake.auth;
-    if (auth && auth.token) {
+    if (auth && auth.token && typeof auth.token === 'string') {
       // Remove "Bearer " prefix if present
       return auth.token.replace(/^Bearer\s+/i, '');
     }
@@ -265,16 +293,22 @@ export class BoardGateway
     token: string,
   ): Promise<{ sub: string; email: string } | null> {
     try {
-      const payload = await this.jwtService.verifyAsync(token);
+      const payload: { sub: string; email: string } =
+        await this.jwtService.verifyAsync(token);
       return payload as { sub: string; email: string };
-    } catch (error) {
-      this.logger.warn(`Token verification failed: ${error.message}`);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        this.logger.warn(`Token verification failed: ${error.message}`);
+      } else {
+        this.logger.error(`Token verification failed: `, error);
+      }
+
       return null;
     }
   }
 
   // Helper to get actor info from socket
-  private getActor(client: Socket): EventActor {
+  private getActor(client: AuthenticatedSocket): EventActor {
     return {
       userId: client.data.userId,
       email: client.data.email,

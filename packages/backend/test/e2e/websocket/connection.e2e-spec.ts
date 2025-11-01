@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 import { io, Socket } from 'socket.io-client';
 import { AppModule } from '../../../src/app.module';
-import { JwtService } from '@nestjs/jwt';
 
 describe('WebSocket Connection (e2e)', () => {
   let app: INestApplication;
@@ -40,7 +40,8 @@ describe('WebSocket Connection (e2e)', () => {
   });
 
   it('should establish WebSocket connection with valid JWT token', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket = io(`http://localhost:${port}`, {
       auth: {
@@ -59,7 +60,8 @@ describe('WebSocket Connection (e2e)', () => {
   });
 
   it('should reject connection without authentication token', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket = io(`http://localhost:${port}`, {
       auth: {},
@@ -76,7 +78,8 @@ describe('WebSocket Connection (e2e)', () => {
   });
 
   it('should reject connection with invalid JWT token', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket = io(`http://localhost:${port}`, {
       auth: {
@@ -95,7 +98,8 @@ describe('WebSocket Connection (e2e)', () => {
   });
 
   it('should reject connection with malformed token', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket = io(`http://localhost:${port}`, {
       auth: {
@@ -114,7 +118,8 @@ describe('WebSocket Connection (e2e)', () => {
   });
 
   it('should maintain connection with heartbeat', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket = io(`http://localhost:${port}`, {
       auth: {
@@ -136,7 +141,8 @@ describe('WebSocket Connection (e2e)', () => {
   }, 10000);
 
   it('should reconnect after temporary disconnection', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
     let disconnectCount = 0;
     let reconnectCount = 0;
 
@@ -166,10 +172,12 @@ describe('WebSocket Connection (e2e)', () => {
     clientSocket.on('disconnect', () => {
       disconnectCount++;
     });
+    console.log('🚀 ~ disconnectCount:', disconnectCount);
   }, 5000);
 
   it('should extract user information from JWT token', (done) => {
-    const port = (app.getHttpServer().address() as any).port;
+    const port = (app.getHttpServer().address() as import('net').AddressInfo)
+      .port;
 
     clientSocket = io(`http://localhost:${port}`, {
       auth: {
