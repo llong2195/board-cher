@@ -28,6 +28,11 @@ lerna-debug.log*
 .serverless/
 .fusebox/
 
+# TypeScript compiled outputs in source directories
+packages/shared/src/**/*.js
+packages/shared/src/**/*.d.ts
+packages/shared/src/**/*.js.map
+
 # Testing
 coverage/
 .nyc_output/

@@ -14,13 +14,13 @@ export abstract class BaseEntity extends TypeOrmBaseEntity {
   id!: string;
 
   @CreateDateColumn({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'created_at',
   })
   createdAt!: Date;
 
   @UpdateDateColumn({
-    type: 'datetime',
+    type: 'timestamp',
     name: 'updated_at',
   })
   updatedAt!: Date;

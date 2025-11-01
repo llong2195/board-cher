@@ -20,7 +20,7 @@ export class UserEntity extends BaseEntity {
   @Column({ name: 'avatar_url', nullable: true, length: 500 })
   avatarUrl?: string;
 
-  @Column({ name: 'last_login_at', type: 'datetime', nullable: true })
+  @Column({ name: 'last_login_at', type: 'timestamp', nullable: true })
   lastLoginAt?: Date;
 
   // Relationships will be added as we implement other entities

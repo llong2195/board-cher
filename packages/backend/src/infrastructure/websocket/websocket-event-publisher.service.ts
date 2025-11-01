@@ -14,7 +14,7 @@ import {
   ChecklistItemToggledEvent,
   MemberAssignedEvent,
 } from '../../domain/shared/domain-event.emitter';
-import { WS_EVENTS } from '../../../../../packages/shared/src/constants/websocket-events';
+import { WS_EVENTS } from '@trello-vibe/shared';
 
 /**
  * WebSocket Event Publisher Service
