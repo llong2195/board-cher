@@ -26,6 +26,7 @@ import { GetBoardQuery } from '../../application/queries/board/get-board.query';
 import { ListBoardsQuery } from '../../application/queries/board/list-boards.query';
 import { Board } from '../../domain/board/board.model';
 import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard';
+import { BoardPermissionGuard } from '../../infrastructure/auth/guards/board-permission.guard';
 import { BoardResponseDto } from '../dto/board/board-response.dto';
 import { CreateBoardDto } from '../dto/board/create-board.dto';
 import { UpdateBoardDto } from '../dto/board/update-board.dto';
@@ -33,6 +34,7 @@ import { UpdateBoardDto } from '../dto/board/update-board.dto';
 /**
  * Controller for board CRUD operations
  * Implements User Story 1: Kanban Board CRUD
+ * T193: BoardPermissionGuard applied to endpoints that access specific boards
  */
 @ApiTags('boards')
 @Controller('boards')
@@ -112,8 +114,10 @@ export class BoardController {
 
   /**
    * Get board by ID
+   * T193: Requires board permission check
    */
   @Get(':id')
+  @UseGuards(BoardPermissionGuard)
   @ApiOperation({ summary: 'Get board details by ID' })
   @ApiOkResponse({
     description: 'Board retrieved successfully',
@@ -127,8 +131,10 @@ export class BoardController {
 
   /**
    * Update board
+   * T193: Requires board permission check
    */
   @Put(':id')
+  @UseGuards(BoardPermissionGuard)
   @ApiOperation({ summary: 'Update board' })
   @ApiOkResponse({
     description: 'Board updated successfully',
@@ -153,8 +159,10 @@ export class BoardController {
 
   /**
    * Delete board (soft delete by archiving)
+   * T193: Requires board permission check
    */
   @Delete(':id')
+  @UseGuards(BoardPermissionGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete board (soft delete)' })
   @ApiNoContentResponse({ description: 'Board deleted successfully' })

@@ -22,30 +22,30 @@ export class ChecklistItemEntity extends BaseEntity {
    * The checklist this item belongs to
    */
   @Column('uuid')
-  checklistId: string;
+  checklistId!: string;
 
   @ManyToOne(() => ChecklistEntity, (checklist) => checklist.items, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'checklistId' })
-  checklist: ChecklistEntity;
+  checklist!: ChecklistEntity;
 
   /**
    * Item text/description
    * Max length: 200 characters
    */
   @Column('varchar', { length: 200 })
-  text: string;
+  text!: string;
 
   /**
    * Whether this item is completed
    */
   @Column('boolean', { default: false })
-  isCompleted: boolean;
+  isCompleted!: boolean;
 
   /**
    * Position within checklist (for ordering)
    */
   @Column('int', { default: 0 })
-  position: number;
+  position!: number;
 }

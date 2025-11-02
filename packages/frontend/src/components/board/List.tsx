@@ -16,6 +16,7 @@ interface ListProps {
   name: string;
   position: number;
   onAddCard?: () => void;
+  canEdit?: boolean;
 }
 
 const CARD_TYPE = 'CARD';
@@ -26,7 +27,7 @@ interface DragItem {
   position: number;
 }
 
-export function List({ listId, name, onAddCard }: ListProps) {
+export function List({ listId, name, onAddCard, canEdit = true }: ListProps) {
   const cards = useBoardStore((state) => state.cards[listId] || []);
   const moveCard = useBoardStore((state) => state.moveCard);
   const isLoading = useBoardStore((state) => state.isLoadingCards[listId]);
@@ -62,16 +63,18 @@ export function List({ listId, name, onAddCard }: ListProps) {
       {/* List Header */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold text-gray-900">{name}</h2>
-        <button className="text-gray-500 hover:text-gray-700" aria-label="List menu">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-            />
-          </svg>
-        </button>
+        {canEdit && (
+          <button className="text-gray-500 hover:text-gray-700" aria-label="List menu">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+              />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Cards Container */}
@@ -91,23 +94,27 @@ export function List({ listId, name, onAddCard }: ListProps) {
         )}
       </div>
 
-      {/* Add Card Button */}
-      {showAddCard ? (
-        <CreateCardForm
-          listId={listId}
-          onSuccess={() => setShowAddCard(false)}
-          onCancel={() => setShowAddCard(false)}
-        />
-      ) : (
-        <button
-          onClick={() => {
-            setShowAddCard(true);
-            onAddCard?.();
-          }}
-          className="mt-3 w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-md transition-colors"
-        >
-          + Add a card
-        </button>
+      {/* Add Card Button - Only show for users with edit permissions */}
+      {canEdit && (
+        <>
+          {showAddCard ? (
+            <CreateCardForm
+              listId={listId}
+              onSuccess={() => setShowAddCard(false)}
+              onCancel={() => setShowAddCard(false)}
+            />
+          ) : (
+            <button
+              onClick={() => {
+                setShowAddCard(true);
+                onAddCard?.();
+              }}
+              className="mt-3 w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-md transition-colors"
+            >
+              + Add a card
+            </button>
+          )}
+        </>
       )}
     </div>
   );

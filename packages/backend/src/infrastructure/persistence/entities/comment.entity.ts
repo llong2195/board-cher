@@ -25,36 +25,36 @@ export class CommentEntity extends BaseEntity {
    * The card this comment belongs to
    */
   @Column('uuid')
-  cardId: string;
+  cardId!: string;
 
   @ManyToOne(() => CardEntity, (card) => card.comments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'cardId' })
-  card: CardEntity;
+  card!: CardEntity;
 
   /**
    * The user who wrote this comment
    */
   @Column('uuid')
-  userId: string;
+  userId!: string;
 
   @ManyToOne(() => UserEntity, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'userId' })
-  user: UserEntity;
+  user!: UserEntity;
 
   /**
    * Comment text content (supports Markdown)
    * Max length: 10,000 characters
    */
   @Column('text')
-  content: string;
+  content!: string;
 
   /**
    * Indicates if the comment has been edited after creation
    */
   @Column('boolean', { default: false })
-  isEdited: boolean;
+  isEdited!: boolean;
 }

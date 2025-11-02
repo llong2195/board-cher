@@ -30,26 +30,26 @@ export class ChecklistEntity extends BaseEntity {
    * The card this checklist belongs to
    */
   @Column('uuid')
-  cardId: string;
+  cardId!: string;
 
   @ManyToOne(() => CardEntity, (card) => card.checklists, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'cardId' })
-  card: CardEntity;
+  card!: CardEntity;
 
   /**
    * Checklist name/title
    * Max length: 100 characters
    */
   @Column('varchar', { length: 100 })
-  name: string;
+  name!: string;
 
   /**
    * Position within card (for ordering multiple checklists)
    */
   @Column('int', { default: 0 })
-  position: number;
+  position!: number;
 
   /**
    * Checklist items
@@ -57,5 +57,5 @@ export class ChecklistEntity extends BaseEntity {
   @OneToMany(() => ChecklistItemEntity, (item) => item.checklist, {
     cascade: true,
   })
-  items: ChecklistItemEntity[];
+  items!: ChecklistItemEntity[];
 }

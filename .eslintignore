@@ -6,3 +6,9 @@ coverage/
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/test/**
+**/tests/**

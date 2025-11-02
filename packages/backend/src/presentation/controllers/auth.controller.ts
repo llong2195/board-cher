@@ -151,7 +151,7 @@ export class AuthController {
   @ApiUnauthorizedResponse({
     description: 'Invalid or expired JWT token',
   })
-  async getProfile(@Request() req: AuthenticatedRequest) {
+  getProfile(@Request() req: AuthenticatedRequest) {
     return {
       id: req.user.id,
       email: req.user.email,

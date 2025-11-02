@@ -1,22 +1,26 @@
 import {
-  Injectable,
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Request } from 'express';
 import { Repository } from 'typeorm';
 import { BoardMemberEntity } from '../../persistence/entities/board-member.entity';
 import { BoardEntity } from '../../persistence/entities/board.entity';
-import { ListEntity } from '../../persistence/entities/list.entity';
 import { CardEntity } from '../../persistence/entities/card.entity';
+import { ListEntity } from '../../persistence/entities/list.entity';
+import { OrganizationMemberEntity } from '../../persistence/entities/organization-member.entity';
 
 /**
  * Board Permission Guard
+ * T188 [US4] Enhanced for organization-level permissions
  *
  * Verifies that the authenticated user has access to the board
  * associated with the requested resource (board, list, or card).
+ * Also checks that the user is a member of the board's organization.
  *
  * Usage:
  * @UseGuards(JwtAuthGuard, BoardPermissionGuard)
@@ -28,6 +32,8 @@ export class BoardPermissionGuard implements CanActivate {
     private readonly boardRepository: Repository<BoardEntity>,
     @InjectRepository(BoardMemberEntity)
     private readonly boardMemberRepository: Repository<BoardMemberEntity>,
+    @InjectRepository(OrganizationMemberEntity)
+    private readonly organizationMemberRepository: Repository<OrganizationMemberEntity>,
     @InjectRepository(ListEntity)
     private readonly listRepository: Repository<ListEntity>,
     @InjectRepository(CardEntity)
@@ -58,6 +64,18 @@ export class BoardPermissionGuard implements CanActivate {
       throw new NotFoundException('Board not found');
     }
 
+    // T188 [US4] Check organization membership first
+    const orgMembership = await this.organizationMemberRepository.findOne({
+      where: {
+        organizationId: board.organizationId,
+        userId: user.id,
+      },
+    });
+
+    if (!orgMembership) {
+      throw new ForbiddenException('You are not a member of this organization');
+    }
+
     // Check if user is a member of the board
     const membership = await this.boardMemberRepository.findOne({
       where: {
@@ -70,9 +88,10 @@ export class BoardPermissionGuard implements CanActivate {
       throw new ForbiddenException('You do not have access to this board');
     }
 
-    // Attach board to request for downstream use
+    // Attach board and memberships to request for downstream use
     request.board = board;
     request.boardMembership = membership;
+    request.organizationMembership = orgMembership;
 
     return true;
   }
@@ -80,12 +99,14 @@ export class BoardPermissionGuard implements CanActivate {
   /**
    * Extract board ID from the request based on the resource being accessed
    */
-  private async extractBoardId(request: any): Promise<string | null> {
+  private async extractBoardId(
+    request: Request & { params: any; user?: any },
+  ): Promise<string | null> {
     const params = request.params;
 
     // Direct board access via boardId param
     if (params.boardId) {
-      return params.boardId;
+      return params.boardId as string;
     }
 
     // List ID from card creation route

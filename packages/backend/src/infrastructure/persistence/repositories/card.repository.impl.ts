@@ -47,9 +47,9 @@ export class CardRepositoryImpl implements ICardRepository {
     return this.findByListId(listId, includeArchived);
   }
 
-  async findByAssignedUserId(_userId: string): Promise<Card[]> {
-    // TODO: Implement in Phase 5 when card assignment feature is added
-    return [];
+  findByAssignedUserId(_userId: string): Promise<Card[]> {
+    // TODO: Implement in Phase 7 when card assignment feature is added
+    return Promise.resolve([]);
   }
 
   async findByBoardId(

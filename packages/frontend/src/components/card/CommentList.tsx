@@ -6,7 +6,7 @@ import type { Comment } from '@/services/api/card.api';
 import { commentApi } from '@/services/api/comment.api';
 
 /**
- * CommentList Component (T164)
+ * CommentList Component (T164 + T169)
  * User Story 2: Enrich Cards with Details
  *
  * Displays comments with add comment form.
@@ -30,20 +30,43 @@ export function CommentList({
 }: CommentListProps) {
   const [newComment, setNewComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim() || isSubmitting) return;
 
+    const optimisticComment: Comment = {
+      id: `temp-${Date.now()}`, // Temporary ID for optimistic update
+      cardId,
+      userId: 'current-user', // TODO: Get from auth context
+      content: newComment.trim(),
+      isEdited: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
     try {
       setIsSubmitting(true);
-      const comment = await commentApi.addComment(cardId, {
-        content: newComment.trim(),
-      });
-      onAdd(comment);
+
+      // T169: Optimistic update - add comment immediately to UI
+      setOptimisticComments([...optimisticComments, optimisticComment]);
       setNewComment('');
+
+      // Make API call
+      const comment = await commentApi.addComment(cardId, {
+        content: optimisticComment.content,
+      });
+
+      // Replace optimistic comment with real one
+      setOptimisticComments(optimisticComments.filter((c) => c.id !== optimisticComment.id));
+      onAdd(comment);
     } catch (error) {
       console.error('Failed to add comment:', error);
+      // Remove optimistic comment on failure
+      setOptimisticComments(optimisticComments.filter((c) => c.id !== optimisticComment.id));
+      // Restore comment text so user can try again
+      setNewComment(optimisticComment.content);
       alert('Failed to add comment. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -62,7 +85,7 @@ export function CommentList({
     }
   };
 
-  const sortedComments = [...comments].sort(
+  const sortedComments = [...comments, ...optimisticComments].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
   );
 
@@ -90,29 +113,36 @@ export function CommentList({
         {sortedComments.length === 0 ? (
           <p className="text-sm text-gray-500 py-4 text-center">No comments yet</p>
         ) : (
-          sortedComments.map((comment) => (
-            <div key={comment.id} className="p-3 border rounded-lg space-y-2">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <p className="text-xs text-gray-500">
-                    {new Date(comment.createdAt).toLocaleString()}
-                    {comment.isEdited && ' (edited)'}
-                  </p>
+          sortedComments.map((comment) => {
+            const isOptimistic = comment.id.startsWith('temp-');
+            return (
+              <div
+                key={comment.id}
+                className={`p-3 border rounded-lg space-y-2 ${isOptimistic ? 'opacity-60' : ''}`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <p className="text-xs text-gray-500">
+                      {new Date(comment.createdAt).toLocaleString()}
+                      {comment.isEdited && ' (edited)'}
+                      {isOptimistic && ' (posting...)'}
+                    </p>
+                  </div>
+                  {!readOnly && !isOptimistic && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(comment.id)}
+                      className="h-6 px-2"
+                    >
+                      <Trash2 className="h-3 w-3 text-red-500" />
+                    </Button>
+                  )}
                 </div>
-                {!readOnly && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(comment.id)}
-                    className="h-6 px-2"
-                  >
-                    <Trash2 className="h-3 w-3 text-red-500" />
-                  </Button>
-                )}
+                <p className="text-sm whitespace-pre-wrap">{comment.content}</p>
               </div>
-              <p className="text-sm whitespace-pre-wrap">{comment.content}</p>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

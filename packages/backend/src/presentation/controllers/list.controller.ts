@@ -21,6 +21,7 @@ import {
 import { CreateListCommand } from '../../application/commands/list/create-list.command';
 import { MoveListCommand } from '../../application/commands/list/move-list.command';
 import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard';
+import { BoardPermissionGuard } from '../../infrastructure/auth/guards/board-permission.guard';
 import { CreateListDto } from '../dto/list/create-list.dto';
 import { ListResponseDto } from '../dto/list/list-response.dto';
 import { MoveListDto } from '../dto/list/move-list.dto';
@@ -28,10 +29,11 @@ import { MoveListDto } from '../dto/list/move-list.dto';
 /**
  * Controller for list operations
  * Implements User Story 1: Kanban Board CRUD
+ * T193: BoardPermissionGuard applied to all list endpoints
  */
 @ApiTags('lists')
 @Controller()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BoardPermissionGuard)
 export class ListController {
   constructor(
     private readonly commandBus: CommandBus,
@@ -112,7 +114,7 @@ export class ListController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a list' })
   @ApiNoContentResponse({ description: 'List deleted successfully' })
-  async deleteList(@Param('id') id: string): Promise<void> {
+  deleteList(@Param('id') _id: string): Promise<void> {
     // TODO: Implement delete list command
     throw new Error('Delete list not yet implemented');
   }

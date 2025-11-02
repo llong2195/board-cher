@@ -22,6 +22,7 @@ import { CreateCardCommand } from '../../application/commands/card/create-card.c
 import { MoveCardCommand } from '../../application/commands/card/move-card.command';
 import { Card } from '../../domain/card/card.model';
 import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard';
+import { BoardPermissionGuard } from '../../infrastructure/auth/guards/board-permission.guard';
 import { CardResponseDto } from '../dto/card/card-response.dto';
 import { CreateCardDto } from '../dto/card/create-card.dto';
 import { MoveCardDto } from '../dto/card/move-card.dto';
@@ -29,10 +30,11 @@ import { MoveCardDto } from '../dto/card/move-card.dto';
 /**
  * Controller for card operations
  * Implements User Story 1: Kanban Board CRUD
+ * T193: BoardPermissionGuard applied to all card endpoints
  */
 @ApiTags('cards')
 @Controller()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BoardPermissionGuard)
 export class CardController {
   constructor(
     private readonly commandBus: CommandBus,

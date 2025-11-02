@@ -34,27 +34,27 @@ export class LabelEntity extends BaseEntity {
    * The board this label belongs to
    */
   @Column('uuid')
-  boardId: string;
+  boardId!: string;
 
   @ManyToOne(() => BoardEntity, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'boardId' })
-  board: BoardEntity;
+  board!: BoardEntity;
 
   /**
    * Label name (optional - can have color-only labels)
    * Max length: 50 characters
    */
   @Column('varchar', { length: 50, nullable: true })
-  name: string | null;
+  name!: string | null;
 
   /**
    * Label color from predefined palette:
    * green, yellow, orange, red, purple, blue, sky, lime, pink, black
    */
   @Column('varchar', { length: 20 })
-  color: string;
+  color!: string;
 
   /**
    * Cards that have this label assigned
@@ -65,5 +65,5 @@ export class LabelEntity extends BaseEntity {
     joinColumn: { name: 'labelId', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'cardId', referencedColumnName: 'id' },
   })
-  cards: CardEntity[];
+  cards!: CardEntity[];
 }

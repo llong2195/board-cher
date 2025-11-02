@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Board } from '../components/board/Board';
 import { BoardSkeleton } from '../components/skeleton/BoardSkeleton';
@@ -6,6 +6,11 @@ import { useBoardStore } from '../stores/board.store';
 import { useBoardRealtime } from '../hooks/useBoardRealtime';
 import type { List as StoreList } from '../services/api/list.api';
 import type { Card as StoreCard } from '../services/api/card.api';
+import {
+  organizationApi,
+  type OrganizationRole,
+  OrganizationRole as Role,
+} from '../services/api/organization.api';
 
 /**
  * BoardViewPage
@@ -22,6 +27,28 @@ export function BoardViewPage() {
   const reset = useBoardStore((state) => state.reset);
   const error = useBoardStore((state) => state.error);
   const isLoading = useBoardStore((state) => state.isLoadingBoard);
+
+  // State for organization member role
+  const [userRole, setUserRole] = useState<OrganizationRole | null>(null);
+  const [isLoadingRole, setIsLoadingRole] = useState(false);
+
+  // Fetch user's role in the organization
+  const loadUserRole = useCallback(async (organizationId: string) => {
+    setIsLoadingRole(true);
+    try {
+      const members = await organizationApi.getMembers(organizationId);
+      // TODO: Get current user ID from auth context
+      // For now, assume the first member is the current user
+      const currentUserId = localStorage.getItem('userId');
+      const currentMember = members.find((m) => m.userId === currentUserId);
+      setUserRole(currentMember?.role || null);
+    } catch (err) {
+      console.error('Failed to load user role:', err);
+      setUserRole(null);
+    } finally {
+      setIsLoadingRole(false);
+    }
+  }, []);
 
   // Get real-time event handlers from store
   const handleListCreated = useBoardStore((state) => state.handleListCreated);
@@ -90,6 +117,13 @@ export function BoardViewPage() {
     };
   }, [boardId, loadBoard, navigate, reset]);
 
+  // Load user role when board is loaded
+  useEffect(() => {
+    if (board?.organizationId) {
+      loadUserRole(board.organizationId);
+    }
+  }, [board?.organizationId, loadUserRole]);
+
   if (isLoading && !board) {
     return (
       <div className="h-screen flex flex-col bg-gray-50">
@@ -153,8 +187,24 @@ export function BoardViewPage() {
         </div>
       )}
 
+      {/* View-Only Banner for Guest Users */}
+      {userRole === Role.GUEST && (
+        <div className="bg-blue-50 border-b border-blue-200 px-4 py-2 text-sm text-blue-800">
+          <span className="flex items-center gap-2">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
+            </svg>
+            You have view-only access to this board
+          </span>
+        </div>
+      )}
+
       {/* Board Content */}
-      <Board boardId={boardId!} />
+      <Board boardId={boardId!} userRole={userRole} isLoadingRole={isLoadingRole} />
     </div>
   );
 }

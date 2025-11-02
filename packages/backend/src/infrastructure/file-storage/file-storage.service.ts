@@ -11,12 +11,12 @@
  * - Allowed types: images, PDFs, documents, archives
  */
 
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { Attachment } from 'src/domain/attachment/attachment.model';
 import { v4 as uuidv4 } from 'uuid';
-import { Attachment } from '../../../domain/attachment/attachment.model';
 
 @Injectable()
 export class FileStorageService {

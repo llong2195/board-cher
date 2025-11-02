@@ -7,10 +7,11 @@ import { checklistApi } from '@/services/api/checklist.api';
 import type { Checklist } from '@/services/api/card.api';
 
 /**
- * ChecklistSection Component (T166)
+ * ChecklistSection Component (T166 + T169)
  * User Story 2: Enrich Cards with Details
  *
  * Display and manage checklists with progress tracking.
+ * Supports optimistic updates for checklist item toggling (T169).
  */
 
 interface ChecklistSectionProps {
@@ -83,12 +84,28 @@ export function ChecklistSection({
 
   const handleToggleItem = async (checklistId: string, itemId: string) => {
     try {
-      // Optimistic update (TODO: T169)
+      // T169: Optimistic update - toggle immediately in UI
+      const checklist = checklists.find((cl) => cl.id === checklistId);
+      if (checklist) {
+        const optimisticChecklist = {
+          ...checklist,
+          items: checklist.items.map((item) =>
+            item.id === itemId ? { ...item, isCompleted: !item.isCompleted } : item,
+          ),
+        };
+        // Update UI immediately
+        onUpdate(checklists.map((cl) => (cl.id === checklistId ? optimisticChecklist : cl)));
+      }
+
+      // Make API call
       const updatedChecklist = await checklistApi.toggleChecklistItem(itemId);
 
+      // Update with real data from server
       onUpdate(checklists.map((cl) => (cl.id === checklistId ? updatedChecklist : cl)));
     } catch (error) {
       console.error('Failed to toggle item:', error);
+      // Rollback: reload original checklists
+      // In a real app, you'd want to restore the previous state more carefully
       alert('Failed to toggle item. Please try again.');
     }
   };

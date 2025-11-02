@@ -29,60 +29,60 @@ export class AttachmentEntity extends BaseEntity {
    * The card this attachment belongs to
    */
   @Column('uuid')
-  cardId: string;
+  cardId!: string;
 
   @ManyToOne(() => CardEntity, (card) => card.attachments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'cardId' })
-  card: CardEntity;
+  card!: CardEntity;
 
   /**
    * The user who uploaded this attachment
    */
   @Column('uuid')
-  userId: string;
+  userId!: string;
 
   @ManyToOne(() => UserEntity, {
     onDelete: 'SET NULL',
     nullable: true,
   })
   @JoinColumn({ name: 'userId' })
-  user: UserEntity;
+  user!: UserEntity;
 
   /**
    * Display name for the attachment (can be customized by user)
    */
   @Column('varchar', { length: 255 })
-  name: string;
+  name!: string;
 
   /**
    * Original filename from upload
    */
   @Column('varchar', { length: 255 })
-  filename: string;
+  filename!: string;
 
   /**
    * File MIME type (e.g., image/png, application/pdf)
    */
   @Column('varchar', { length: 100 })
-  mimeType: string;
+  mimeType!: string;
 
   /**
    * File size in bytes
    */
   @Column('int')
-  size: number;
+  size!: number;
 
   /**
    * Storage path on disk (relative to uploads directory)
    */
   @Column('varchar', { length: 500 })
-  storagePath: string;
+  storagePath!: string;
 
   /**
    * Public URL for accessing the file
    */
   @Column('varchar', { length: 500 })
-  url: string;
+  url!: string;
 }
