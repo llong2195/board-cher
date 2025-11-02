@@ -18,6 +18,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../../../src/app.module';
+import { DataSource } from 'typeorm/data-source/DataSource';
 
 describe('Card CRUD Operations (e2e)', () => {
   let app: INestApplication<App>;
@@ -25,6 +26,7 @@ describe('Card CRUD Operations (e2e)', () => {
   let userId: string;
   let boardId: string;
   let listId: string;
+  let dataSource: DataSource;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -40,6 +42,7 @@ describe('Card CRUD Operations (e2e)', () => {
       }),
     );
     await app.init();
+    dataSource = app.get<DataSource>(DataSource);
 
     // Register and authenticate a test user
     const registerResponse = await request(app.getHttpServer())
@@ -80,6 +83,7 @@ describe('Card CRUD Operations (e2e)', () => {
   });
 
   afterAll(async () => {
+    await dataSource.dropDatabase();
     await app.close();
   });
 

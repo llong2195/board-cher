@@ -10,12 +10,12 @@
  * - DELETE /organizations/:id - Delete organization
  */
 
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../../../src/app.module';
-import { DataSource } from 'typeorm';
+import { Test, TestingModule } from '@nestjs/testing';
+import request from 'supertest';
 import { App } from 'supertest/types';
+import { DataSource } from 'typeorm';
+import { AppModule } from '../../../src/app.module';
 
 describe('Organization CRUD API (e2e)', () => {
   let app: INestApplication<App>;

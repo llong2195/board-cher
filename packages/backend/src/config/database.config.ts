@@ -34,34 +34,23 @@ export const databaseConfig = registerAs(
   },
 );
 
-// DataSource for migrations CLI - created lazily
-let appDataSource: DataSource | null = null;
+// DataSource for migrations CLI
+const AppDataSource = new DataSource({
+  type: 'postgres',
+  host: process.env.DATABASE_HOST || 'localhost',
+  port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+  username: process.env.DATABASE_USER || 'postgres',
+  password: process.env.DATABASE_PASSWORD || 'password',
+  database: process.env.DATABASE_NAME || 'trello',
+  entities: [
+    __dirname + '/../infrastructure/persistence/entities/**/*.entity{.ts,.js}',
+  ],
+  migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
+  synchronize: false,
+  logging: process.env.DATABASE_LOGGING === 'true' || false,
+  ssl:
+    process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false,
+} as DataSourceOptions);
 
-export const getAppDataSource = (): DataSource => {
-  if (!appDataSource) {
-    appDataSource = new DataSource({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST || 'localhost',
-      port: parseInt(process.env.DATABASE_PORT || '5432', 10),
-      username: process.env.DATABASE_USER || 'postgres',
-      password: process.env.DATABASE_PASSWORD || 'password',
-      database: process.env.DATABASE_NAME || 'trello',
-      entities: [
-        __dirname +
-          '/../infrastructure/persistence/entities/**/*.entity{.ts,.js}',
-      ],
-      migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
-      synchronize: false,
-      logging: process.env.DATABASE_LOGGING === 'true' || false,
-      ssl:
-        process.env.DATABASE_SSL === 'true'
-          ? { rejectUnauthorized: false }
-          : false,
-    } as DataSourceOptions);
-  }
-  return appDataSource;
-};
-
-// Export for migrations - but don't eagerly create it
-// Use: `getAppDataSource()` in migration scripts
-export { getAppDataSource as AppDataSource };
+// Default export for TypeORM CLI
+export default AppDataSource;

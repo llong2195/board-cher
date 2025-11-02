@@ -208,7 +208,7 @@ export class WebSocketService {
     });
 
     // Connection error
-    this.socket.on(WS_EVENTS.CONNECT_ERROR, (error: Error) => {
+    this.socket.on(WS_EVENTS.AUTH_ERROR, (error: Error) => {
       console.error('[WebSocketService] Connection error:', error);
       this.setConnectionState('disconnected');
     });

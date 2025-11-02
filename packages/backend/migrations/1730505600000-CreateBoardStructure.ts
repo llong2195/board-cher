@@ -2,6 +2,7 @@
  * T070 - Initial Database Schema Migration
  *
  * Creates all tables for User Story 1 (Kanban Board CRUD):
+ * - users
  * - organizations
  * - organization_members
  * - boards
@@ -22,6 +23,70 @@ import {
 
 export class CreateBoardStructure1730505600000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    // 0. Create users table (required for foreign keys)
+    await queryRunner.createTable(
+      new Table({
+        name: 'users',
+        columns: [
+          {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            default: 'uuid_generate_v4()',
+          },
+          {
+            name: 'email',
+            type: 'varchar',
+            length: '255',
+            isNullable: false,
+            isUnique: true,
+          },
+          {
+            name: 'password_hash',
+            type: 'varchar',
+            length: '255',
+            isNullable: false,
+          },
+          {
+            name: 'name',
+            type: 'varchar',
+            length: '100',
+            isNullable: false,
+          },
+          {
+            name: 'avatar_url',
+            type: 'varchar',
+            length: '500',
+            isNullable: true,
+          },
+          {
+            name: 'last_login_at',
+            type: 'timestamp',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+      true,
+    );
+
+    await queryRunner.createIndex(
+      'users',
+      new TableIndex({
+        name: 'IDX_user_email',
+        columnNames: ['email'],
+      }),
+    );
+
     // 1. Create organizations table
     await queryRunner.createTable(
       new Table({
@@ -585,5 +650,6 @@ export class CreateBoardStructure1730505600000 implements MigrationInterface {
     await queryRunner.dropTable('boards', true);
     await queryRunner.dropTable('organization_members', true);
     await queryRunner.dropTable('organizations', true);
+    await queryRunner.dropTable('users', true);
   }
 }

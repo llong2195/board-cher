@@ -58,7 +58,7 @@ export class BoardGateway
       const token = this.extractToken(client);
       if (!token) {
         this.logger.warn(`Connection rejected: No token provided`);
-        client.emit(WS_EVENTS.CONNECT_ERROR, {
+        client.emit(WS_EVENTS.AUTH_ERROR, {
           message: 'Authentication token required',
         });
         client.disconnect();
@@ -69,7 +69,7 @@ export class BoardGateway
       const payload = await this.verifyToken(token);
       if (!payload) {
         this.logger.warn(`Connection rejected: Invalid token`);
-        client.emit(WS_EVENTS.CONNECT_ERROR, {
+        client.emit(WS_EVENTS.AUTH_ERROR, {
           message: 'Authentication failed',
         });
         client.disconnect();
@@ -101,7 +101,7 @@ export class BoardGateway
         this.logger.error(`Connection error: `, error);
       }
 
-      client.emit(WS_EVENTS.CONNECT_ERROR, {
+      client.emit(WS_EVENTS.AUTH_ERROR, {
         message: 'Authentication error',
       });
       client.disconnect();

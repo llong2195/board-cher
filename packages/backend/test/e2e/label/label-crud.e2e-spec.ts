@@ -17,9 +17,11 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../../../src/app.module';
+import { DataSource } from 'typeorm';
 
 describe('LabelController (e2e) - T119', () => {
   let app: INestApplication<App>;
+  let dataSource: DataSource;
   let authToken: string;
   let userId: string;
   let boardId: string;
@@ -55,9 +57,11 @@ describe('LabelController (e2e) - T119', () => {
       }),
     );
     await app.init();
+    dataSource = moduleFixture.get<DataSource>(DataSource);
   });
 
   afterAll(async () => {
+    await dataSource.dropDatabase();
     await app.close();
   });
 

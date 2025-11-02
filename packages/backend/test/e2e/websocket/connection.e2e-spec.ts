@@ -61,7 +61,7 @@ describe('WebSocket Connection (e2e)', () => {
       done();
     });
 
-    clientSocket.on('connect_error', (error) => {
+    clientSocket.on('auth_error', (error) => {
       done(error);
     });
   });
@@ -78,7 +78,7 @@ describe('WebSocket Connection (e2e)', () => {
       done(new Error('Should not connect without token'));
     });
 
-    clientSocket.on('connect_error', (error) => {
+    clientSocket.on('auth_error', (error) => {
       expect(error.message).toContain('Authentication');
       done();
     });
@@ -98,7 +98,7 @@ describe('WebSocket Connection (e2e)', () => {
       done(new Error('Should not connect with invalid token'));
     });
 
-    clientSocket.on('connect_error', (error) => {
+    clientSocket.on('auth_error', (error) => {
       expect(error.message).toContain('Authentication');
       done();
     });
@@ -118,7 +118,7 @@ describe('WebSocket Connection (e2e)', () => {
       done(new Error('Should not connect with malformed token'));
     });
 
-    clientSocket.on('connect_error', (error) => {
+    clientSocket.on('auth_error', (error) => {
       expect(error.message).toContain('Authentication');
       done();
     });
@@ -200,7 +200,7 @@ describe('WebSocket Connection (e2e)', () => {
       });
     });
 
-    clientSocket.on('connect_error', (error) => {
+    clientSocket.on('auth_error', (error) => {
       done(error);
     });
   });

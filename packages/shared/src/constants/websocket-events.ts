@@ -3,7 +3,7 @@ export const WS_EVENTS = {
   // Connection
   CONNECT: 'connect',
   DISCONNECT: 'disconnect',
-  CONNECT_ERROR: 'connect_error',
+  AUTH_ERROR: 'auth:error', // Changed from 'connect_error' which is reserved
 
   // Board room management
   BOARD_JOIN: 'board:join',

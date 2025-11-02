@@ -26,7 +26,7 @@ describe('List CRUD (e2e)', () => {
   });
 
   afterAll(async () => {
-    await dataSource.destroy();
+    await dataSource.dropDatabase();
     await app.close();
   });
 

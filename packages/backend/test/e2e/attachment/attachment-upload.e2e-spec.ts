@@ -12,16 +12,18 @@
  * TDD Approach: These tests are written FIRST and will FAIL until the implementation is complete.
  */
 
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import * as fs from 'fs';
+import * as path from 'path';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { DataSource } from 'typeorm';
 import { AppModule } from '../../../src/app.module';
-import * as path from 'path';
-import * as fs from 'fs';
 
 describe('AttachmentController (e2e) - T118', () => {
   let app: INestApplication<App>;
+  let dataSource: DataSource;
   let authToken: string;
   let userId: string;
   let boardId: string;
@@ -50,6 +52,7 @@ describe('AttachmentController (e2e) - T118', () => {
       }),
     );
     await app.init();
+    dataSource = app.get<DataSource>(DataSource);
 
     // Create test files directory if it doesn't exist
     if (!fs.existsSync(testFilesDir)) {
@@ -93,6 +96,7 @@ describe('AttachmentController (e2e) - T118', () => {
     if (fs.existsSync(testFilesDir)) {
       fs.rmSync(testFilesDir, { recursive: true, force: true });
     }
+    await dataSource.dropDatabase();
     await app.close();
   });
 
