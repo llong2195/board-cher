@@ -138,8 +138,8 @@
 
 > **CRITICAL: Write these tests FIRST, ensure they FAIL, then implement to make them pass**
 
-- [ ] T056 [P] [US1] Board CRUD API tests in `packages/backend/test/e2e/board/board-crud.e2e-spec.ts` - POST, GET, PUT, DELETE /boards endpoints
-- [ ] T057 [P] [US1] List CRUD API tests in `packages/backend/test/e2e/list/list-crud.e2e-spec.ts` - POST, GET, PUT, DELETE /boards/:id/lists endpoints
+- [x] T056 [P] [US1] Board CRUD API tests in `packages/backend/test/e2e/board/board-crud.e2e-spec.ts` - POST, GET, PUT, DELETE /boards endpoints
+- [x] T057 [P] [US1] List CRUD API tests in `packages/backend/test/e2e/list/list-crud.e2e-spec.ts` - POST, GET, PUT, DELETE /boards/:id/lists endpoints
 - [ ] T058 [P] [US1] Card CRUD API tests in `packages/backend/test/e2e/card/card-crud.e2e-spec.ts` - POST, GET, PUT, DELETE /lists/:id/cards endpoints
 - [ ] T059 [P] [US1] Card move API test in `packages/backend/test/e2e/card/card-move.e2e-spec.ts` - PUT /cards/:id/move with listId and position
 - [ ] T060 [P] [US1] Position recalculation unit test in `packages/backend/test/unit/domain/card/position-calculator.spec.ts`
