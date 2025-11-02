@@ -7,7 +7,7 @@
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { MoveCardCommand } from './move-card.command';
 import { Card } from '../../../domain/card/card.model';
 import { ICardRepository } from '../../../domain/card/card.repository';
@@ -20,7 +20,9 @@ import { PositionCalculatorService } from '../../../domain/shared/position-calcu
 @CommandHandler(MoveCardCommand)
 export class MoveCardHandler implements ICommandHandler<MoveCardCommand> {
   constructor(
+    @Inject('ICardRepository')
     private readonly cardRepository: ICardRepository,
+    @Inject('IListRepository')
     private readonly listRepository: IListRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

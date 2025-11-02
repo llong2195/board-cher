@@ -5,14 +5,15 @@
  * CQRS Queries for retrieving organization data.
  */
 
-import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import {
+  ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
-  ForbiddenException,
 } from '@nestjs/common';
-import { Organization } from '../../../domain/organization/organization.model';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { OrganizationMember } from '../../../domain/organization/organization-member.model';
+import { Organization } from '../../../domain/organization/organization.model';
 import { OrganizationRepository } from '../../../domain/organization/organization.repository';
 
 /**
@@ -31,6 +32,7 @@ export class GetOrganizationHandler
   implements IQueryHandler<GetOrganizationQuery>
 {
   constructor(
+    @Inject('IOrganizationRepository')
     private readonly organizationRepository: OrganizationRepository,
   ) {}
 
@@ -72,6 +74,7 @@ export class GetUserOrganizationsHandler
   implements IQueryHandler<GetUserOrganizationsQuery>
 {
   constructor(
+    @Inject('IOrganizationRepository')
     private readonly organizationRepository: OrganizationRepository,
   ) {}
 
@@ -96,6 +99,7 @@ export class GetOrganizationMembersHandler
   implements IQueryHandler<GetOrganizationMembersQuery>
 {
   constructor(
+    @Inject('IOrganizationRepository')
     private readonly organizationRepository: OrganizationRepository,
   ) {}
 

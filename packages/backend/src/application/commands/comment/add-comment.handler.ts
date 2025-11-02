@@ -7,7 +7,7 @@
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { AddCommentCommand } from './add-comment.command';
 import { Comment } from '../../../domain/comment/comment.model';
@@ -20,7 +20,9 @@ import { CommentAddedEvent } from '../../../domain/comment/events/comment.events
 @CommandHandler(AddCommentCommand)
 export class AddCommentHandler implements ICommandHandler<AddCommentCommand> {
   constructor(
+    @Inject('ICommentRepository')
     private readonly commentRepository: ICommentRepository,
+    @Inject('ICardRepository')
     private readonly cardRepository: ICardRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

@@ -2,7 +2,7 @@
 name: Build & Test until success
 description: Run build and test repeatedly until no errors remain
 steps:
-  - run: pnpm build && pnpm test && pnpm run
+  - run: pnpm build && pnpm dev && pnpm test && pnpm run
   - if: hasErrors()
     then:
       - fix: automatically analyze and resolve build/test errors

@@ -7,7 +7,7 @@
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateBoardCommand } from './update-board.command';
 import { Board } from '../../../domain/board/board.model';
 import { IBoardRepository } from '../../../domain/board/board.repository';
@@ -18,6 +18,7 @@ import { BoardUpdatedEvent } from '../../../domain/board/events/board.events';
 @CommandHandler(UpdateBoardCommand)
 export class UpdateBoardHandler implements ICommandHandler<UpdateBoardCommand> {
   constructor(
+    @Inject('IBoardRepository')
     private readonly boardRepository: IBoardRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

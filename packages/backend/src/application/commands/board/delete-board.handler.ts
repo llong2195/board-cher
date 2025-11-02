@@ -11,6 +11,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Inject,
 } from '@nestjs/common';
 import { DeleteBoardCommand } from './delete-board.command';
 import { IBoardRepository } from '../../../domain/board/board.repository';
@@ -21,6 +22,7 @@ import { BoardDeletedEvent } from '../../../domain/board/events/board.events';
 @CommandHandler(DeleteBoardCommand)
 export class DeleteBoardHandler implements ICommandHandler<DeleteBoardCommand> {
   constructor(
+    @Inject('IBoardRepository')
     private readonly boardRepository: IBoardRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

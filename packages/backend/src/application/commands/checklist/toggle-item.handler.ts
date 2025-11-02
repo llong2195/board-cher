@@ -7,7 +7,7 @@
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ToggleChecklistItemCommand } from './toggle-item.command';
 import { ChecklistItem } from '../../../domain/checklist/checklist.model';
 import { IChecklistRepository } from '../../../domain/checklist/checklist.repository';
@@ -23,6 +23,7 @@ export class ToggleChecklistItemHandler
   implements ICommandHandler<ToggleChecklistItemCommand>
 {
   constructor(
+    @Inject('IChecklistRepository')
     private readonly checklistRepository: IChecklistRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

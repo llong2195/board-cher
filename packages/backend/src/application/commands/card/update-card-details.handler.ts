@@ -7,7 +7,7 @@
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateCardDetailsCommand } from './update-card-details.command';
 import { Card } from '../../../domain/card/card.model';
 import { ICardRepository } from '../../../domain/card/card.repository';
@@ -23,6 +23,7 @@ export class UpdateCardDetailsHandler
   implements ICommandHandler<UpdateCardDetailsCommand>
 {
   constructor(
+    @Inject('ICardRepository')
     private readonly cardRepository: ICardRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

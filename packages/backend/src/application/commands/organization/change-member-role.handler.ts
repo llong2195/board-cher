@@ -13,11 +13,12 @@ import {
   ForbiddenException,
   NotFoundException,
   BadRequestException,
+  Inject,
 } from '@nestjs/common';
 import { OrganizationRole } from '../../../domain/organization/organization-member.model';
 import { OrganizationRepository } from '../../../domain/organization/organization.repository';
 import { DomainEventEmitter } from '../../../domain/shared/domain-event.emitter';
-import { MemberRoleChangedEvent } from '../../../domain/organization/events';
+import { MemberRoleChangedEvent } from '../../../domain/organization/events/organization.events';
 
 export class ChangeMemberRoleCommand {
   constructor(
@@ -34,6 +35,7 @@ export class ChangeMemberRoleHandler
   implements ICommandHandler<ChangeMemberRoleCommand>
 {
   constructor(
+    @Inject('IOrganizationRepository')
     private readonly organizationRepository: OrganizationRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

@@ -13,6 +13,7 @@ import {
   Injectable,
   ForbiddenException,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateBoardCommand } from './create-board.command';
@@ -26,7 +27,9 @@ import { OrganizationRepository } from '../../../domain/organization/organizatio
 @CommandHandler(CreateBoardCommand)
 export class CreateBoardHandler implements ICommandHandler<CreateBoardCommand> {
   constructor(
+    @Inject('IBoardRepository')
     private readonly boardRepository: IBoardRepository,
+    @Inject('IOrganizationRepository')
     private readonly organizationRepository: OrganizationRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

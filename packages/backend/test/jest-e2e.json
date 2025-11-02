@@ -6,6 +6,7 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
+  "transformIgnorePatterns": ["node_modules/(?!((\\.pnpm/)?uuid))"],
   "moduleNameMapper": {
     "^@trello-vibe/shared$": "<rootDir>/../../shared/src/index.ts"
   },

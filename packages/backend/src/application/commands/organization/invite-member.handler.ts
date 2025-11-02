@@ -11,6 +11,7 @@ import {
   Injectable,
   ForbiddenException,
   NotFoundException,
+  Inject,
 } from '@nestjs/common';
 import {
   OrganizationMember,
@@ -18,7 +19,7 @@ import {
 } from '../../../domain/organization/organization-member.model';
 import { OrganizationRepository } from '../../../domain/organization/organization.repository';
 import { DomainEventEmitter } from '../../../domain/shared/domain-event.emitter';
-import { MemberInvitedEvent } from '../../../domain/organization/events';
+import { MemberInvitedEvent } from '../../../domain/organization/events/organization.events';
 
 export class InviteMemberCommand {
   constructor(
@@ -35,6 +36,7 @@ export class InviteMemberHandler
   implements ICommandHandler<InviteMemberCommand>
 {
   constructor(
+    @Inject('IOrganizationRepository')
     private readonly organizationRepository: OrganizationRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

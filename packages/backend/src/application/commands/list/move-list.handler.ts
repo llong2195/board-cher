@@ -6,7 +6,7 @@
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { MoveListCommand } from './move-list.command';
 import { List } from '../../../domain/list/list.model';
 import { IListRepository } from '../../../domain/list/list.repository';
@@ -18,6 +18,7 @@ import { PositionCalculatorService } from '../../../domain/shared/position-calcu
 @CommandHandler(MoveListCommand)
 export class MoveListHandler implements ICommandHandler<MoveListCommand> {
   constructor(
+    @Inject('IListRepository')
     private readonly listRepository: IListRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

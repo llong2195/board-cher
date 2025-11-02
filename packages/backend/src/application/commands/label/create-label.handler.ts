@@ -12,6 +12,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  Inject,
 } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateLabelCommand } from './create-label.command';
@@ -25,7 +26,9 @@ import { LabelCreatedEvent } from '../../../domain/label/events/label.events';
 @CommandHandler(CreateLabelCommand)
 export class CreateLabelHandler implements ICommandHandler<CreateLabelCommand> {
   constructor(
+    @Inject('ILabelRepository')
     private readonly labelRepository: ILabelRepository,
+    @Inject('IBoardRepository')
     private readonly boardRepository: IBoardRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

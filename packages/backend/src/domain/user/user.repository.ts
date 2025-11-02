@@ -4,7 +4,7 @@ import { User } from './user.model';
  * User repository interface
  * Defines operations for persisting and retrieving users
  */
-export interface UserRepository {
+export interface IUserRepository {
   /**
    * Find user by ID
    */

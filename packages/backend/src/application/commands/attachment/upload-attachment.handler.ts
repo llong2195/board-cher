@@ -8,7 +8,7 @@
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { UploadAttachmentCommand } from './upload-attachment.command';
 import { Attachment } from '../../../domain/attachment/attachment.model';
@@ -24,7 +24,9 @@ export class UploadAttachmentHandler
   implements ICommandHandler<UploadAttachmentCommand>
 {
   constructor(
+    @Inject('IAttachmentRepository')
     private readonly attachmentRepository: IAttachmentRepository,
+    @Inject('ICardRepository')
     private readonly cardRepository: ICardRepository,
     private readonly fileStorageService: FileStorageService,
     private readonly eventEmitter: DomainEventEmitter,

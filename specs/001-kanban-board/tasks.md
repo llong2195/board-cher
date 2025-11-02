@@ -316,11 +316,11 @@
 
 > **CRITICAL: Write these tests FIRST, ensure they FAIL, then implement to make them pass**
 
-- [ ] T171 [P] [US4] Organization CRUD API tests in `packages/backend/test/e2e/organization/organization-crud.e2e-spec.ts`
-- [ ] T172 [P] [US4] Organization member management tests in `packages/backend/test/e2e/organization/member-management.e2e-spec.ts` - invite, remove, change role
-- [ ] T173 [P] [US4] Board permission enforcement tests in `packages/backend/test/e2e/board/permissions.e2e-spec.ts` - verify guests cannot edit
-- [ ] T174 [P] [US4] Role-based access unit tests in `packages/backend/test/unit/domain/organization/role-permissions.spec.ts`
-- [ ] T175 [P] [US4] Frontend organization page test in `packages/frontend/test/integration/organization/organization-page.test.tsx`
+- [x] T171 [P] [US4] Organization CRUD API tests in `packages/backend/test/e2e/organization/organization-crud.e2e-spec.ts` ✅ **CREATED** - 20+ test cases covering POST/GET/PUT/DELETE with authentication and authorization checks
+- [x] T172 [P] [US4] Organization member management tests in `packages/backend/test/e2e/organization/member-management.e2e-spec.ts` - invite, remove, change role ✅ **CREATED** - Comprehensive tests for invite/remove/role changes
+- [x] T173 [P] [US4] Board permission enforcement tests in `packages/backend/test/e2e/board/permissions.e2e-spec.ts` - verify guests cannot edit ✅ **CREATED** - 40+ permission checks across all board operations
+- [x] T174 [P] [US4] Role-based access unit tests in `packages/backend/test/unit/domain/organization/role-permissions.spec.ts` ✅ **CREATED** - Unit tests for permission service and role hierarchy
+- [x] T175 [P] [US4] Frontend organization page test in `packages/frontend/test/integration/organization/organization-page.test.tsx` ✅ **CREATED** - Integration tests for organization UI and member management
 
 ### Implementation for User Story 4 - Domain Layer
 
@@ -328,7 +328,7 @@
 - [x] T177 [P] [US4] Create OrganizationMember domain model in `packages/backend/src/domain/organization/organization-member.model.ts` with role validation
 - [x] T178 [P] [US4] Create OrganizationRepository interface in `packages/backend/src/domain/organization/organization.repository.ts`
 - [x] T179 [P] [US4] Create domain events: OrganizationCreated, MemberInvited, MemberRemoved, MemberRoleChanged
-- [ ] T180 [US4] Create PermissionService in `packages/backend/src/domain/shared/permission.service.ts` for checking user permissions on boards
+- [x] T180 [US4] Create PermissionService in `packages/backend/src/domain/shared/permission.service.ts` for checking user permissions on boards ✅ **COMPLETE** - Comprehensive role hierarchy checking with 10+ permission methods
 
 ### Implementation for User Story 4 - Application Layer
 

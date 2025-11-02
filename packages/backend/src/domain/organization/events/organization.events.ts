@@ -6,8 +6,8 @@
  * These events drive WebSocket notifications and activity logging.
  */
 
-import { DomainEvent } from '../shared/domain-event.emitter';
-import { OrganizationRole } from './organization-member.model';
+import { DomainEvent } from '../../shared/domain-event.emitter';
+import { OrganizationRole } from '../organization-member.model';
 
 /**
  * Event emitted when an organization is created

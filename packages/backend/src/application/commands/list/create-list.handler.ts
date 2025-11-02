@@ -7,7 +7,7 @@
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateListCommand } from './create-list.command';
 import { List } from '../../../domain/list/list.model';
@@ -21,7 +21,9 @@ import { PositionCalculatorService } from '../../../domain/shared/position-calcu
 @CommandHandler(CreateListCommand)
 export class CreateListHandler implements ICommandHandler<CreateListCommand> {
   constructor(
+    @Inject('IListRepository')
     private readonly listRepository: IListRepository,
+    @Inject('IBoardRepository')
     private readonly boardRepository: IBoardRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

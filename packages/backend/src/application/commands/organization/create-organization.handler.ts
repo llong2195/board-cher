@@ -6,16 +6,16 @@
  * The creator automatically becomes the owner.
  */
 
+import { Inject, Injectable } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable } from '@nestjs/common';
-import { Organization } from '../../../domain/organization/organization.model';
+import { OrganizationCreatedEvent } from '../../../domain/organization/events/organization.events';
 import {
   OrganizationMember,
   OrganizationRole,
 } from '../../../domain/organization/organization-member.model';
+import { Organization } from '../../../domain/organization/organization.model';
 import { OrganizationRepository } from '../../../domain/organization/organization.repository';
 import { DomainEventEmitter } from '../../../domain/shared/domain-event.emitter';
-import { OrganizationCreatedEvent } from '../../../domain/organization/events';
 
 export class CreateOrganizationCommand {
   constructor(
@@ -31,6 +31,7 @@ export class CreateOrganizationHandler
   implements ICommandHandler<CreateOrganizationCommand>
 {
   constructor(
+    @Inject('IOrganizationRepository')
     private readonly organizationRepository: OrganizationRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

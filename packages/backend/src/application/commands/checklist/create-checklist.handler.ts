@@ -8,7 +8,7 @@
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateChecklistCommand } from './create-checklist.command';
 import { Checklist } from '../../../domain/checklist/checklist.model';
@@ -23,7 +23,9 @@ export class CreateChecklistHandler
   implements ICommandHandler<CreateChecklistCommand>
 {
   constructor(
+    @Inject('IChecklistRepository')
     private readonly checklistRepository: IChecklistRepository,
+    @Inject('ICardRepository')
     private readonly cardRepository: ICardRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

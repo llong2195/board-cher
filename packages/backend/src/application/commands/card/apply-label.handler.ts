@@ -13,6 +13,7 @@ import {
   NotFoundException,
   BadRequestException,
   ConflictException,
+  Inject,
 } from '@nestjs/common';
 import { ApplyLabelToCardCommand } from './apply-label.command';
 import { ICardRepository } from '../../../domain/card/card.repository';
@@ -27,8 +28,11 @@ export class ApplyLabelToCardHandler
   implements ICommandHandler<ApplyLabelToCardCommand>
 {
   constructor(
+    @Inject('ICardRepository')
     private readonly cardRepository: ICardRepository,
+    @Inject('ILabelRepository')
     private readonly labelRepository: ILabelRepository,
+    @Inject('IListRepository')
     private readonly listRepository: IListRepository,
     private readonly eventEmitter: DomainEventEmitter,
   ) {}

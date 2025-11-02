@@ -6,7 +6,7 @@
  */
 
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ListBoardsQuery } from './list-boards.query';
 import { Board } from '../../../domain/board/board.model';
 import { IBoardRepository } from '../../../domain/board/board.repository';
@@ -22,7 +22,10 @@ export interface ListBoardsResult {
 @Injectable()
 @QueryHandler(ListBoardsQuery)
 export class ListBoardsHandler implements IQueryHandler<ListBoardsQuery> {
-  constructor(private readonly boardRepository: IBoardRepository) {}
+  constructor(
+    @Inject('IBoardRepository')
+    private readonly boardRepository: IBoardRepository,
+  ) {}
 
   async execute(query: ListBoardsQuery): Promise<ListBoardsResult> {
     // TODO: Add permission check - verify user has access to organization
