@@ -252,35 +252,35 @@
 
 ### Implementation for User Story 2 - Domain Layer
 
-- [ ] T131 [P] [US2] Create Comment domain model in `packages/backend/src/domain/comment/comment.model.ts`
-- [ ] T132 [P] [US2] Create Attachment domain model in `packages/backend/src/domain/attachment/attachment.model.ts` with file validation
-- [ ] T133 [P] [US2] Create Label domain model in `packages/backend/src/domain/label/label.model.ts` with color validation
-- [ ] T134 [P] [US2] Create Checklist domain model in `packages/backend/src/domain/checklist/checklist.model.ts` with progress calculation
-- [ ] T135 [P] [US2] Update Card domain model to include description, dueDate, comments, attachments, labels, checklists
-- [ ] T136 [P] [US2] Create domain events: CommentAdded, AttachmentUploaded, LabelApplied, ChecklistItemToggled
+- [x] T131 [P] [US2] Create Comment domain model in `packages/backend/src/domain/comment/comment.model.ts`
+- [x] T132 [P] [US2] Create Attachment domain model in `packages/backend/src/domain/attachment/attachment.model.ts` with file validation
+- [x] T133 [P] [US2] Create Label domain model in `packages/backend/src/domain/label/label.model.ts` with color validation
+- [x] T134 [P] [US2] Create Checklist domain model in `packages/backend/src/domain/checklist/checklist.model.ts` with progress calculation
+- [x] T135 [P] [US2] Update Card domain model to include description, dueDate, comments, attachments, labels, checklists
+- [x] T136 [P] [US2] Create domain events: CommentAdded, AttachmentUploaded, LabelApplied, ChecklistItemToggled
 
 ### Implementation for User Story 2 - Application Layer
 
-- [ ] T137 [P] [US2] Create AddCommentCommand handler in `packages/backend/src/application/commands/comment/add-comment.handler.ts`
-- [ ] T138 [P] [US2] Create UploadAttachmentCommand handler in `packages/backend/src/application/commands/attachment/upload-attachment.handler.ts`
-- [ ] T139 [P] [US2] Create CreateLabelCommand handler in `packages/backend/src/application/commands/label/create-label.handler.ts`
-- [ ] T140 [P] [US2] Create ApplyLabelToCardCommand handler in `packages/backend/src/application/commands/card/apply-label.handler.ts`
-- [ ] T141 [P] [US2] Create CreateChecklistCommand handler in `packages/backend/src/application/commands/checklist/create-checklist.handler.ts`
-- [ ] T142 [P] [US2] Create ToggleChecklistItemCommand handler in `packages/backend/src/application/commands/checklist/toggle-item.handler.ts`
-- [ ] T143 [P] [US2] Create UpdateCardDetailsCommand handler in `packages/backend/src/application/commands/card/update-card-details.handler.ts`
-- [ ] T144 [US2] Create FileStorageService in `packages/backend/src/infrastructure/file-storage/file-storage.service.ts` for local file upload with size/type validation
+- [x] T137 [P] [US2] Create AddCommentCommand handler in `packages/backend/src/application/commands/comment/add-comment.handler.ts`
+- [x] T138 [P] [US2] Create UploadAttachmentCommand handler in `packages/backend/src/application/commands/attachment/upload-attachment.handler.ts`
+- [x] T139 [P] [US2] Create CreateLabelCommand handler in `packages/backend/src/application/commands/label/create-label.handler.ts`
+- [x] T140 [P] [US2] Create ApplyLabelToCardCommand handler in `packages/backend/src/application/commands/card/apply-label.handler.ts`
+- [x] T141 [P] [US2] Create CreateChecklistCommand handler in `packages/backend/src/application/commands/checklist/create-checklist.handler.ts`
+- [x] T142 [P] [US2] Create ToggleChecklistItemCommand handler in `packages/backend/src/application/commands/checklist/toggle-item.handler.ts`
+- [x] T143 [P] [US2] Create UpdateCardDetailsCommand handler in `packages/backend/src/application/commands/card/update-card-details.handler.ts`
+- [x] T144 [US2] Create FileStorageService in `packages/backend/src/infrastructure/file-storage/file-storage.service.ts` for local file upload with size/type validation
 
 ### Implementation for User Story 2 - Presentation Layer
 
-- [ ] T145 [P] [US2] Create Comment DTOs in `packages/backend/src/presentation/dto/comment/`: CreateCommentDto, CommentResponseDto
-- [ ] T146 [P] [US2] Create Attachment DTOs in `packages/backend/src/presentation/dto/attachment/`: UploadAttachmentDto, AttachmentResponseDto
-- [ ] T147 [P] [US2] Create Label DTOs in `packages/backend/src/presentation/dto/label/`: CreateLabelDto, LabelResponseDto
-- [ ] T148 [P] [US2] Create Checklist DTOs in `packages/backend/src/presentation/dto/checklist/`: CreateChecklistDto, ToggleItemDto, ChecklistResponseDto
-- [ ] T149 [US2] Create CommentController in `packages/backend/src/presentation/controllers/comment.controller.ts` with GET /cards/:id/comments, POST /cards/:id/comments, DELETE /comments/:id
-- [ ] T150 [US2] Create AttachmentController in `packages/backend/src/presentation/controllers/attachment.controller.ts` with POST /cards/:id/attachments (multipart), GET /attachments/:id/download
-- [ ] T151 [US2] Create LabelController in `packages/backend/src/presentation/controllers/label.controller.ts` with GET /boards/:id/labels, POST /boards/:id/labels, POST /cards/:id/labels/:labelId
-- [ ] T152 [US2] Create ChecklistController in `packages/backend/src/presentation/controllers/checklist.controller.ts` with POST /cards/:id/checklists, POST /checklists/:id/items, PUT /checklist-items/:id/toggle
-- [ ] T153 [US2] Update CardController GET /cards/:id to include comments, attachments, labels, checklists with eager loading
+- [x] T145 [P] [US2] Create Comment DTOs in `packages/backend/src/presentation/dto/comment/`: CreateCommentDto, CommentResponseDto
+- [x] T146 [P] [US2] Create Attachment DTOs in `packages/backend/src/presentation/dto/attachment/`: UploadAttachmentDto, AttachmentResponseDto
+- [x] T147 [P] [US2] Create Label DTOs in `packages/backend/src/presentation/dto/label/`: CreateLabelDto, LabelResponseDto
+- [x] T148 [P] [US2] Create Checklist DTOs in `packages/backend/src/presentation/dto/checklist/`: CreateChecklistDto, AddChecklistItemDto, ToggleItemDto, ChecklistResponseDto, ChecklistItemResponseDto
+- [x] T149 [US2] Create CommentController in `packages/backend/src/presentation/controllers/comment.controller.ts` with GET /cards/:id/comments, POST /cards/:id/comments, DELETE /comments/:id
+- [x] T150 [US2] Create AttachmentController in `packages/backend/src/presentation/controllers/attachment.controller.ts` with POST /cards/:id/attachments (multipart), GET /attachments/:id/download
+- [x] T151 [US2] Create LabelController in `packages/backend/src/presentation/controllers/label.controller.ts` with GET /boards/:id/labels, POST /boards/:id/labels, POST /cards/:id/labels/:labelId
+- [x] T152 [US2] Create ChecklistController in `packages/backend/src/presentation/controllers/checklist.controller.ts` with POST /cards/:id/checklists, POST /checklists/:id/items, PUT /checklist-items/:id/toggle
+- [x] T153 [US2] Update CardController GET /cards/:id to include comments, attachments, labels, checklists with eager loading
 
 ### Implementation for User Story 2 - Frontend
 

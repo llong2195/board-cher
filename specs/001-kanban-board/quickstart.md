@@ -35,8 +35,8 @@ FRONTEND_URL=http://localhost:5173
 # Database - PostgreSQL
 DATABASE_HOST=localhost
 DATABASE_PORT=5432
-DATABASE_USER=trello
-DATABASE_PASSWORD=trello
+DATABASE_USER=postgres
+DATABASE_PASSWORD=password
 DATABASE_NAME=trello
 
 # JWT Secrets (generate with: openssl rand -base64 32)

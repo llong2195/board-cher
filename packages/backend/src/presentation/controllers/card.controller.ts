@@ -81,16 +81,21 @@ export class CardController {
   }
 
   /**
-   * Get card by ID
+   * Get card by ID (T153 - Updated for US2: includes enriched data)
    */
   @Get('cards/:id')
-  @ApiOperation({ summary: 'Get card details by ID' })
+  @ApiOperation({
+    summary: 'Get card details by ID',
+    description:
+      'Returns card with enriched details: comments, attachments, labels, and checklists',
+  })
   @ApiOkResponse({
     description: 'Card retrieved successfully',
     type: CardResponseDto,
   })
   getCard(@Param('id') _id: string): Promise<CardResponseDto> {
-    // TODO: Implement query handler for getting card
+    // TODO: Implement query handler for getting card with eager loading
+    // Should include: comments, attachments, labels, checklists with items
     throw new Error('Get card not yet implemented');
   }
 
