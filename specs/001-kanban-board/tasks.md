@@ -171,15 +171,15 @@
 
 ### Implementation for User Story 1 - Application Layer (CQRS)
 
-- [ ] T080 [P] [US1] Create CreateBoardCommand handler in `packages/backend/src/application/commands/board/create-board.handler.ts`
-- [ ] T081 [P] [US1] Create UpdateBoardCommand handler in `packages/backend/src/application/commands/board/update-board.handler.ts`
-- [ ] T082 [P] [US1] Create DeleteBoardCommand handler in `packages/backend/src/application/commands/board/delete-board.handler.ts`
-- [ ] T083 [P] [US1] Create GetBoardQuery handler in `packages/backend/src/application/queries/board/get-board.handler.ts`
-- [ ] T084 [P] [US1] Create ListBoardsQuery handler in `packages/backend/src/application/queries/board/list-boards.handler.ts` with pagination
-- [ ] T085 [P] [US1] Create CreateListCommand handler in `packages/backend/src/application/commands/list/create-list.handler.ts` with position calculation
-- [ ] T086 [P] [US1] Create MoveListCommand handler in `packages/backend/src/application/commands/list/move-list.handler.ts` with position recalculation
-- [ ] T087 [P] [US1] Create CreateCardCommand handler in `packages/backend/src/application/commands/card/create-card.handler.ts`
-- [ ] T088 [P] [US1] Create MoveCardCommand handler in `packages/backend/src/application/commands/card/move-card.handler.ts` with cross-list support
+- [x] T080 [P] [US1] Create CreateBoardCommand handler in `packages/backend/src/application/commands/board/create-board.handler.ts`
+- [x] T081 [P] [US1] Create UpdateBoardCommand handler in `packages/backend/src/application/commands/board/update-board.handler.ts`
+- [x] T082 [P] [US1] Create DeleteBoardCommand handler in `packages/backend/src/application/commands/board/delete-board.handler.ts`
+- [x] T083 [P] [US1] Create GetBoardQuery handler in `packages/backend/src/application/queries/board/get-board.handler.ts`
+- [x] T084 [P] [US1] Create ListBoardsQuery handler in `packages/backend/src/application/queries/board/list-boards.handler.ts` with pagination
+- [x] T085 [P] [US1] Create CreateListCommand handler in `packages/backend/src/application/commands/list/create-list.handler.ts` with position calculation
+- [x] T086 [P] [US1] Create MoveListCommand handler in `packages/backend/src/application/commands/list/move-list.handler.ts` with position recalculation
+- [x] T087 [P] [US1] Create CreateCardCommand handler in `packages/backend/src/application/commands/card/create-card.handler.ts`
+- [x] T088 [P] [US1] Create MoveCardCommand handler in `packages/backend/src/application/commands/card/move-card.handler.ts` with cross-list support
 - [x] T089 [US1] Create PositionCalculatorService in `packages/backend/src/domain/shared/position-calculator.service.ts` for list/card reordering
 
 ### Implementation for User Story 1 - Infrastructure Layer

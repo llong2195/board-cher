@@ -51,6 +51,7 @@ export default [
       '**/coverage/**',
       '**/.next/**',
       '**/eslint.config.*',
+      'packages/frontend/**',
     ],
   },
 ];
