@@ -2,10 +2,11 @@ import { INestApplication } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { io, Socket } from 'socket.io-client';
+import { App } from 'supertest/types';
 import { AppModule } from '../../../src/app.module';
 
 describe('Board Room Management (e2e)', () => {
-  let app: INestApplication;
+  let app: INestApplication<App>;
   let jwtService: JwtService;
   let clientSocket1: Socket;
   let clientSocket2: Socket;

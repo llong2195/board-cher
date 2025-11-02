@@ -1,5 +1,7 @@
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { BaseEntity } from '../base.entity';
+import { OrganizationMemberEntity } from './organization-member.entity';
+import { BoardMemberEntity } from './board-member.entity';
 
 /**
  * User entity representing an authenticated person using the application
@@ -23,13 +25,14 @@ export class UserEntity extends BaseEntity {
   @Column({ name: 'last_login_at', type: 'timestamp', nullable: true })
   lastLoginAt?: Date;
 
-  // Relationships will be added as we implement other entities
-  // @OneToMany(() => OrganizationMemberEntity, member => member.user)
-  // organizationMembers: OrganizationMemberEntity[];
+  // Relationships
+  @OneToMany(() => OrganizationMemberEntity, (member) => member.user)
+  organizationMemberships!: OrganizationMemberEntity[];
 
-  // @OneToMany(() => BoardMemberEntity, member => member.user)
-  // boardMembers: BoardMemberEntity[];
+  @OneToMany(() => BoardMemberEntity, (member) => member.user)
+  boardMemberships!: BoardMemberEntity[];
 
+  // Future relationships (User Story 2+):
   // @OneToMany(() => CommentEntity, comment => comment.user)
   // comments: CommentEntity[];
 

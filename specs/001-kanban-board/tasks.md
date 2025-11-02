@@ -140,34 +140,34 @@
 
 - [x] T056 [P] [US1] Board CRUD API tests in `packages/backend/test/e2e/board/board-crud.e2e-spec.ts` - POST, GET, PUT, DELETE /boards endpoints
 - [x] T057 [P] [US1] List CRUD API tests in `packages/backend/test/e2e/list/list-crud.e2e-spec.ts` - POST, GET, PUT, DELETE /boards/:id/lists endpoints
-- [ ] T058 [P] [US1] Card CRUD API tests in `packages/backend/test/e2e/card/card-crud.e2e-spec.ts` - POST, GET, PUT, DELETE /lists/:id/cards endpoints
-- [ ] T059 [P] [US1] Card move API test in `packages/backend/test/e2e/card/card-move.e2e-spec.ts` - PUT /cards/:id/move with listId and position
-- [ ] T060 [P] [US1] Position recalculation unit test in `packages/backend/test/unit/domain/card/position-calculator.spec.ts`
-- [ ] T061 [P] [US1] Board permissions unit test in `packages/backend/test/unit/domain/board/board-permissions.spec.ts` - verify role-based access
-- [ ] T062 [P] [US1] Frontend board creation test in `packages/frontend/test/integration/board/create-board.test.tsx` using React Testing Library
-- [ ] T063 [P] [US1] Frontend drag-and-drop test in `packages/frontend/test/integration/board/drag-drop-card.test.tsx` using React DnD test utils
+- [x] T058 [P] [US1] Card CRUD API tests in `packages/backend/test/e2e/card/card-crud.e2e-spec.ts` - POST, GET, PUT, DELETE /lists/:id/cards endpoints
+- [x] T059 [P] [US1] Card move API test in `packages/backend/test/e2e/card/card-move.e2e-spec.ts` - PUT /cards/:id/move with listId and position
+- [x] T060 [P] [US1] Position recalculation unit test in `packages/backend/test/unit/domain/card/position-calculator.spec.ts`
+- [x] T061 [P] [US1] Board permissions unit test in `packages/backend/test/unit/domain/board/board-permissions.spec.ts` - verify role-based access
+- [x] T062 [P] [US1] Frontend board creation test in `packages/frontend/test/integration/board/create-board.test.tsx` using React Testing Library
+- [x] T063 [P] [US1] Frontend drag-and-drop test in `packages/frontend/test/integration/board/drag-drop-card.test.tsx` using React DnD test utils
 
 ### Implementation for User Story 1 - Data Layer
 
-- [ ] T064 [P] [US1] Create Organization entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/organization.entity.ts`
-- [ ] T065 [P] [US1] Create OrganizationMember entity in `packages/backend/src/infrastructure/persistence/entities/organization-member.entity.ts` with role enum
-- [ ] T066 [P] [US1] Create Board entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/board.entity.ts` with organizationId FK
-- [ ] T067 [P] [US1] Create BoardMember entity in `packages/backend/src/infrastructure/persistence/entities/board-member.entity.ts` with role enum
-- [ ] T068 [P] [US1] Create List entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/list.entity.ts` with boardId FK, position
-- [ ] T069 [P] [US1] Create Card entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/card.entity.ts` with listId FK, position, title, description
-- [ ] T070 [US1] Create database migration `1-create-board-structure.ts` for Organization, Board, BoardMember, List, Card tables with indexes on FKs and position fields
+- [x] T064 [P] [US1] Create Organization entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/organization.entity.ts`
+- [x] T065 [P] [US1] Create OrganizationMember entity in `packages/backend/src/infrastructure/persistence/entities/organization-member.entity.ts` with role enum
+- [x] T066 [P] [US1] Create Board entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/board.entity.ts` with organizationId FK
+- [x] T067 [P] [US1] Create BoardMember entity in `packages/backend/src/infrastructure/persistence/entities/board-member.entity.ts` with role enum
+- [x] T068 [P] [US1] Create List entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/list.entity.ts` with boardId FK, position
+- [x] T069 [P] [US1] Create Card entity (TypeORM) in `packages/backend/src/infrastructure/persistence/entities/card.entity.ts` with listId FK, position, title, description
+- [x] T070 [US1] Create database migration `1-create-board-structure.ts` for Organization, Board, BoardMember, List, Card tables with indexes on FKs and position fields
 
 ### Implementation for User Story 1 - Domain Layer
 
-- [ ] T071 [P] [US1] Create Board domain model in `packages/backend/src/domain/board/board.model.ts` with validation and business rules
-- [ ] T072 [P] [US1] Create List domain model in `packages/backend/src/domain/list/list.model.ts` with position logic
-- [ ] T073 [P] [US1] Create Card domain model in `packages/backend/src/domain/card/card.model.ts` with position logic
-- [ ] T074 [P] [US1] Create BoardRepository interface in `packages/backend/src/domain/board/board.repository.ts`
-- [ ] T075 [P] [US1] Create ListRepository interface in `packages/backend/src/domain/list/list.repository.ts`
-- [ ] T076 [P] [US1] Create CardRepository interface in `packages/backend/src/domain/card/card.repository.ts`
-- [ ] T077 [P] [US1] Create domain events in `packages/backend/src/domain/board/events/`: BoardCreated, BoardUpdated, BoardDeleted
-- [ ] T078 [P] [US1] Create domain events in `packages/backend/src/domain/list/events/`: ListCreated, ListMoved, ListUpdated, ListDeleted
-- [ ] T079 [P] [US1] Create domain events in `packages/backend/src/domain/card/events/`: CardCreated, CardMoved, CardUpdated, CardDeleted
+- [x] T071 [P] [US1] Create Board domain model in `packages/backend/src/domain/board/board.model.ts` with validation and business rules
+- [x] T072 [P] [US1] Create List domain model in `packages/backend/src/domain/list/list.model.ts` with position logic
+- [x] T073 [P] [US1] Create Card domain model in `packages/backend/src/domain/card/card.model.ts` with position logic
+- [x] T074 [P] [US1] Create BoardRepository interface in `packages/backend/src/domain/board/board.repository.ts`
+- [x] T075 [P] [US1] Create ListRepository interface in `packages/backend/src/domain/list/list.repository.ts`
+- [x] T076 [P] [US1] Create CardRepository interface in `packages/backend/src/domain/card/card.repository.ts`
+- [x] T077 [P] [US1] Create domain events in `packages/backend/src/domain/board/events/`: BoardCreated, BoardUpdated, BoardDeleted
+- [x] T078 [P] [US1] Create domain events in `packages/backend/src/domain/list/events/`: ListCreated, ListMoved, ListUpdated, ListDeleted
+- [x] T079 [P] [US1] Create domain events in `packages/backend/src/domain/card/events/`: CardCreated, CardMoved, CardUpdated, CardDeleted
 
 ### Implementation for User Story 1 - Application Layer (CQRS)
 
@@ -180,7 +180,7 @@
 - [ ] T086 [P] [US1] Create MoveListCommand handler in `packages/backend/src/application/commands/list/move-list.handler.ts` with position recalculation
 - [ ] T087 [P] [US1] Create CreateCardCommand handler in `packages/backend/src/application/commands/card/create-card.handler.ts`
 - [ ] T088 [P] [US1] Create MoveCardCommand handler in `packages/backend/src/application/commands/card/move-card.handler.ts` with cross-list support
-- [ ] T089 [US1] Create PositionCalculatorService in `packages/backend/src/domain/shared/position-calculator.service.ts` for list/card reordering
+- [x] T089 [US1] Create PositionCalculatorService in `packages/backend/src/domain/shared/position-calculator.service.ts` for list/card reordering
 
 ### Implementation for User Story 1 - Infrastructure Layer
 

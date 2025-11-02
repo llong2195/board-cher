@@ -20,6 +20,7 @@ export default [
         project: [
           './packages/backend/tsconfig.json',
           './packages/frontend/tsconfig.app.json',
+          './packages/frontend/tsconfig.node.json',
           './packages/shared/tsconfig.json',
         ],
       },
@@ -43,6 +44,13 @@ export default [
 
   // --- Ignore patterns ---
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/coverage/**', '**/.next/**'],
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/coverage/**',
+      '**/.next/**',
+      '**/eslint.config.*',
+    ],
   },
 ];

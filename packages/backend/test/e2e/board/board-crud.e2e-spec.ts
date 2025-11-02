@@ -32,9 +32,6 @@ describe('Board CRUD (e2e)', () => {
   });
 
   beforeEach(async () => {
-    // Clean database before each test
-    await dataSource.synchronize(true);
-
     // Register a test user
     const registerResponse = await request(app.getHttpServer())
       .post('/api/v1/auth/register')

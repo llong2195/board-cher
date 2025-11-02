@@ -31,9 +31,6 @@ describe('List CRUD (e2e)', () => {
   });
 
   beforeEach(async () => {
-    // Clean database
-    await dataSource.synchronize(true);
-
     // Register user
     const registerResponse = await request(app.getHttpServer())
       .post('/api/v1/auth/register')
