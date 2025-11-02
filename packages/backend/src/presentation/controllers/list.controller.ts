@@ -69,12 +69,12 @@ export class ListController {
     description: 'Lists retrieved successfully',
     type: [ListResponseDto],
   })
-  async getBoardLists(
-    @Param('boardId') boardId: string,
+  getBoardLists(
+    @Param('boardId') _boardId: string,
   ): Promise<ListResponseDto[]> {
     // TODO: Implement query handler for getting board lists
     // For now, return empty array as placeholder
-    return [];
+    return Promise.resolve([]);
   }
 
   /**

@@ -232,23 +232,23 @@
 
 > **CRITICAL: Write these tests FIRST, ensure they FAIL, then implement to make them pass**
 
-- [ ] T117 [P] [US2] Comment CRUD API tests in `packages/backend/test/e2e/comment/comment-crud.e2e-spec.ts` - POST /cards/:id/comments, GET, DELETE
-- [ ] T118 [P] [US2] Attachment upload API tests in `packages/backend/test/e2e/attachment/attachment-upload.e2e-spec.ts` - POST /cards/:id/attachments with multipart/form-data
-- [ ] T119 [P] [US2] Label CRUD API tests in `packages/backend/test/e2e/label/label-crud.e2e-spec.ts` - POST /boards/:id/labels, assign to card
-- [ ] T120 [P] [US2] Checklist CRUD API tests in `packages/backend/test/e2e/checklist/checklist-crud.e2e-spec.ts` - POST /cards/:id/checklists, toggle items
-- [ ] T121 [P] [US2] Card detail update test in `packages/backend/test/e2e/card/card-detail-update.e2e-spec.ts` - update description, dueDate
-- [ ] T122 [P] [US2] Frontend card modal test in `packages/frontend/test/integration/card/card-modal.test.tsx` - open card, add comment, check checklist item
+- [x] T117 [P] [US2] Comment CRUD API tests in `packages/backend/test/e2e/comment/comment-crud.e2e-spec.ts` - POST /cards/:id/comments, GET, DELETE
+- [x] T118 [P] [US2] Attachment upload API tests in `packages/backend/test/e2e/attachment/attachment-upload.e2e-spec.ts` - POST /cards/:id/attachments with multipart/form-data
+- [x] T119 [P] [US2] Label CRUD API tests in `packages/backend/test/e2e/label/label-crud.e2e-spec.ts` - POST /boards/:id/labels, assign to card
+- [x] T120 [P] [US2] Checklist CRUD API tests in `packages/backend/test/e2e/checklist/checklist-crud.e2e-spec.ts` - POST /cards/:id/checklists, toggle items
+- [x] T121 [P] [US2] Card detail update test in `packages/backend/test/e2e/card/card-detail-update.e2e-spec.ts` - update description, dueDate
+- [x] T122 [P] [US2] Frontend card modal test in `packages/frontend/test/integration/card/card-modal.test.tsx` - open card, add comment, check checklist item
 
 ### Implementation for User Story 2 - Data Layer
 
-- [ ] T123 [P] [US2] Create Comment entity in `packages/backend/src/infrastructure/persistence/entities/comment.entity.ts` with cardId FK, userId FK, text
-- [ ] T124 [P] [US2] Create Attachment entity in `packages/backend/src/infrastructure/persistence/entities/attachment.entity.ts` with cardId FK, filename, size, storagePath
-- [ ] T125 [P] [US2] Create Label entity in `packages/backend/src/infrastructure/persistence/entities/label.entity.ts` with boardId FK, name, color
-- [ ] T126 [P] [US2] Create CardLabel entity in `packages/backend/src/infrastructure/persistence/entities/card-label.entity.ts` (many-to-many join)
-- [ ] T127 [P] [US2] Create Checklist entity in `packages/backend/src/infrastructure/persistence/entities/checklist.entity.ts` with cardId FK, title
-- [ ] T128 [P] [US2] Create ChecklistItem entity in `packages/backend/src/infrastructure/persistence/entities/checklist-item.entity.ts` with checklistId FK, text, isComplete
-- [ ] T129 [US2] Add description and dueDate fields to Card entity (migration)
-- [ ] T130 [US2] Create database migration `2-create-card-details.ts` for Comment, Attachment, Label, CardLabel, Checklist, ChecklistItem tables
+- [x] T123 [P] [US2] Create Comment entity in `packages/backend/src/infrastructure/persistence/entities/comment.entity.ts` with cardId FK, userId FK, text
+- [x] T124 [P] [US2] Create Attachment entity in `packages/backend/src/infrastructure/persistence/entities/attachment.entity.ts` with cardId FK, filename, size, storagePath
+- [x] T125 [P] [US2] Create Label entity in `packages/backend/src/infrastructure/persistence/entities/label.entity.ts` with boardId FK, name, color
+- [x] T126 [P] [US2] Create CardLabel entity in `packages/backend/src/infrastructure/persistence/entities/card-label.entity.ts` (many-to-many join) - implicitly created by Label @JoinTable
+- [x] T127 [P] [US2] Create Checklist entity in `packages/backend/src/infrastructure/persistence/entities/checklist.entity.ts` with cardId FK, title
+- [x] T128 [P] [US2] Create ChecklistItem entity in `packages/backend/src/infrastructure/persistence/entities/checklist-item.entity.ts` with checklistId FK, text, isComplete
+- [x] T129 [US2] Add description and dueDate fields to Card entity (migration) - already exists from T029
+- [x] T130 [US2] Create database migration `2-create-card-details.ts` for Comment, Attachment, Label, CardLabel, Checklist, ChecklistItem tables
 
 ### Implementation for User Story 2 - Domain Layer
 

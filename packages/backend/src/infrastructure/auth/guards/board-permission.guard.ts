@@ -83,50 +83,68 @@ export class BoardPermissionGuard implements CanActivate {
   private async extractBoardId(request: any): Promise<string | null> {
     const params = request.params;
 
-    // Direct board access
+    // Direct board access via boardId param
     if (params.boardId) {
       return params.boardId;
     }
 
-    if (params.id) {
-      // Determine resource type from the URL path
-      const path = request.route?.path || request.url;
-
-      // Board resource
-      if (path.includes('/boards/:id')) {
-        return params.id;
-      }
-
-      // List resource - get boardId from list
-      if (path.includes('/lists/:id')) {
-        const list = await this.listRepository.findOne({
-          where: { id: params.id },
-          select: ['boardId'],
-        });
-        return list?.boardId || null;
-      }
-
-      // Card resource - get boardId via list
-      if (path.includes('/cards/:id')) {
-        const card = await this.cardRepository.findOne({
-          where: { id: params.id },
-          relations: ['list'],
-          select: ['id'],
-        });
-        return card?.list?.boardId || null;
-      }
-    }
-
     // List ID from card creation route
     if (params.listId) {
-      const list = await this.listRepository.findOne({
-        where: { id: params.listId },
-        select: ['boardId'],
-      });
-      return list?.boardId || null;
+      return this.getBoardIdFromList(params.listId);
+    }
+
+    // Resource ID - determine type from URL path
+    if (params.id) {
+      const path = request.route?.path || request.url;
+      return this.getBoardIdFromResource(params.id, path);
     }
 
     // No board context found
     return null;
+  }
+
+  /**
+   * Get board ID from list ID
+   */
+  private async getBoardIdFromList(listId: string): Promise<string | null> {
+    const list = await this.listRepository.findOne({
+      where: { id: listId },
+      select: ['boardId'],
+    });
+    return list?.boardId || null;
+  }
+
+  /**
+   * Get board ID from resource (board/list/card) based on path
+   */
+  private async getBoardIdFromResource(
+    resourceId: string,
+    path: string,
+  ): Promise<string | null> {
+    if (path.includes('/boards/:id')) {
+      return resourceId;
+    }
+
+    if (path.includes('/lists/:id')) {
+      return this.getBoardIdFromList(resourceId);
+    }
+
+    if (path.includes('/cards/:id')) {
+      return this.getBoardIdFromCard(resourceId);
+    }
+
+    return null;
+  }
+
+  /**
+   * Get board ID from card ID
+   */
+  private async getBoardIdFromCard(cardId: string): Promise<string | null> {
+    const card = await this.cardRepository.findOne({
+      where: { id: cardId },
+      relations: ['list'],
+      select: ['id'],
+    });
+    return card?.list?.boardId || null;
   }
 }

@@ -22,6 +22,8 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
+  ManyToMany,
   JoinColumn,
   Index,
 } from 'typeorm';
@@ -76,4 +78,17 @@ export class CardEntity {
   @ManyToOne(() => UserEntity, { onDelete: 'SET NULL', nullable: true })
   @JoinColumn({ name: 'createdBy' })
   creator!: UserEntity;
+
+  // US2 Relations - Card Details
+  @OneToMany('CommentEntity', 'card', { lazy: true })
+  comments!: Promise<any[]>;
+
+  @OneToMany('AttachmentEntity', 'card', { lazy: true })
+  attachments!: Promise<any[]>;
+
+  @ManyToMany('LabelEntity', 'cards', { lazy: true })
+  labels!: Promise<any[]>;
+
+  @OneToMany('ChecklistEntity', 'card', { lazy: true })
+  checklists!: Promise<any[]>;
 }
