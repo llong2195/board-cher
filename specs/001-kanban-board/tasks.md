@@ -284,19 +284,19 @@
 
 ### Implementation for User Story 2 - Frontend
 
-- [ ] T154 Install shadcn/ui components: `pnpm dlx shadcn-ui@latest add dialog button input textarea select label checkbox`
-- [ ] T155 [P] [US2] Create Card API methods in `packages/frontend/src/services/api/card.api.ts`: updateDetails, getDetails
-- [ ] T156 [P] [US2] Create Comment API client in `packages/frontend/src/services/api/comment.api.ts`
-- [ ] T157 [P] [US2] Create Attachment API client in `packages/frontend/src/services/api/attachment.api.ts` with upload progress
-- [ ] T158 [P] [US2] Create Label API client in `packages/frontend/src/services/api/label.api.ts`
-- [ ] T159 [P] [US2] Create Checklist API client in `packages/frontend/src/services/api/checklist.api.ts`
-- [ ] T160 [US2] Create CardModal component in `packages/frontend/src/components/card/CardModal.tsx` using shadcn/ui Dialog
-- [ ] T161 [P] [US2] Create CardDescription section in `packages/frontend/src/components/card/CardDescription.tsx` with Markdown preview
-- [ ] T162 [P] [US2] Create DueDatePicker component in `packages/frontend/src/components/card/DueDatePicker.tsx` using shadcn/ui date picker
-- [ ] T163 [P] [US2] Create AttachmentList component in `packages/frontend/src/components/card/AttachmentList.tsx` with upload button and file list
-- [ ] T164 [P] [US2] Create CommentList component in `packages/frontend/src/components/card/CommentList.tsx` with add comment form
-- [ ] T165 [P] [US2] Create LabelSelector component in `packages/frontend/src/components/card/LabelSelector.tsx` with color picker
-- [ ] T166 [P] [US2] Create ChecklistSection component in `packages/frontend/src/components/card/ChecklistSection.tsx` with progress bar
+- [x] T154 Install shadcn/ui components: `pnpm dlx shadcn-ui@latest add dialog button input textarea select label checkbox`
+- [x] T155 [P] [US2] Create Card API methods in `packages/frontend/src/services/api/card.api.ts`: updateDetails, getDetails
+- [x] T156 [P] [US2] Create Comment API client in `packages/frontend/src/services/api/comment.api.ts`
+- [x] T157 [P] [US2] Create Attachment API client in `packages/frontend/src/services/api/attachment.api.ts` with upload progress
+- [x] T158 [P] [US2] Create Label API client in `packages/frontend/src/services/api/label.api.ts`
+- [x] T159 [P] [US2] Create Checklist API client in `packages/frontend/src/services/api/checklist.api.ts`
+- [x] T160 [US2] Create CardModal component in `packages/frontend/src/components/card/CardModal.tsx` using shadcn/ui Dialog
+- [x] T161 [P] [US2] Create CardDescription section in `packages/frontend/src/components/card/CardDescription.tsx` with Markdown preview
+- [x] T162 [P] [US2] Create DueDatePicker component in `packages/frontend/src/components/card/DueDatePicker.tsx` using shadcn/ui date picker
+- [x] T163 [P] [US2] Create AttachmentList component in `packages/frontend/src/components/card/AttachmentList.tsx` with upload button and file list
+- [x] T164 [P] [US2] Create CommentList component in `packages/frontend/src/components/card/CommentList.tsx` with add comment form
+- [x] T165 [P] [US2] Create LabelSelector component in `packages/frontend/src/components/card/LabelSelector.tsx` with color picker
+- [x] T166 [P] [US2] Create ChecklistSection component in `packages/frontend/src/components/card/ChecklistSection.tsx` with progress bar
 - [ ] T167 [US2] Integrate all card detail sections into CardModal
 - [ ] T168 [US2] Add real-time updates for comments, attachments, labels, checklists via WebSocket (card:comment:added, card:checklist:updated, etc.)
 - [ ] T169 [US2] Add optimistic updates for comment posting and checklist toggling
