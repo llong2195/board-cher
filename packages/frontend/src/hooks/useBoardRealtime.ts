@@ -122,7 +122,6 @@ export function useBoardRealtime(
   );
 
   // Setup event handlers
-  // eslint-disable-next-line complexity
   useEffect(() => {
     if (!boardId) {
       return;
