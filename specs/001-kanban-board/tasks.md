@@ -378,46 +378,46 @@
 
 > **CRITICAL: Write these tests FIRST, ensure they FAIL, then implement to make them pass**
 
-- [ ] T201 [P] [US6] Card assignment API tests in `packages/backend/test/e2e/card/assignment.e2e-spec.ts` - POST /cards/:id/assignments/:userId
-- [ ] T202 [P] [US6] Assigned cards query tests in `packages/backend/test/e2e/card/assigned-to-me.e2e-spec.ts` - GET /cards/assigned-to-me
+- [x] T201 [P] [US6] Card assignment API tests in `packages/backend/test/e2e/card/assignment.e2e-spec.ts` - POST /cards/:id/assignments/:userId
+- [x] T202 [P] [US6] Assigned cards query tests in `packages/backend/test/e2e/card/assigned-to-me.e2e-spec.ts` - GET /cards/assigned-to-me
 - [ ] T203 [P] [US6] Notification delivery test in `packages/backend/test/integration/notification/notification-delivery.integration-spec.ts`
 - [ ] T204 [P] [US6] Frontend notification toast test in `packages/frontend/test/integration/notification/notification-toast.test.tsx`
 
 ### Implementation for User Story 6 - Data Layer
 
-- [ ] T205 [US6] Create CardAssignment entity in `packages/backend/src/infrastructure/persistence/entities/card-assignment.entity.ts` with cardId FK, userId FK
-- [ ] T206 [US6] Create database migration `3-create-card-assignment.ts` with composite unique constraint on (cardId, userId)
+- [x] T205 [US6] Create CardAssignment entity in `packages/backend/src/infrastructure/persistence/entities/card-assignment.entity.ts` with cardId FK, userId FK
+- [x] T206 [US6] Create database migration `3-create-card-assignment.ts` with composite unique constraint on (cardId, userId)
 
 ### Implementation for User Story 6 - Domain Layer
 
-- [ ] T207 [P] [US6] Create CardAssignment domain model in `packages/backend/src/domain/card/card-assignment.model.ts`
-- [ ] T208 [P] [US6] Update Card domain model to include assignees collection
-- [ ] T209 [P] [US6] Create domain events: CardAssigned, CardUnassigned
+- [x] T207 [P] [US6] Create CardAssignment domain model in `packages/backend/src/domain/card/card-assignment.model.ts`
+- [x] T208 [P] [US6] Update Card domain model to include assignees collection
+- [x] T209 [P] [US6] Create domain events: CardAssigned, CardUnassigned
 
 ### Implementation for User Story 6 - Application Layer
 
-- [ ] T210 [P] [US6] Create AssignCardCommand handler in `packages/backend/src/application/commands/card/assign-card.handler.ts`
-- [ ] T211 [P] [US6] Create UnassignCardCommand handler in `packages/backend/src/application/commands/card/unassign-card.handler.ts`
-- [ ] T212 [P] [US6] Create GetAssignedCardsQuery handler in `packages/backend/src/application/queries/card/get-assigned-cards.handler.ts` with pagination
-- [ ] T213 [US6] Create NotificationService in `packages/backend/src/application/services/notification.service.ts` (in-memory for now, can extend to email/push later)
-- [ ] T214 [US6] Subscribe to CardAssigned, CommentAdded events to trigger notifications
+- [x] T210 [P] [US6] Create AssignCardCommand handler in `packages/backend/src/application/commands/card/assign-card.handler.ts`
+- [x] T211 [P] [US6] Create UnassignCardCommand handler in `packages/backend/src/application/commands/card/unassign-card.handler.ts`
+- [x] T212 [P] [US6] Create GetAssignedCardsQuery handler in `packages/backend/src/application/queries/card/get-assigned-cards.handler.ts` with pagination
+- [x] T213 [US6] Create NotificationService in `packages/backend/src/application/services/notification.service.ts` (in-memory for now, can extend to email/push later)
+- [x] T214 [US6] Subscribe to CardAssigned, CommentAdded events to trigger notifications
 
 ### Implementation for User Story 6 - Presentation Layer
 
-- [ ] T215 [P] [US6] Create Assignment DTOs in `packages/backend/src/presentation/dto/card/`: AssignCardDto, CardAssignmentResponseDto
-- [ ] T216 [US6] Add POST /cards/:id/assignments/:userId and DELETE /cards/:id/assignments/:userId to CardController
-- [ ] T217 [US6] Add GET /cards/assigned-to-me endpoint to CardController with pagination
+- [x] T215 [P] [US6] Create Assignment DTOs in `packages/backend/src/presentation/dto/card/`: AssignCardDto, CardAssignmentResponseDto
+- [x] T216 [US6] Add POST /cards/:id/assignments/:userId and DELETE /cards/:id/assignments/:userId to CardController
+- [x] T217 [US6] Add GET /cards/assigned-to-me endpoint to CardController with pagination
 
 ### Implementation for User Story 6 - Frontend
 
-- [ ] T218 [P] [US6] Create AssigneeSelector component in `packages/frontend/src/components/card/AssigneeSelector.tsx` with user search
-- [ ] T219 [P] [US6] Create AssigneeAvatars component in `packages/frontend/src/components/card/AssigneeAvatars.tsx` to show on card preview
-- [ ] T220 [P] [US6] Create AssignedToMePage component in `packages/frontend/src/pages/AssignedToMePage.tsx` with card list
-- [ ] T221 [P] [US6] Create NotificationToast component in `packages/frontend/src/components/notification/NotificationToast.tsx` using shadcn/ui Toast
-- [ ] T222 [US6] Add assignee selector to CardModal
-- [ ] T223 [US6] Add assignee avatars to Card component
-- [ ] T224 [US6] Subscribe to card:assigned, card:comment:added WebSocket events and show toast notifications
-- [ ] T225 [US6] Add "Assigned to me" link to navigation sidebar
+- [x] T218 [P] [US6] Create AssigneeSelector component in `packages/frontend/src/components/card/AssigneeSelector.tsx` with user search
+- [x] T219 [P] [US6] Create AssigneeAvatars component in `packages/frontend/src/components/card/AssigneeAvatars.tsx` to show on card preview
+- [x] T220 [P] [US6] Create AssignedToMePage component in `packages/frontend/src/pages/AssignedToMePage.tsx` with card list
+- [x] T221 [P] [US6] Create NotificationToast component in `packages/frontend/src/components/notification/NotificationToast.tsx` using shadcn/ui Toast
+- [x] T222 [US6] Add assignee selector to CardModal
+- [x] T223 [US6] Add assignee avatars to Card component
+- [x] T224 [US6] Subscribe to card:assigned, card:comment:added WebSocket events and show toast notifications
+- [x] T225 [US6] Add "Assigned to me" link to navigation sidebar
 - [ ] T226 [US6] Verify all tests pass and coverage ≥80% for User Story 6 modules
 
 **Checkpoint**: Users can now assign cards, view their assigned work, and receive real-time notifications.

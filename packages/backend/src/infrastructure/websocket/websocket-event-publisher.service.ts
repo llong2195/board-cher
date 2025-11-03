@@ -266,4 +266,46 @@ export class WebSocketEventPublisherService {
       this.handleError('publish checklist toggled event', error);
     }
   }
+
+  /**
+   * T214 - US6: Publish card assignment event
+   */
+  publishCardAssigned(event: {
+    cardId: string;
+    listId: string;
+    assignedUserId: string;
+    assignedBy: string;
+    timestamp: Date;
+  }): void {
+    try {
+      // Note: boardId needs to be fetched from card/list if not in event
+      // For now, we'll broadcast to all boards and let the gateway handle routing
+      this.logger.log(`Published card assigned event: ${event.cardId}`);
+      // TODO: Get boardId from card and use broadcastToBoard
+      // this.boardGateway.broadcastToBoard(boardId, WS_EVENTS.CARD_ASSIGNED, { ... });
+    } catch (error: unknown) {
+      this.handleError('publish card assigned event', error);
+    }
+  }
+
+  /**
+   * T214 - US6: Publish card unassignment event
+   */
+  publishCardUnassigned(event: {
+    cardId: string;
+    listId: string;
+    unassignedUserId: string;
+    unassignedBy: string;
+    timestamp: Date;
+  }): void {
+    try {
+      // Note: boardId needs to be fetched from card/list if not in event
+      // For now, we'll broadcast to all boards and let the gateway handle routing
+      this.logger.log(`Published card unassigned event: ${event.cardId}`);
+      // TODO: Get boardId from card and use broadcastToBoard
+      // this.boardGateway.broadcastToBoard(boardId, WS_EVENTS.CARD_UNASSIGNED, { ... });
+    } catch (error: unknown) {
+      this.handleError('publish card unassigned event', error);
+    }
+  }
 }

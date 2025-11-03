@@ -102,4 +102,17 @@ export class DomainEventSubscriber {
     this.logger.log(`Received checklist.item.toggled event: ${event.itemId}`);
     this.websocketEventPublisher.publishChecklistItemToggled(event);
   }
+
+  // T214 - US6: Card Assignment Events
+  @OnEvent('card.assigned')
+  handleCardAssigned(event: any): void {
+    this.logger.log(`Received card.assigned event: ${event.cardId}`);
+    this.websocketEventPublisher.publishCardAssigned(event);
+  }
+
+  @OnEvent('card.unassigned')
+  handleCardUnassigned(event: any): void {
+    this.logger.log(`Received card.unassigned event: ${event.cardId}`);
+    this.websocketEventPublisher.publishCardUnassigned(event);
+  }
 }

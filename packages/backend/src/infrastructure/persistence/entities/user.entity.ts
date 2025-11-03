@@ -1,7 +1,9 @@
 import { Column, Entity, Index, OneToMany } from 'typeorm';
 import { BaseEntity } from '../base.entity';
-import { OrganizationMemberEntity } from './organization-member.entity';
 import { BoardMemberEntity } from './board-member.entity';
+import { CardAssignmentEntity } from './card-assignment.entity';
+import { CommentEntity } from './comment.entity';
+import { OrganizationMemberEntity } from './organization-member.entity';
 
 /**
  * User entity representing an authenticated person using the application
@@ -32,10 +34,14 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => BoardMemberEntity, (member) => member.user)
   boardMemberships!: BoardMemberEntity[];
 
-  // Future relationships (User Story 2+):
-  // @OneToMany(() => CommentEntity, comment => comment.user)
-  // comments: CommentEntity[];
+  // US6 Relationships - Card Assignments
+  @OneToMany(() => CardAssignmentEntity, (assignment) => assignment.user)
+  cardAssignments!: CardAssignmentEntity[];
 
-  // @OneToMany(() => ActivityEntity, activity => activity.user)
-  // activities: ActivityEntity[];
+  // Future relationships (User Story 2+):
+  @OneToMany(() => CommentEntity, (comment) => comment.user)
+  comments!: CommentEntity[];
+
+  // @OneToMany(() => ActivityEntity, (activity) => activity.user)
+  // activities!: ActivityEntity[];
 }

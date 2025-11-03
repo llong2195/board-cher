@@ -10,7 +10,10 @@ import { AttachmentList } from './AttachmentList';
 import { CommentList } from './CommentList';
 import { LabelSelector } from './LabelSelector';
 import { ChecklistSection } from './ChecklistSection';
+import { AssigneeSelector, type User } from './AssigneeSelector';
 import { useWebSocket } from '@/hooks/useWebSocket';
+import { useToast } from '@/hooks/useToast';
+import { createAssignmentNotification, createCommentNotification } from './NotificationToast';
 
 /**
  * CardModal Component (T160 + T167 + T168)
@@ -31,8 +34,10 @@ interface CardModalProps {
 
 export function CardModal({ cardId, boardId, isOpen, onClose, onUpdate, wsToken }: CardModalProps) {
   const [card, setCard] = useState<Card | null>(null);
+  const [assignees, setAssignees] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
 
   // T168: WebSocket real-time updates
   const ws = useWebSocket({
@@ -48,6 +53,10 @@ export function CardModal({ cardId, boardId, isOpen, onClose, onUpdate, wsToken 
         setError(null);
         const data = await cardApi.getDetails(cardId);
         setCard(data);
+
+        // TODO: Load actual assignees from card data once API returns assignees
+        // For now, set to empty array
+        setAssignees([]);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load card details');
       } finally {
@@ -141,6 +150,52 @@ export function CardModal({ cardId, boardId, isOpen, onClose, onUpdate, wsToken 
     ws.on('card:label:removed', handleLabelRemoved);
     ws.on('card:checklist:updated', handleChecklistUpdated);
 
+    // T224: Subscribe to assignment and comment events for notifications
+    const handleCardAssigned = (data: {
+      cardId: string;
+      assignedUserId: string;
+      assignedBy: string;
+    }) => {
+      if (data.cardId === cardId && card) {
+        // Show toast notification if current user was assigned
+        const currentUserId = localStorage.getItem('userId');
+        if (data.assignedUserId === currentUserId) {
+          const notification = createAssignmentNotification({
+            cardTitle: card.title,
+            cardId: card.id,
+            boardName: 'Board', // TODO: Get actual board name
+            assignedByName: 'User', // TODO: Get actual user name
+          });
+          addToast(notification);
+        }
+
+        // Refresh assignees list
+        // TODO: Fetch updated assignees from API
+      }
+    };
+
+    const handleCommentAddedNotification = (data: { cardId: string; comment: Comment }) => {
+      if (data.cardId === cardId && card) {
+        // Show toast notification if current user is assigned to the card
+        const currentUserId = localStorage.getItem('userId');
+        const isAssigned = assignees.some((a) => a.id === currentUserId);
+
+        if (isAssigned) {
+          const notification = createCommentNotification({
+            cardTitle: card.title,
+            cardId: card.id,
+            boardName: 'Board', // TODO: Get actual board name
+            commentAuthorName: 'User', // TODO: Get actual user name from comment
+            commentPreview: data.comment.content.slice(0, 50),
+          });
+          addToast(notification);
+        }
+      }
+    };
+
+    ws.on('card:assigned', handleCardAssigned);
+    ws.on('card:comment:added', handleCommentAddedNotification);
+
     // Cleanup: unregister handlers on unmount or when dependencies change
     return () => {
       ws.off('card:updated', handleCardUpdated);
@@ -151,8 +206,10 @@ export function CardModal({ cardId, boardId, isOpen, onClose, onUpdate, wsToken 
       ws.off('card:label:applied', handleLabelApplied);
       ws.off('card:label:removed', handleLabelRemoved);
       ws.off('card:checklist:updated', handleChecklistUpdated);
+      ws.off('card:assigned', handleCardAssigned);
+      ws.off('card:comment:added', handleCommentAddedNotification);
     };
-  }, [isOpen, cardId, card, ws]);
+  }, [isOpen, cardId, card, assignees, ws, addToast]);
 
   const handleUpdate = (updatedCard: Card) => {
     setCard(updatedCard);
@@ -222,6 +279,14 @@ export function CardModal({ cardId, boardId, isOpen, onClose, onUpdate, wsToken 
     handleUpdate(updated);
   };
 
+  const handleAssignUser = (user: User) => {
+    setAssignees((prev) => [...prev, user]);
+  };
+
+  const handleUnassignUser = (userId: string) => {
+    setAssignees((prev) => prev.filter((u) => u.id !== userId));
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open: boolean) => !open && onClose()}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -286,6 +351,15 @@ export function CardModal({ cardId, boardId, isOpen, onClose, onUpdate, wsToken 
 
             {/* Sidebar (1/3 width) */}
             <div className="space-y-4">
+              {/* Assignees */}
+              <AssigneeSelector
+                boardId={boardId}
+                cardId={cardId}
+                selectedAssignees={assignees}
+                onAssign={handleAssignUser}
+                onUnassign={handleUnassignUser}
+              />
+
               {/* Labels */}
               <LabelSelector
                 boardId={boardId}

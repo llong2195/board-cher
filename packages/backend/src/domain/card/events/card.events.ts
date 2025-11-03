@@ -102,3 +102,29 @@ export class CardDueDateChangedEvent extends CardEvent {
     super(card.id, card.listId);
   }
 }
+
+/**
+ * T209 - US6: Event emitted when a user is assigned to a card
+ */
+export class CardAssignedEvent extends CardEvent {
+  constructor(
+    public readonly card: Card,
+    public readonly assignedUserId: string,
+    public readonly assignedBy: string,
+  ) {
+    super(card.id, card.listId);
+  }
+}
+
+/**
+ * T209 - US6: Event emitted when a user is unassigned from a card
+ */
+export class CardUnassignedEvent extends CardEvent {
+  constructor(
+    public readonly card: Card,
+    public readonly unassignedUserId: string,
+    public readonly unassignedBy: string,
+  ) {
+    super(card.id, card.listId);
+  }
+}

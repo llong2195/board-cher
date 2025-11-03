@@ -18,6 +18,9 @@ export class Card {
   private _labelIds: string[] = [];
   private _checklistIds: string[] = [];
 
+  // US6 collections - Card Assignments
+  private _assigneeIds: string[] = [];
+
   constructor(
     public readonly id: string,
     public listId: string,
@@ -267,6 +270,55 @@ export class Card {
   }
 
   /**
+   * T208 - US6: Set assignee IDs (for hydration from repository)
+   */
+  setAssigneeIds(ids: string[]): void {
+    this._assigneeIds = ids;
+  }
+
+  /**
+   * T208 - US6: Get assignee IDs
+   */
+  getAssigneeIds(): string[] {
+    return [...this._assigneeIds];
+  }
+
+  /**
+   * T208 - US6: Add assignee
+   */
+  addAssignee(userId: string): void {
+    if (!this._assigneeIds.includes(userId)) {
+      this._assigneeIds.push(userId);
+      this.updatedAt = new Date();
+    }
+  }
+
+  /**
+   * T208 - US6: Remove assignee
+   */
+  removeAssignee(userId: string): void {
+    const index = this._assigneeIds.indexOf(userId);
+    if (index > -1) {
+      this._assigneeIds.splice(index, 1);
+      this.updatedAt = new Date();
+    }
+  }
+
+  /**
+   * T208 - US6: Check if user is assigned
+   */
+  isAssignedTo(userId: string): boolean {
+    return this._assigneeIds.includes(userId);
+  }
+
+  /**
+   * T208 - US6: Get assignee count
+   */
+  getAssigneeCount(): number {
+    return this._assigneeIds.length;
+  }
+
+  /**
    * Validate card invariants
    */
   private validate(): void {
@@ -308,6 +360,8 @@ export class Card {
       attachmentCount: this.getAttachmentCount(),
       labelCount: this.getLabelCount(),
       checklistCount: this.getChecklistCount(),
+      // US6 counts
+      assigneeCount: this.getAssigneeCount(),
     };
   }
 }

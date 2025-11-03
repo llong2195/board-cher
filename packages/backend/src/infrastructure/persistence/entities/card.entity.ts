@@ -91,4 +91,8 @@ export class CardEntity {
 
   @OneToMany('ChecklistEntity', 'card', { lazy: true })
   checklists!: Promise<any[]>;
+
+  // US6 Relations - Card Assignments
+  @OneToMany('CardAssignmentEntity', 'card', { lazy: true })
+  assignments!: Promise<any[]>;
 }

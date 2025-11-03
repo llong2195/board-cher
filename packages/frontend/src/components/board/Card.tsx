@@ -1,5 +1,7 @@
 import { useDrag } from 'react-dnd';
 import type { Card as CardType } from '../../services/api/card.api';
+import { AssigneeAvatars } from '../card/AssigneeAvatars';
+import type { User } from '../card/AssigneeSelector';
 
 /**
  * Card Component
@@ -7,7 +9,7 @@ import type { Card as CardType } from '../../services/api/card.api';
  */
 
 interface CardProps {
-  card: CardType;
+  card: CardType & { assignees?: User[] };
   onClick?: () => void;
 }
 
@@ -71,6 +73,11 @@ export function Card({ card, onClick }: CardProps) {
 
           {card.isArchived && (
             <span className="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded">Archived</span>
+          )}
+
+          {/* Show assignee avatars if available */}
+          {card.assignees && card.assignees.length > 0 && (
+            <AssigneeAvatars assignees={card.assignees} size="sm" className="ml-auto" />
           )}
         </div>
       </div>

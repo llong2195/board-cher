@@ -20,12 +20,15 @@ import {
 } from '@nestjs/swagger';
 import { CreateCardCommand } from '../../application/commands/card/create-card.command';
 import { MoveCardCommand } from '../../application/commands/card/move-card.command';
+import { UnassignCardCommand } from '../../application/commands/card/unassign-card.command';
 import { Card } from '../../domain/card/card.model';
-import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard';
 import { BoardPermissionGuard } from '../../infrastructure/auth/guards/board-permission.guard';
+import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard';
 import { CardResponseDto } from '../dto/card/card-response.dto';
 import { CreateCardDto } from '../dto/card/create-card.dto';
 import { MoveCardDto } from '../dto/card/move-card.dto';
+import { AssignCardCommand } from '../../application/commands/card/assign-card.command';
+import { GetAssignedCardsQuery } from '../../application/queries/card/get-assigned-cards.query';
 
 /**
  * Controller for card operations
@@ -151,6 +154,63 @@ export class CardController {
   deleteCard(@Param('id') _id: string): Promise<void> {
     // TODO: Implement delete card command
     throw new Error('Delete card not yet implemented');
+  }
+
+  /**
+   * T216 - US6: Assign user to card
+   */
+  @Post('cards/:id/assignments/:userId')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Assign a user to a card' })
+  @ApiCreatedResponse({
+    description: 'User assigned successfully',
+  })
+  async assignCard(
+    @Param('id') cardId: string,
+    @Param('userId') userId: string,
+  ): Promise<void> {
+    const assignedBy = 'temp-user-id'; // TODO: Extract from JWT token
+    const command = new AssignCardCommand(cardId, userId, assignedBy);
+    await this.commandBus.execute(command);
+  }
+
+  /**
+   * T216 - US6: Unassign user from card
+   */
+  @Delete('cards/:id/assignments/:userId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Unassign a user from a card' })
+  @ApiOkResponse({
+    description: 'User unassigned successfully',
+  })
+  async unassignCard(
+    @Param('id') cardId: string,
+    @Param('userId') userId: string,
+  ): Promise<void> {
+    const unassignedBy = 'temp-user-id'; // TODO: Extract from JWT token
+    const command = new UnassignCardCommand(cardId, userId, unassignedBy);
+    await this.commandBus.execute(command);
+  }
+
+  /**
+   * T217 - US6: Get cards assigned to current user
+   */
+  @Get('cards/assigned-to-me')
+  @ApiOperation({
+    summary: 'Get all cards assigned to current user',
+    description:
+      'Returns paginated list of cards assigned to the authenticated user',
+  })
+  @ApiOkResponse({
+    description: 'Assigned cards retrieved successfully',
+  })
+  async getAssignedCards(): Promise<any> {
+    const userId = 'temp-user-id'; // TODO: Extract from JWT token
+    const page = 1; // TODO: Get from query params
+    const limit = 50; // TODO: Get from query params
+
+    const query = new GetAssignedCardsQuery(userId, page, limit);
+    return await this.queryBus.execute(query);
   }
 
   /**
