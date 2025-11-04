@@ -14,7 +14,7 @@ import { AssigneeSelector, type User } from './AssigneeSelector';
 import { ActivityFeed } from './ActivityFeed';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useToast } from '@/hooks/useToast';
-import { createAssignmentNotification, createCommentNotification } from './NotificationToast';
+import { createAssignmentNotification, createCommentNotification } from './notification-helpers';
 
 /**
  * CardModal Component (T160 + T167 + T168)

@@ -1,27 +1,53 @@
 /**
- * BoardRepository Implementation (TypeORM)
- * Task: T090 [US1]
+ * BoardRepository Implementation (TypeORM + Redis Cache)
+ * Task: T090 [US1], T265 [Phase 10]
  *
- * Concrete implementation of IBoardRepository using TypeORM.
+ * Concrete implementation of IBoardRepository using TypeORM with Redis caching.
+ * Cache TTL: 5 minutes for board queries
+ * Cache invalidation: On save/update/delete operations
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { IBoardRepository } from '../../../domain/board/board.repository';
 import { Board } from '../../../domain/board/board.model';
 import { BoardEntity } from '../entities/board.entity';
 
 @Injectable()
 export class BoardRepositoryImpl implements IBoardRepository {
+  private readonly CACHE_TTL = 300000; // 5 minutes in milliseconds
+  private readonly CACHE_PREFIX = 'board:';
+
   constructor(
     @InjectRepository(BoardEntity)
     private readonly boardRepository: Repository<BoardEntity>,
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
   ) {}
 
   async findById(id: string): Promise<Board | null> {
+    const cacheKey = `${this.CACHE_PREFIX}${id}`;
+
+    // Try to get from cache first
+    const cached = await this.cacheManager.get<Board>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    // If not in cache, get from database
     const entity = await this.boardRepository.findOne({ where: { id } });
-    return entity ? this.toDomain(entity) : null;
+    if (!entity) {
+      return null;
+    }
+
+    const board = this.toDomain(entity);
+
+    // Store in cache with TTL
+    await this.cacheManager.set(cacheKey, board, this.CACHE_TTL);
+
+    return board;
   }
 
   async findByOrganizationId(
@@ -68,11 +94,31 @@ export class BoardRepositoryImpl implements IBoardRepository {
   async save(board: Board): Promise<Board> {
     const entity = this.toEntity(board);
     const saved = await this.boardRepository.save(entity);
-    return this.toDomain(saved);
+    const result = this.toDomain(saved);
+
+    // Invalidate cache after save/update
+    const cacheKey = `${this.CACHE_PREFIX}${result.id}`;
+    await this.cacheManager.del(cacheKey);
+
+    // Also invalidate organization-level caches if needed
+    await this.invalidateOrganizationCache(result.organizationId);
+
+    return result;
   }
 
   async delete(id: string): Promise<void> {
+    // Get board before deletion to invalidate org cache
+    const board = await this.findById(id);
+
     await this.boardRepository.delete(id);
+
+    // Invalidate cache after deletion
+    const cacheKey = `${this.CACHE_PREFIX}${id}`;
+    await this.cacheManager.del(cacheKey);
+
+    if (board) {
+      await this.invalidateOrganizationCache(board.organizationId);
+    }
   }
 
   async exists(id: string): Promise<boolean> {
@@ -90,28 +136,43 @@ export class BoardRepositoryImpl implements IBoardRepository {
     organizationId: string,
     page: number,
     limit: number,
-    includeArchived = false,
+    includeArchived: boolean = false,
   ): Promise<{ boards: Board[]; total: number }> {
-    const skip = (page - 1) * limit;
     const where: { organizationId: string; isArchived?: boolean } = {
       organizationId,
     };
-
     if (!includeArchived) {
       where.isArchived = false;
     }
 
     const [entities, total] = await this.boardRepository.findAndCount({
       where,
-      order: { createdAt: 'DESC' },
-      skip,
       take: limit,
+      skip: (page - 1) * limit,
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     return {
       boards: entities.map((entity) => this.toDomain(entity)),
       total,
     };
+  }
+
+  /**
+   * Invalidate organization-level cached queries
+   * @param organizationId Organization ID to invalidate cache for
+   */
+  private async invalidateOrganizationCache(
+    organizationId: string,
+  ): Promise<void> {
+    // In a more sophisticated implementation, this could:
+    // 1. Track org-level cache keys in a Redis Set
+    // 2. Invalidate all board list queries for this org
+    // For now, we'll use a simple prefix-based approach
+    const orgCacheKey = `${this.CACHE_PREFIX}org:${organizationId}`;
+    await this.cacheManager.del(orgCacheKey);
   }
 
   /**

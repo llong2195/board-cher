@@ -17,12 +17,12 @@ import { useToast, type Toast as ToastType } from '@/hooks/useToast';
  * and comment notifications using shadcn/ui Toast primitives.
  */
 
-export interface NotificationToastProps {
+interface NotificationToastProps {
   toasts: ToastType[];
   onDismiss: (id: string) => void;
 }
 
-export function NotificationToast({ toasts, onDismiss }: NotificationToastProps) {
+function NotificationToast({ toasts, onDismiss }: NotificationToastProps) {
   const getIcon = (variant?: 'default' | 'success' | 'error' | 'warning') => {
     switch (variant) {
       case 'success':
@@ -60,65 +60,11 @@ export function NotificationToast({ toasts, onDismiss }: NotificationToastProps)
 }
 
 /**
- * Notification types for specific use cases
- */
-
-export interface AssignmentNotification {
-  cardTitle: string;
-  cardId: string;
-  boardName: string;
-  assignedByName: string;
-}
-
-export interface CommentNotification {
-  cardTitle: string;
-  cardId: string;
-  boardName: string;
-  commentAuthorName: string;
-  commentPreview: string;
-}
-
-/**
- * Helper functions to create notifications
- */
-
-export function createAssignmentNotification({
-  cardTitle,
-  boardName,
-  assignedByName,
-}: AssignmentNotification): Omit<ToastType, 'id'> {
-  return {
-    title: 'You were assigned to a card',
-    description: `${assignedByName} assigned you to "${cardTitle}" in ${boardName}`,
-    variant: 'default',
-    duration: 7000,
-  };
-}
-
-export function createCommentNotification({
-  cardTitle,
-  boardName,
-  commentAuthorName,
-  commentPreview,
-}: CommentNotification): Omit<ToastType, 'id'> {
-  return {
-    title: 'New comment on your card',
-    description: `${commentAuthorName} commented on "${cardTitle}" in ${boardName}: ${commentPreview}`,
-    variant: 'default',
-    duration: 7000,
-  };
-}
-
-/**
  * NotificationToastProvider Component
  * Wrapper component that provides toast context to the app
  */
 
-interface NotificationToastProviderProps {
-  children: React.ReactNode;
-}
-
-export function NotificationToastProvider({ children }: NotificationToastProviderProps) {
+export function NotificationToastProvider({ children }: { children: React.ReactNode }) {
   const { toasts, removeToast } = useToast();
 
   return (
@@ -128,8 +74,3 @@ export function NotificationToastProvider({ children }: NotificationToastProvide
     </>
   );
 }
-
-/**
- * Export the useToast hook for use in components
- */
-export { useToast };

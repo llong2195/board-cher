@@ -1,8 +1,9 @@
 import { ListSkeleton } from './ListSkeleton';
+import { Skeleton } from '../ui/skeleton';
 
 /**
  * BoardSkeleton Component
- * Loading placeholder for entire Board
+ * Loading placeholder for entire Board using shadcn/ui Skeleton
  */
 
 interface BoardSkeletonProps {
@@ -16,12 +17,12 @@ export function BoardSkeleton({ listCount = 4 }: BoardSkeletonProps) {
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <div className="h-8 bg-gray-300 rounded w-48 mb-2 animate-pulse" />
-            <div className="h-4 bg-gray-200 rounded w-64 animate-pulse" />
+            <Skeleton className="h-8 w-48 mb-2" />
+            <Skeleton className="h-4 w-64" />
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-9 w-20 bg-gray-200 rounded animate-pulse" />
-            <div className="h-9 w-12 bg-gray-200 rounded animate-pulse" />
+            <Skeleton className="h-9 w-20" />
+            <Skeleton className="h-9 w-12" />
           </div>
         </div>
       </div>
@@ -34,7 +35,7 @@ export function BoardSkeleton({ listCount = 4 }: BoardSkeletonProps) {
           ))}
 
           {/* Add list button skeleton */}
-          <div className="flex-shrink-0 w-72 h-20 bg-gray-100 rounded-lg animate-pulse" />
+          <Skeleton className="flex-shrink-0 w-72 h-20 rounded-lg" />
         </div>
       </div>
     </div>

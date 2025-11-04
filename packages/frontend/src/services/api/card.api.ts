@@ -7,6 +7,7 @@ import type { AxiosInstance } from 'axios';
  */
 
 export interface Card {
+  assignments: never[];
   id: string;
   listId: string;
   title: string;

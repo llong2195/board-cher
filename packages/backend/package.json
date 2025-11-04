@@ -37,6 +37,7 @@
     "@nestjs/platform-express": "^11.1.8",
     "@nestjs/platform-socket.io": "^11.1.8",
     "@nestjs/swagger": "^11.2.1",
+    "@nestjs/throttler": "^6.4.0",
     "@nestjs/typeorm": "^11.0.0",
     "@nestjs/websockets": "^11.1.8",
     "@socket.io/redis-adapter": "^8.3.0",
@@ -46,6 +47,7 @@
     "cache-manager-ioredis-yet": "^2.1.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "helmet": "^8.1.0",
     "ioredis": "^5.8.2",
     "joi": "^18.0.1",
     "passport-jwt": "^4.0.1",
@@ -97,6 +99,9 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!((\\.pnpm/)?uuid))"
+    ],
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
@@ -104,6 +109,12 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/src/$1"
+    },
+    "preset": "ts-jest/presets/default-esm",
+    "globals": {
+      "ts-jest": {
+        "useESM": true
+      }
     }
   }
 }

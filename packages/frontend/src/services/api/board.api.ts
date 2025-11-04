@@ -7,6 +7,7 @@ import type { AxiosInstance } from 'axios';
  */
 
 export interface Board {
+  labels: any;
   id: string;
   organizationId: string;
   name: string;

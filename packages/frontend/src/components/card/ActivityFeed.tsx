@@ -13,6 +13,7 @@ import { Loader2 } from 'lucide-react';
 import { ActivityItem } from './ActivityItem';
 import { getActivityApiClient, type Activity } from '@/services/api/activity.api';
 import { useWebSocket } from '@/hooks/useWebSocket';
+import { ActivityFeedSkeleton } from '../skeleton/ActivityFeedSkeleton';
 
 interface ActivityFeedProps {
   type: 'card' | 'board';
@@ -173,12 +174,7 @@ export function ActivityFeed({
   }, [prependActivity, onActivityUpdate]);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-        <span className="ml-2 text-sm text-gray-500">Loading activity...</span>
-      </div>
-    );
+    return <ActivityFeedSkeleton itemCount={5} />;
   }
 
   if (error) {
