@@ -20,6 +20,7 @@ import { AttachmentModule } from './domain/attachment/attachment.module';
 import { LabelModule } from './domain/label/label.module';
 import { ChecklistModule } from './domain/checklist/checklist.module';
 import { SharedModule } from './domain/shared/shared.module';
+import { ActivityModule } from './application/activity.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { SharedModule } from './domain/shared/shared.module';
     CacheModuleWrapper,
     WebSocketModule,
     SharedModule,
+    ActivityModule,
 
     // Domain modules
     UserModule,

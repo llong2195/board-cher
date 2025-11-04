@@ -1,21 +1,25 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Board } from '../components/board/Board';
+import { FilterChips, type FilterChip } from '../components/search/FilterChips';
+import { FilterPanel, type FilterOption } from '../components/search/FilterPanel';
+import { SearchBar } from '../components/search/SearchBar';
 import { BoardSkeleton } from '../components/skeleton/BoardSkeleton';
-import { useBoardStore } from '../stores/board.store';
 import { useBoardRealtime } from '../hooks/useBoardRealtime';
-import type { List as StoreList } from '../services/api/list.api';
 import type { Card as StoreCard } from '../services/api/card.api';
+import type { List as StoreList } from '../services/api/list.api';
 import {
   organizationApi,
-  type OrganizationRole,
   OrganizationRole as Role,
+  type OrganizationRole,
 } from '../services/api/organization.api';
+import { useBoardStore } from '../stores/board.store';
 
 /**
  * BoardViewPage
  * Main page for viewing and interacting with a board
  * Includes WebSocket integration for real-time updates
+ * T240-T242: Added search and filter functionality
  */
 
 export function BoardViewPage() {
@@ -31,6 +35,13 @@ export function BoardViewPage() {
   // State for organization member role
   const [userRole, setUserRole] = useState<OrganizationRole | null>(null);
   const [isLoadingRole, setIsLoadingRole] = useState(false);
+
+  // Search and filter state (T240)
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLabelIds, setSelectedLabelIds] = useState<string[]>([]);
+  const [selectedAssigneeIds, setSelectedAssigneeIds] = useState<string[]>([]);
+  const [dueDateFilter, setDueDateFilter] = useState<'all' | 'today' | 'overdue' | 'none'>('all');
+  const [isSearching, setIsSearching] = useState(false);
 
   // Fetch user's role in the organization
   const loadUserRole = useCallback(async (organizationId: string) => {
@@ -169,6 +180,180 @@ export function BoardViewPage() {
     return null;
   }
 
+  // Extract available labels and assignees for filter panel (T241)
+  const availableLabels: FilterOption[] =
+    board.labels?.map((label) => ({
+      id: label.id,
+      name: label.name,
+      color: label.color,
+    })) || [];
+
+  const allCards = Object.values(cards).flat();
+  const availableAssignees: FilterOption[] = Array.from(
+    new Set(
+      allCards.flatMap((card) => card.assignments || []).map((assignment) => assignment.userId),
+    ),
+  ).map((userId) => {
+    const assignment = allCards
+      .flatMap((card) => card.assignments || [])
+      .find((a) => a.userId === userId);
+    return {
+      id: userId,
+      name: assignment?.user?.username || userId,
+    };
+  });
+
+  // Search handler (T241)
+  const handleSearch = useCallback(async (query: string) => {
+    setSearchQuery(query);
+    if (query.trim().length > 0) {
+      setIsSearching(true);
+      // TODO: Call search API endpoint
+      // For now, use local filtering
+      setIsSearching(false);
+    }
+  }, []);
+
+  // Filter handlers (T241)
+  const handleLabelToggle = useCallback((labelId: string) => {
+    setSelectedLabelIds((prev) =>
+      prev.includes(labelId) ? prev.filter((id) => id !== labelId) : [...prev, labelId],
+    );
+  }, []);
+
+  const handleAssigneeToggle = useCallback((assigneeId: string) => {
+    setSelectedAssigneeIds((prev) =>
+      prev.includes(assigneeId) ? prev.filter((id) => id !== assigneeId) : [...prev, assigneeId],
+    );
+  }, []);
+
+  const handleDueDateFilterChange = useCallback((filter: 'all' | 'today' | 'overdue' | 'none') => {
+    setDueDateFilter(filter);
+  }, []);
+
+  const handleClearAllFilters = useCallback(() => {
+    setSelectedLabelIds([]);
+    setSelectedAssigneeIds([]);
+    setDueDateFilter('all');
+    setSearchQuery('');
+  }, []);
+
+  // Generate filter chips (T242)
+  const filterChips: FilterChip[] = useMemo(() => {
+    const chips: FilterChip[] = [];
+
+    selectedLabelIds.forEach((labelId) => {
+      const label = availableLabels.find((l) => l.id === labelId);
+      if (label) {
+        chips.push({
+          id: labelId,
+          label: label.name,
+          type: 'label',
+          color: label.color,
+        });
+      }
+    });
+
+    selectedAssigneeIds.forEach((assigneeId) => {
+      const assignee = availableAssignees.find((a) => a.id === assigneeId);
+      if (assignee) {
+        chips.push({
+          id: assigneeId,
+          label: assignee.name,
+          type: 'assignee',
+        });
+      }
+    });
+
+    if (dueDateFilter !== 'all') {
+      chips.push({
+        id: 'dueDate',
+        label: `Due: ${dueDateFilter}`,
+        type: 'dueDate',
+      });
+    }
+
+    return chips;
+  }, [selectedLabelIds, selectedAssigneeIds, dueDateFilter, availableLabels, availableAssignees]);
+
+  const handleRemoveChip = useCallback(
+    (chipId: string, type: FilterChip['type']) => {
+      if (type === 'label') {
+        handleLabelToggle(chipId);
+      } else if (type === 'assignee') {
+        handleAssigneeToggle(chipId);
+      } else if (type === 'dueDate') {
+        setDueDateFilter('all');
+      }
+    },
+    [handleLabelToggle, handleAssigneeToggle],
+  );
+
+  // Calculate active filter count
+  const activeFilterCount =
+    selectedLabelIds.length + selectedAssigneeIds.length + (dueDateFilter !== 'all' ? 1 : 0);
+
+  // Apply local filtering to cards (T242)
+  const filteredCards = useMemo(() => {
+    let result = allCards;
+
+    // Apply search filter
+    if (searchQuery.trim().length > 0) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (card) =>
+          card.title.toLowerCase().includes(query) ||
+          card.description?.toLowerCase().includes(query),
+      );
+    }
+
+    // Apply label filter (OR logic)
+    if (selectedLabelIds.length > 0) {
+      result = result.filter((card) =>
+        card.labels?.some((label) => selectedLabelIds.includes(label.id)),
+      );
+    }
+
+    // Apply assignee filter (OR logic)
+    if (selectedAssigneeIds.length > 0) {
+      result = result.filter((card) =>
+        card.assignments?.some((assignment) => selectedAssigneeIds.includes(assignment.userId)),
+      );
+    }
+
+    // Apply due date filter
+    if (dueDateFilter === 'today') {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      result = result.filter((card) => {
+        if (!card.dueDate) return false;
+        const dueDate = new Date(card.dueDate);
+        return dueDate >= today && dueDate < tomorrow;
+      });
+    } else if (dueDateFilter === 'overdue') {
+      const now = new Date();
+      result = result.filter((card) => {
+        if (!card.dueDate) return false;
+        return new Date(card.dueDate) < now;
+      });
+    } else if (dueDateFilter === 'none') {
+      result = result.filter((card) => !card.dueDate);
+    }
+
+    return result;
+  }, [allCards, searchQuery, selectedLabelIds, selectedAssigneeIds, dueDateFilter]);
+
+  // Group filtered cards by list
+  const filteredCardsByList = useMemo(() => {
+    const grouped: Record<string, StoreCard[]> = {};
+    lists.forEach((list) => {
+      grouped[list.id] = filteredCards.filter((card) => card.listId === list.id);
+    });
+    return grouped;
+  }, [filteredCards, lists]);
+
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* WebSocket Status Indicator */}
@@ -202,6 +387,42 @@ export function BoardViewPage() {
           </span>
         </div>
       )}
+
+      {/* Search and Filter Toolbar (T242) */}
+      <div className="bg-white border-b border-gray-200 px-4 py-3">
+        <div className="flex items-center gap-3">
+          <div className="flex-1 max-w-md">
+            <SearchBar
+              onSearch={handleSearch}
+              isLoading={isSearching}
+              defaultValue={searchQuery}
+              resultCount={filteredCards.length}
+              hasActiveSearch={searchQuery.length > 0 || activeFilterCount > 0}
+            />
+          </div>
+          <FilterPanel
+            labels={availableLabels}
+            assignees={availableAssignees}
+            selectedLabelIds={selectedLabelIds}
+            selectedAssigneeIds={selectedAssigneeIds}
+            dueDateFilter={dueDateFilter}
+            onLabelToggle={handleLabelToggle}
+            onAssigneeToggle={handleAssigneeToggle}
+            onDueDateFilterChange={handleDueDateFilterChange}
+            onClearFilters={handleClearAllFilters}
+            activeFilterCount={activeFilterCount}
+          />
+        </div>
+        {filterChips.length > 0 && (
+          <div className="mt-3">
+            <FilterChips
+              chips={filterChips}
+              onRemove={handleRemoveChip}
+              onClearAll={handleClearAllFilters}
+            />
+          </div>
+        )}
+      </div>
 
       {/* Board Content */}
       <Board boardId={boardId!} userRole={userRole} isLoadingRole={isLoadingRole} />

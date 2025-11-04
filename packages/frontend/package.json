@@ -22,6 +22,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-toast": "^1.2.15",
     "@tailwindcss/vite": "^4.1.16",
+    "@tanstack/react-virtual": "^3.13.12",
     "@trello-vibe/shared": "workspace:*",
     "axios": "^1.13.1",
     "class-variance-authority": "^0.7.1",

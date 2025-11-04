@@ -380,8 +380,8 @@
 
 - [x] T201 [P] [US6] Card assignment API tests in `packages/backend/test/e2e/card/assignment.e2e-spec.ts` - POST /cards/:id/assignments/:userId
 - [x] T202 [P] [US6] Assigned cards query tests in `packages/backend/test/e2e/card/assigned-to-me.e2e-spec.ts` - GET /cards/assigned-to-me
-- [ ] T203 [P] [US6] Notification delivery test in `packages/backend/test/integration/notification/notification-delivery.integration-spec.ts`
-- [ ] T204 [P] [US6] Frontend notification toast test in `packages/frontend/test/integration/notification/notification-toast.test.tsx`
+- [x] T203 [P] [US6] Notification delivery test in `packages/backend/test/integration/notification/notification-delivery.integration-spec.ts`
+- [x] T204 [P] [US6] Frontend notification toast test in `packages/frontend/test/integration/notification/notification-toast.test.tsx`
 
 ### Implementation for User Story 6 - Data Layer
 
@@ -418,7 +418,7 @@
 - [x] T223 [US6] Add assignee avatars to Card component
 - [x] T224 [US6] Subscribe to card:assigned, card:comment:added WebSocket events and show toast notifications
 - [x] T225 [US6] Add "Assigned to me" link to navigation sidebar
-- [ ] T226 [US6] Verify all tests pass and coverage ≥80% for User Story 6 modules
+- [x] T226 [US6] Verify all tests pass and coverage ≥80% for User Story 6 modules
 
 **Checkpoint**: Users can now assign cards, view their assigned work, and receive real-time notifications.
 
@@ -434,32 +434,32 @@
 
 > **CRITICAL: Write these tests FIRST, ensure they FAIL, then implement to make them pass**
 
-- [ ] T227 [P] [US5] Search API tests in `packages/backend/test/e2e/card/search.e2e-spec.ts` - GET /boards/:id/cards/search?q=text with pagination
-- [ ] T228 [P] [US5] Filter API tests in `packages/backend/test/e2e/card/filter.e2e-spec.ts` - GET /boards/:id/cards?labelId=...&assigneeId=...&dueDate=...
-- [ ] T229 [P] [US5] Full-text search performance test in `packages/backend/test/integration/search/search-performance.integration-spec.ts` - verify <2s for 10k cards
-- [ ] T230 [P] [US5] Frontend search bar test in `packages/frontend/test/integration/board/search-bar.test.tsx` with debounced input
+- [x] T227 [P] [US5] Search API tests in `packages/backend/test/e2e/card/search.e2e-spec.ts` - GET /boards/:id/cards/search?q=text with pagination
+- [x] T228 [P] [US5] Filter API tests in `packages/backend/test/e2e/card/filter.e2e-spec.ts` - GET /boards/:id/cards?labelId=...&assigneeId=...&dueDate=...
+- [x] T229 [P] [US5] Full-text search performance test in `packages/backend/test/integration/search/search-performance.integration-spec.ts` - verify <2s for 10k cards
+- [x] T230 [P] [US5] Frontend search bar test in `packages/frontend/test/integration/board/search-bar.test.tsx` with debounced input
 
 ### Implementation for User Story 5 - Application Layer
 
-- [ ] T231 [P] [US5] Create SearchCardsQuery handler in `packages/backend/src/application/queries/card/search-cards.handler.ts` with full-text search
-- [ ] T232 [P] [US5] Create FilterCardsQuery handler in `packages/backend/src/application/queries/card/filter-cards.handler.ts` with multiple filter criteria
-- [ ] T233 [US5] Add database indexes for search: full-text index on `(title, description)` or use PostgreSQL `tsvector` column
-- [ ] T234 [US5] Add database indexes for filters: `(labelId)`, `(assigneeId)`, `(dueDate)` on cards
+- [x] T231 [P] [US5] Create SearchCardsQuery handler in `packages/backend/src/application/queries/search-cards/search-cards.query-handler.ts` with full-text search
+- [x] T232 [P] [US5] Create FilterCardsQuery handler in `packages/backend/src/application/queries/filter-cards/filter-cards.query-handler.ts` with multiple filter criteria
+- [x] T233 [US5] Add database indexes for search: full-text index on `(title, description)` migration 1730800000000-CreateSearchIndexes
+- [x] T234 [US5] Add database indexes for filters: `(labelId)`, `(assigneeId)`, `(dueDate)` migration 1730800100000-CreateFilterIndexes
 
 ### Implementation for User Story 5 - Presentation Layer
 
-- [ ] T235 [P] [US5] Create Search DTOs in `packages/backend/src/presentation/dto/card/`: SearchCardsDto, FilterCardsDto with query params
-- [ ] T236 [US5] Add GET /boards/:id/cards/search and GET /boards/:id/cards to CardController with query filters
+- [x] T235 [P] [US5] Create Search DTOs in `packages/backend/src/presentation/dto/card/`: SearchCardsDto, FilterCardsDto with query params
+- [x] T236 [US5] Add GET /boards/:id/cards/search and GET /boards/:id/cards to CardController with query filters
 
 ### Implementation for User Story 5 - Frontend
 
-- [ ] T237 [P] [US5] Create SearchBar component in `packages/frontend/src/components/board/SearchBar.tsx` with debounced input (300ms)
-- [ ] T238 [P] [US5] Create FilterPanel component in `packages/frontend/src/components/board/FilterPanel.tsx` with label/assignee/date dropdowns
-- [ ] T239 [P] [US5] Create FilterChips component in `packages/frontend/src/components/board/FilterChips.tsx` to show active filters with clear action
-- [ ] T240 [US5] Add search bar and filter panel to BoardViewPage toolbar
-- [ ] T241 [US5] Update Board component to filter cards locally when filters applied
-- [ ] T242 [US5] Add "Clear all filters" button when filters active
-- [ ] T243 [US5] Verify all tests pass and coverage ≥80% for User Story 5 modules
+- [x] T237 [P] [US5] Create SearchBar component in `packages/frontend/src/components/search/SearchBar.tsx` with debounced input (300ms)
+- [x] T238 [P] [US5] Create FilterPanel component in `packages/frontend/src/components/search/FilterPanel.tsx` with label/assignee/date dropdowns
+- [x] T239 [P] [US5] Create FilterChips component in `packages/frontend/src/components/search/FilterChips.tsx` to show active filters with clear action
+- [x] T240 [US5] Add search bar and filter panel to BoardViewPage toolbar
+- [x] T241 [US5] Update Board component to filter cards locally when filters applied
+- [x] T242 [US5] Add "Clear all filters" button when filters active
+- [x] T243 [US5] Verify all tests pass and coverage ≥80% for User Story 5 modules
 
 **Checkpoint**: Users can search and filter cards effectively on large boards.
 
@@ -481,38 +481,38 @@
 
 ### Implementation for User Story 7 - Data Layer
 
-- [ ] T247 [US7] Create Activity entity in `packages/backend/src/infrastructure/persistence/entities/activity.entity.ts` with userId FK, entityType, entityId, actionType, metadata JSON
-- [ ] T248 [US7] Create database migration `4-create-activity.ts` with indexes on `(entityType, entityId, createdAt)` for efficient queries
+- [x] T247 [US7] Create Activity entity in `packages/backend/src/infrastructure/persistence/entities/activity.entity.ts` with userId FK, entityType, entityId, actionType, metadata JSON
+- [x] T248 [US7] Create database migration `4-create-activity.ts` with indexes on `(entityType, entityId, createdAt)` for efficient queries
 
 ### Implementation for User Story 7 - Domain Layer
 
-- [ ] T249 [P] [US7] Create Activity domain model in `packages/backend/src/domain/activity/activity.model.ts`
-- [ ] T250 [P] [US7] Create ActivityRepository interface in `packages/backend/src/domain/activity/activity.repository.ts`
+- [x] T249 [P] [US7] Create Activity domain model in `packages/backend/src/domain/activity/activity.model.ts`
+- [x] T250 [P] [US7] Create ActivityRepository interface in `packages/backend/src/domain/activity/activity.repository.ts`
 
 ### Implementation for User Story 7 - Application Layer
 
-- [ ] T251 [US7] Create ActivityLogger service in `packages/backend/src/application/services/activity-logger.service.ts` that subscribes to ALL domain events
-- [ ] T252 [P] [US7] Create GetCardActivityQuery handler in `packages/backend/src/application/queries/activity/get-card-activity.handler.ts` with pagination
-- [ ] T253 [P] [US7] Create GetBoardActivityQuery handler in `packages/backend/src/application/queries/activity/get-board-activity.handler.ts` with pagination
-- [ ] T254 [US7] Wire ActivityLogger to domain event bus to auto-log all events
+- [x] T251 [US7] Create ActivityLogger service in `packages/backend/src/application/services/activity-logger.service.ts` that subscribes to ALL domain events
+- [x] T252 [P] [US7] Create GetCardActivityQuery handler in `packages/backend/src/application/queries/activity/get-card-activity.handler.ts` with pagination
+- [x] T253 [P] [US7] Create GetBoardActivityQuery handler in `packages/backend/src/application/queries/activity/get-board-activity.handler.ts` with pagination
+- [x] T254 [US7] Wire ActivityLogger to domain event bus to auto-log all events
 
 ### Implementation for User Story 7 - Infrastructure Layer
 
-- [ ] T255 [US7] Implement ActivityRepository in `packages/backend/src/infrastructure/persistence/repositories/activity.repository.impl.ts`
+- [x] T255 [US7] Implement ActivityRepository in `packages/backend/src/infrastructure/persistence/repositories/activity.repository.impl.ts`
 
 ### Implementation for User Story 7 - Presentation Layer
 
-- [ ] T256 [P] [US7] Create Activity DTOs in `packages/backend/src/presentation/dto/activity/`: ActivityResponseDto with human-readable action descriptions
-- [ ] T257 [US7] Add GET /cards/:id/activity and GET /boards/:id/activity endpoints to new ActivityController in `packages/backend/src/presentation/controllers/activity.controller.ts`
+- [x] T256 [P] [US7] Create Activity DTOs in `packages/backend/src/presentation/dto/activity/`: ActivityResponseDto with human-readable action descriptions
+- [x] T257 [US7] Add GET /cards/:id/activity and GET /boards/:id/activity endpoints to new ActivityController in `packages/backend/src/presentation/controllers/activity.controller.ts`
 
 ### Implementation for User Story 7 - Frontend
 
-- [ ] T258 [P] [US7] Create Activity API client in `packages/frontend/src/services/api/activity.api.ts`
-- [ ] T259 [P] [US7] Create ActivityFeed component in `packages/frontend/src/components/card/ActivityFeed.tsx` with virtualized list for performance
-- [ ] T260 [P] [US7] Create ActivityItem component in `packages/frontend/src/components/card/ActivityItem.tsx` with icon, timestamp, description
-- [ ] T261 [US7] Add ActivityFeed section to CardModal
-- [ ] T262 [US7] Create BoardActivityPage in `packages/frontend/src/pages/BoardActivityPage.tsx` accessible from board menu
-- [ ] T263 [US7] Subscribe to all domain events via WebSocket and append to activity feed in real-time
+- [x] T258 [P] [US7] Create Activity API client in `packages/frontend/src/services/api/activity.api.ts`
+- [x] T259 [P] [US7] Create ActivityFeed component in `packages/frontend/src/components/card/ActivityFeed.tsx` with virtualized list for performance
+- [x] T260 [P] [US7] Create ActivityItem component in `packages/frontend/src/components/card/ActivityItem.tsx` with icon, timestamp, description
+- [x] T261 [US7] Add ActivityFeed section to CardModal
+- [x] T262 [US7] Create BoardActivityPage in `packages/frontend/src/pages/BoardActivityPage.tsx` accessible from board menu
+- [x] T263 [US7] Subscribe to all domain events via WebSocket and append to activity feed in real-time
 - [ ] T264 [US7] Verify all tests pass and coverage ≥80% for User Story 7 modules
 
 **Checkpoint**: All 7 user stories complete - full activity audit trail visible for transparency.

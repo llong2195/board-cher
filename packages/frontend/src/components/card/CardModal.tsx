@@ -11,6 +11,7 @@ import { CommentList } from './CommentList';
 import { LabelSelector } from './LabelSelector';
 import { ChecklistSection } from './ChecklistSection';
 import { AssigneeSelector, type User } from './AssigneeSelector';
+import { ActivityFeed } from './ActivityFeed';
 import { useWebSocket } from '@/hooks/useWebSocket';
 import { useToast } from '@/hooks/useToast';
 import { createAssignmentNotification, createCommentNotification } from './NotificationToast';
@@ -346,6 +347,15 @@ export function CardModal({ cardId, boardId, isOpen, onClose, onUpdate, wsToken 
                 comments={card.comments || []}
                 onAdd={handleAddComment}
                 onDelete={handleDeleteComment}
+              />
+
+              {/* Activity History (T261 + T263) */}
+              <ActivityFeed
+                type="card"
+                id={cardId}
+                maxHeight="400px"
+                wsToken={wsToken}
+                boardId={boardId}
               />
             </div>
 

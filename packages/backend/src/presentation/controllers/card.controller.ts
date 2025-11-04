@@ -9,6 +9,8 @@ import {
   Post,
   Put,
   UseGuards,
+  Query,
+  Req,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
@@ -17,6 +19,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { CreateCardCommand } from '../../application/commands/card/create-card.command';
 import { MoveCardCommand } from '../../application/commands/card/move-card.command';
@@ -29,10 +32,15 @@ import { CreateCardDto } from '../dto/card/create-card.dto';
 import { MoveCardDto } from '../dto/card/move-card.dto';
 import { AssignCardCommand } from '../../application/commands/card/assign-card.command';
 import { GetAssignedCardsQuery } from '../../application/queries/card/get-assigned-cards.query';
+import { SearchCardsDto } from '../dto/card/search-cards.dto';
+import { FilterCardsDto } from '../dto/card/filter-cards.dto';
+import { SearchCardsQuery } from '../../application/queries/search-cards/search-cards.query';
+import { FilterCardsQuery } from '../../application/queries/filter-cards/filter-cards.query';
 
 /**
  * Controller for card operations
  * Implements User Story 1: Kanban Board CRUD
+ * Implements User Story 5: Search and Filter Work Items (T235-T236)
  * T193: BoardPermissionGuard applied to all card endpoints
  */
 @ApiTags('cards')
@@ -83,6 +91,119 @@ export class CardController {
     // TODO: Implement query handler for getting list cards
     // For now, return empty array as placeholder
     return [];
+  }
+
+  /**
+   * Search cards in a board (T235 - User Story 5: Search Work Items)
+   * Supports full-text search on title and description with pagination
+   */
+  @Get('boards/:boardId/cards/search')
+  @ApiOperation({
+    summary: 'Search cards in a board',
+    description:
+      'Full-text search on card title and description. Case-insensitive with pagination support.',
+  })
+  @ApiOkResponse({
+    description: 'Search results retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/CardResponseDto' },
+        },
+        total: { type: 'number', example: 42 },
+        limit: { type: 'number', example: 50 },
+        offset: { type: 'number', example: 0 },
+      },
+    },
+  })
+  async searchCards(
+    @Param('boardId') boardId: string,
+    @Query() dto: SearchCardsDto,
+    @Req() req: any,
+  ): Promise<{
+    data: CardResponseDto[];
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
+    const userId = req.user?.id || 'temp-user-id';
+    const query = new SearchCardsQuery(
+      boardId,
+      userId,
+      dto.q || '',
+      dto.limit || 50,
+      dto.offset || 0,
+    );
+
+    const result = await this.queryBus.execute(query);
+
+    return {
+      data: result.data.map((card: Card) => this.mapToResponse(card)),
+      total: result.total,
+      limit: result.limit,
+      offset: result.offset,
+    };
+  }
+
+  /**
+   * Filter cards in a board (T236 - User Story 5: Filter Work Items)
+   * Supports filtering by labels, assignees, and due dates with pagination
+   */
+  @Get('boards/:boardId/cards')
+  @ApiOperation({
+    summary: 'Filter cards in a board',
+    description:
+      'Filter cards by labels (OR), assignees (OR), and due dates (AND logic). Supports pagination.',
+  })
+  @ApiOkResponse({
+    description: 'Filtered cards retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        data: {
+          type: 'array',
+          items: { $ref: '#/components/schemas/CardResponseDto' },
+        },
+        total: { type: 'number', example: 42 },
+        limit: { type: 'number', example: 50 },
+        offset: { type: 'number', example: 0 },
+      },
+    },
+  })
+  async filterCards(
+    @Param('boardId') boardId: string,
+    @Query() dto: FilterCardsDto,
+    @Req() req: any,
+  ): Promise<{
+    data: CardResponseDto[];
+    total: number;
+    limit: number;
+    offset: number;
+  }> {
+    const userId = req.user?.id || 'temp-user-id';
+
+    const query = new FilterCardsQuery(
+      boardId,
+      userId,
+      dto.labelId,
+      dto.assigneeId,
+      dto.dueDateFilter,
+      dto.dueDateStart ? new Date(dto.dueDateStart) : undefined,
+      dto.dueDateEnd ? new Date(dto.dueDateEnd) : undefined,
+      dto.limit || 50,
+      dto.offset || 0,
+    );
+
+    const result = await this.queryBus.execute(query);
+
+    return {
+      data: result.data.map((card: Card) => this.mapToResponse(card)),
+      total: result.total,
+      limit: result.limit,
+      offset: result.offset,
+    };
   }
 
   /**
