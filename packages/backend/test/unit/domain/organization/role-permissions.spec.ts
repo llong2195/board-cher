@@ -10,7 +10,7 @@
 
 import { PermissionService } from '../../../../src/domain/shared/permission.service';
 import { OrganizationRole } from '../../../../src/domain/organization/organization-member.model';
-import { BoardRole } from '../../../../src/domain/board/board-member.model';
+import { BoardRole } from '../../../../src/infrastructure/persistence/entities/board-member.entity';
 
 describe('Role-Based Access Control (Unit)', () => {
   let permissionService: PermissionService;

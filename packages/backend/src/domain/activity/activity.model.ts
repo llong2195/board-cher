@@ -64,20 +64,12 @@ export class Activity {
     }
 
     // ActionType must be valid
-    if (
-      !Object.values(ActivityActionType).includes(
-        this.actionType as ActivityActionType,
-      )
-    ) {
+    if (!Object.values(ActivityActionType).includes(this.actionType)) {
       throw new Error(`Invalid actionType: ${this.actionType}`);
     }
 
     // EntityType must be valid
-    if (
-      !Object.values(ActivityEntityType).includes(
-        this.entityType as ActivityEntityType,
-      )
-    ) {
+    if (!Object.values(ActivityEntityType).includes(this.entityType)) {
       throw new Error(`Invalid entityType: ${this.entityType}`);
     }
 

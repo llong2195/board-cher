@@ -12,6 +12,7 @@ import { ConfigModule } from './config/config.module';
 import { databaseConfig } from './config/database.config';
 import { CacheModuleWrapper } from './infrastructure/cache/cache.module';
 import { WebSocketModule } from './infrastructure/websocket/websocket.module';
+import { AuthModule } from './infrastructure/auth/auth.module';
 import { UserModule } from './domain/user/user.module';
 import { BoardModule } from './domain/board/board.module';
 import { ListModule } from './domain/list/list.module';
@@ -65,6 +66,7 @@ import { ActivityModule } from './application/activity.module';
     CacheModuleWrapper,
     WebSocketModule,
     SharedModule,
+    AuthModule,
     ActivityModule,
 
     // Domain modules

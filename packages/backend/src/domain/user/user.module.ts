@@ -6,8 +6,6 @@ import { AuthService } from '../../application/services/auth.service';
 import { AuthController } from '../../presentation/controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtStrategy } from '../../infrastructure/auth/jwt.strategy';
-import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -30,9 +28,7 @@ import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard';
       useClass: UserRepositoryImpl,
     },
     AuthService,
-    JwtStrategy,
-    JwtAuthGuard,
   ],
-  exports: ['IUserRepository', AuthService, JwtAuthGuard],
+  exports: ['IUserRepository', AuthService],
 })
 export class UserModule {}

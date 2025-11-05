@@ -14,6 +14,8 @@
  * This service will be used by List and Card operations to maintain proper ordering.
  */
 
+import { PositionCalculatorService } from '../../../../src/domain/shared/position-calculator.service';
+
 describe('PositionCalculatorService', () => {
   let positionCalculator: PositionCalculatorService;
 
@@ -603,59 +605,3 @@ describe('PositionCalculatorService', () => {
     });
   });
 });
-
-/**
- * Mock implementation to define the interface
- * The actual implementation will be created in:
- * packages/backend/src/domain/shared/position-calculator.service.ts
- */
-class PositionCalculatorService {
-  calculateInsertPosition(
-    existingItems: Array<{ position: number }>,
-    desiredPosition: number,
-  ): number {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  recalculateAfterInsert<T extends { position: number }>(
-    existingItems: T[],
-    insertedPosition: number,
-  ): T[] {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  recalculateAfterDelete<T extends { position: number }>(
-    remainingItems: T[],
-    deletedPosition: number,
-  ): T[] {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  recalculateAfterMove<T extends { id: string; position: number }>(
-    items: T[],
-    movedItemId: string,
-    oldPosition: number,
-    newPosition: number,
-  ): T[] {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  recalculateAfterMoveToOtherContainer<
-    T extends { id: string; position: number },
-  >(
-    sourceItems: T[],
-    targetItems: T[],
-    movedItemId: string,
-    targetPosition: number,
-  ): { source: T[]; target: T[]; movedItem: T } {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  normalizePositions<T extends { position: number }>(items: T[]): T[] {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  validatePositions(items: Array<{ position: number }>): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-}

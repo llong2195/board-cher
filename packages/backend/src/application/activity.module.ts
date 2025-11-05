@@ -24,12 +24,14 @@ import { ActivityRepositoryImpl } from '../infrastructure/persistence/repositori
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { IActivityRepository } from '../domain/activity/activity.repository';
 import { WebSocketModule } from '../infrastructure/websocket/websocket.module';
+import { AuthModule } from '../infrastructure/auth/auth.module';
 
 @Module({
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([ActivityEntity]),
     WebSocketModule, // Import to access BoardGateway for real-time updates
+    AuthModule, // Import for BoardPermissionGuard dependencies
   ],
   controllers: [ActivityController],
   providers: [

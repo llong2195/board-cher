@@ -1,10 +1,11 @@
 import { useDrop } from 'react-dnd';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import { Card } from './Card';
 import { CreateCardForm } from './CreateCardForm';
 import { CardSkeleton } from '../skeleton/CardSkeleton';
 import { useBoardStore } from '../../stores/board.store';
 import type { Card as CardType } from '../../services/api/card.api';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 /**
  * List Component
@@ -32,6 +33,17 @@ export function List({ listId, name, onAddCard, canEdit = true }: ListProps) {
   const moveCard = useBoardStore((state) => state.moveCard);
   const isLoading = useBoardStore((state) => state.isLoadingCards[listId]);
   const [showAddCard, setShowAddCard] = useState(false);
+
+  // Ref for the scrolling container (T268 - Virtual scrolling)
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  // Setup virtual scrolling for cards (T268 - Performance optimization)
+  const rowVirtualizer = useVirtualizer({
+    count: cards.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 100, // Estimated card height in pixels
+    overscan: 5, // Number of items to render above/below visible area
+  });
 
   const [{ isOver }, drop] = useDrop<DragItem, void, { isOver: boolean }>(() => ({
     accept: CARD_TYPE,
@@ -77,8 +89,11 @@ export function List({ listId, name, onAddCard, canEdit = true }: ListProps) {
         )}
       </div>
 
-      {/* Cards Container */}
-      <div className="flex-1 overflow-y-auto min-h-[100px] max-h-[calc(100vh-300px)]">
+      {/* Cards Container - T268: Virtual scrolling for performance */}
+      <div
+        ref={parentRef}
+        className="flex-1 overflow-y-auto min-h-[100px] max-h-[calc(100vh-300px)]"
+      >
         {isLoading ? (
           <div className="space-y-2">
             <CardSkeleton />
@@ -88,9 +103,31 @@ export function List({ listId, name, onAddCard, canEdit = true }: ListProps) {
         ) : cards.length === 0 ? (
           <div className="text-center py-8 text-gray-500 text-sm">No cards yet</div>
         ) : (
-          cards.map((card) => (
-            <Card key={card.id} card={card} onClick={() => handleCardClick(card)} />
-          ))
+          <div
+            style={{
+              height: `${rowVirtualizer.getTotalSize()}px`,
+              width: '100%',
+              position: 'relative',
+            }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+              const card = cards[virtualItem.index];
+              return (
+                <div
+                  key={virtualItem.key}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    transform: `translateY(${virtualItem.start}px)`,
+                  }}
+                >
+                  <Card key={card.id} card={card} onClick={() => handleCardClick(card)} />
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
 

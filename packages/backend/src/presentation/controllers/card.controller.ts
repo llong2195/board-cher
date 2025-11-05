@@ -32,6 +32,7 @@ import { CreateCardDto } from '../dto/card/create-card.dto';
 import { MoveCardDto } from '../dto/card/move-card.dto';
 import { AssignCardCommand } from '../../application/commands/card/assign-card.command';
 import { GetAssignedCardsQuery } from '../../application/queries/card/get-assigned-cards.query';
+import { ListCardsQuery } from '../../application/queries/card/list-cards.query';
 import { SearchCardsDto } from '../dto/card/search-cards.dto';
 import { FilterCardsDto } from '../dto/card/filter-cards.dto';
 import { SearchCardsQuery } from '../../application/queries/search-cards/search-cards.query';
@@ -79,18 +80,33 @@ export class CardController {
   }
 
   /**
-   * Get all cards in a list
+   * Get all cards in a list with cursor-based pagination (T267)
    */
   @Get('lists/:listId/cards')
-  @ApiOperation({ summary: 'Get all cards in a list' })
+  @ApiOperation({
+    summary: 'Get all cards in a list',
+    description: 'Supports cursor-based pagination for large lists',
+  })
   @ApiOkResponse({
     description: 'Cards retrieved successfully',
     type: [CardResponseDto],
   })
-  getListCards(@Param('listId') _listId: string): CardResponseDto[] {
-    // TODO: Implement query handler for getting list cards
-    // For now, return empty array as placeholder
-    return [];
+  async getListCards(
+    @Param('listId') listId: string,
+    @Query('cursor') cursor?: string,
+    @Query('limit') limit: number = 50,
+  ): Promise<{
+    cards: CardResponseDto[];
+    nextCursor: string | null;
+    hasMore: boolean;
+  }> {
+    const query = new ListCardsQuery(listId, cursor, limit);
+    const result = await this.queryBus.execute(query);
+    return {
+      cards: result.cards.map((card: Card) => this.mapToResponse(card)),
+      nextCursor: result.nextCursor,
+      hasMore: result.hasMore,
+    };
   }
 
   /**

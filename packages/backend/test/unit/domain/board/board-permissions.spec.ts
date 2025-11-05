@@ -14,6 +14,11 @@
  * This service will be used across Board, List, and Card operations to enforce access control.
  */
 
+import {
+  BoardPermissionsService,
+  BoardRole,
+} from '../../../../src/domain/board/board-permissions.helper';
+
 describe('BoardPermissionsService', () => {
   let permissionsService: BoardPermissionsService;
 
@@ -539,182 +544,14 @@ describe('BoardPermissionsService', () => {
 
     it('should handle empty string role gracefully', () => {
       expect(() => {
-        permissionsService.canReadBoard('');
+        permissionsService.canReadBoard('' as BoardRole);
       }).toThrow('Role is required');
     });
 
     it('should handle role case sensitivity', () => {
       // Roles should be case-insensitive or normalized
-      const result = permissionsService.canReadBoard('OWNER');
+      const result = permissionsService.canReadBoard('OWNER' as any);
       expect(result).toBe(true);
     });
   });
 });
-
-/**
- * Type definitions for Board Roles
- */
-type BoardRole = 'owner' | 'admin' | 'member' | 'guest';
-
-/**
- * Interface for permission summary
- */
-interface PermissionSummary {
-  canRead: boolean;
-  canWrite: boolean;
-  canDelete: boolean;
-  canManageMembers: boolean;
-  canDeleteBoard: boolean;
-}
-
-/**
- * Mock implementation to define the interface
- * The actual implementation will be created in:
- * packages/backend/src/domain/board/board-permissions.service.ts
- */
-class BoardPermissionsService {
-  // Read permissions
-  canReadBoard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canReadList(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canReadCard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  // Board management permissions
-  canUpdateBoard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canDeleteBoard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canArchiveBoard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  // Member management permissions
-  canAddMember(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canRemoveMember(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canChangeMemberRole(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  // List permissions
-  canCreateList(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canUpdateList(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canDeleteList(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  // Card permissions
-  canCreateCard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canUpdateCard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canDeleteCard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canMoveCard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  // Role validation helpers
-  isOwner(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  isAdminOrHigher(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  isMemberOrHigher(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canWrite(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canRead(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  getPermissionsForRole(role: BoardRole): PermissionSummary {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  // Permission enforcement
-  enforcePermission(role: BoardRole, action: string): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  enforcePermissionStrict(role: BoardRole, action: string): void {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  // Role hierarchy
-  getRoleHierarchy(): BoardRole[] {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  isRoleHigherThan(role1: BoardRole, role2: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  getRoleLevel(role: BoardRole): number {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  // Contextual permissions
-  canRemoveSpecificMember(
-    userRole: BoardRole,
-    targetMemberRole: BoardRole,
-  ): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canChangeRoleToLevel(
-    userRole: BoardRole,
-    currentTargetRole: BoardRole,
-    newTargetRole: BoardRole,
-  ): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  // Aggregate permissions
-  hasAnyBoardPermission(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canManageBoard(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-
-  canContribute(role: BoardRole): boolean {
-    throw new Error('Not implemented - TDD test phase');
-  }
-}
