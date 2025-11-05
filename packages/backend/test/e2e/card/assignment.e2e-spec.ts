@@ -384,7 +384,9 @@ describe('Card Assignment API (e2e)', () => {
 
       expect(response.body.assignees).toHaveLength(2);
 
-      const assigneeUsers = response.body.assignees.map((a: any) => a.userId);
+      const assigneeUsers = response.body.assignees.map(
+        (a: { userId: string }) => a.userId,
+      );
       expect(assigneeUsers).toContain(userId);
       expect(assigneeUsers).toContain(assigneeId);
 

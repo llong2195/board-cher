@@ -82,5 +82,5 @@ export function parseEmailProvider(provider: string): EmailProvider {
     );
   }
 
-  return normalized as EmailProvider;
+  return normalized;
 }

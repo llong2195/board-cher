@@ -119,7 +119,7 @@ export class EmailService implements EmailRepository {
         });
 
       default:
-        throw new Error(`Unsupported email provider: ${provider}`);
+        throw new Error(`Unsupported email provider: `, provider);
     }
   }
 

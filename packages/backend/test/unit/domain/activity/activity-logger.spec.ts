@@ -97,7 +97,9 @@ describe('ActivityLoggerService', () => {
       await service.handleBoardCreated(event);
 
       // Assert
-      expect(activityRepository.create).toHaveBeenCalledWith(
+      expect(
+        activityRepository.create.bind(activityRepository),
+      ).toHaveBeenCalledWith(
         expect.objectContaining({
           userId: 'user-1',
           boardId: 'board-1',
@@ -106,12 +108,12 @@ describe('ActivityLoggerService', () => {
           entityId: 'board-1',
         }),
       );
-      expect(activityRepository.save).toHaveBeenCalled();
-      expect(boardGateway.broadcastToBoard).toHaveBeenCalledWith(
-        'board-1',
-        'activity:created',
-        expect.any(Object),
-      );
+      expect(
+        activityRepository.save.bind(activityRepository),
+      ).toHaveBeenCalled();
+      expect(
+        boardGateway.broadcastToBoard.bind(boardGateway),
+      ).toHaveBeenCalledWith('board-1', 'activity:created', expect.any(Object));
     });
   });
 
@@ -145,7 +147,9 @@ describe('ActivityLoggerService', () => {
       await service.handleCardCreated(event);
 
       // Assert
-      expect(activityRepository.create).toHaveBeenCalledWith(
+      expect(
+        activityRepository.create.bind(activityRepository),
+      ).toHaveBeenCalledWith(
         expect.objectContaining({
           userId: 'user-1',
           boardId: 'board-1',
@@ -155,7 +159,9 @@ describe('ActivityLoggerService', () => {
           entityId: 'card-1',
         }),
       );
-      expect(activityRepository.save).toHaveBeenCalled();
+      expect(
+        activityRepository.save.bind(activityRepository),
+      ).toHaveBeenCalled();
     });
 
     it('should create activity record for card.moved event', async () => {
@@ -188,7 +194,9 @@ describe('ActivityLoggerService', () => {
       await service.handleCardMoved(event);
 
       // Assert
-      expect(activityRepository.create).toHaveBeenCalledWith(
+      expect(
+        activityRepository.create.bind(activityRepository),
+      ).toHaveBeenCalledWith(
         expect.objectContaining({
           userId: 'user-1',
           boardId: 'board-1',
@@ -234,7 +242,9 @@ describe('ActivityLoggerService', () => {
       await service.handleCommentAdded(event);
 
       // Assert
-      expect(activityRepository.create).toHaveBeenCalledWith(
+      expect(
+        activityRepository.create.bind(activityRepository),
+      ).toHaveBeenCalledWith(
         expect.objectContaining({
           userId: 'user-1',
           boardId: 'board-1',
@@ -275,7 +285,9 @@ describe('ActivityLoggerService', () => {
       await service.handleLabelApplied(event);
 
       // Assert
-      expect(activityRepository.create).toHaveBeenCalledWith(
+      expect(
+        activityRepository.create.bind(activityRepository),
+      ).toHaveBeenCalledWith(
         expect.objectContaining({
           userId: 'user-1',
           boardId: 'board-1',
@@ -317,7 +329,9 @@ describe('ActivityLoggerService', () => {
       await service.handleMemberAssigned(event);
 
       // Assert
-      expect(activityRepository.create).toHaveBeenCalledWith(
+      expect(
+        activityRepository.create.bind(activityRepository),
+      ).toHaveBeenCalledWith(
         expect.objectContaining({
           userId: 'user-1',
           boardId: 'board-1',
@@ -410,32 +424,30 @@ describe('ActivityLoggerService', () => {
       };
 
       activityRepository.create.mockReturnValue(
-        savedActivity as ActivityEntity,
+        savedActivity as unknown as ActivityEntity,
       );
       activityRepository.save.mockResolvedValue(
-        savedActivity as ActivityEntity,
+        savedActivity as unknown as ActivityEntity,
       );
 
       // Act
       await service.handleCardCreated(event);
 
       // Assert
-      expect(boardGateway.broadcastToBoard).toHaveBeenCalledWith(
-        'board-1',
-        'activity:created',
-        {
-          activity: expect.objectContaining({
-            id: 'activity-1',
-            userId: 'user-1',
-            boardId: 'board-1',
-            cardId: 'card-1',
-            actionType: ActivityActionType.CARD_CREATED,
-          }),
-        },
-      );
+      expect(
+        boardGateway.broadcastToBoard.bind(boardGateway),
+      ).toHaveBeenCalledWith('board-1', 'activity:created', {
+        activity: expect.objectContaining({
+          id: 'activity-1',
+          userId: 'user-1',
+          boardId: 'board-1',
+          cardId: 'card-1',
+          actionType: ActivityActionType.CARD_CREATED,
+        }),
+      });
     });
 
-    it('should not broadcast when boardId is null', async () => {
+    it('should not broadcast when boardId is null', () => {
       // Arrange
       const mockActivity = {
         id: 'activity-1',
@@ -450,7 +462,9 @@ describe('ActivityLoggerService', () => {
       // Act
       // We can't easily test this without accessing private methods,
       // but we can verify the gateway is not called unnecessarily
-      expect(boardGateway.broadcastToBoard).not.toHaveBeenCalled();
+      expect(
+        boardGateway.broadcastToBoard.bind(boardGateway),
+      ).not.toHaveBeenCalled();
     });
   });
 });

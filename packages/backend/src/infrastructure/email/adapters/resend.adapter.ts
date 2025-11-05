@@ -1,4 +1,4 @@
-import { Resend } from 'resend';
+import { CreateBatchOptions, CreateEmailOptions, Resend } from 'resend';
 import { EmailProviderAdapter } from './email-provider.adapter';
 import { EmailMessage } from '../../../domain/shared/value-objects/email-message.vo';
 import { EmailSendResult } from '../../../domain/shared/email.repository';
@@ -110,12 +110,13 @@ export class ResendAdapter extends EmailProviderAdapter {
     const results: EmailSendResult[] = [];
 
     // Resend supports batch sending with emails.sendBatch
-    const batchData = messages.map((message) => {
-      const emailData: any = {
+    const batchData: CreateBatchOptions = messages.map((message) => {
+      const emailData: CreateEmailOptions = {
         from: message.from,
         subject: message.subject,
         html: message.htmlBody,
         text: message.getTextBody(),
+        to: [],
       };
 
       if (Array.isArray(message.to)) {
@@ -135,7 +136,7 @@ export class ResendAdapter extends EmailProviderAdapter {
       }
 
       if (message.replyTo) {
-        emailData.reply_to = message.replyTo;
+        emailData.replyTo = message.replyTo;
       }
 
       if (message.attachments && message.attachments.length > 0) {
@@ -161,13 +162,13 @@ export class ResendAdapter extends EmailProviderAdapter {
       // Create results for each message
       messages.forEach((message, index) => {
         const messageId =
-          response.data[index]?.id || `resend-bulk-${Date.now()}-${index}`;
+          response.data.data[index]?.id || `resend-bulk-${Date.now()}-${index}`;
         results.push(this.createSuccessResult(message, messageId));
       });
 
       this.logger.log(`Bulk send complete: ${messages.length} emails sent`);
     } catch (error) {
-      this.logger.error(`Bulk send failed: ${error.message}`);
+      this.logger.error(`Bulk send failed: `, error);
 
       // Create error results for all messages
       messages.forEach((message) => {

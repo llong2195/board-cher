@@ -73,9 +73,9 @@ export abstract class EmailProviderAdapter implements EmailRepository {
    */
   protected createErrorResult(
     message: EmailMessage,
-    error: Error | string,
+    error: unknown,
   ): EmailSendResult {
-    const errorMessage = error instanceof Error ? error.message : error;
+    const errorMessage = error instanceof Error ? error.message : String(error);
 
     return {
       success: false,
@@ -126,8 +126,8 @@ export abstract class EmailProviderAdapter implements EmailRepository {
   /**
    * Log failed send
    */
-  protected logSendFailure(error: Error | string, recipients: string[]): void {
-    const errorMessage = error instanceof Error ? error.message : error;
+  protected logSendFailure(error: unknown, recipients: string[]): void {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     this.logger.error(
       `Failed to send email to ${recipients.length} recipient(s): ${errorMessage}`,
     );

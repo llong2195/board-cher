@@ -362,7 +362,7 @@ describe('LabelController (e2e) - T119', () => {
       expect(Array.isArray(response.body)).toBe(true);
       expect(response.body.length).toBeGreaterThanOrEqual(3);
 
-      const labelNames = response.body.map((l: any) => l.name);
+      const labelNames = response.body.map((l: { name: string }) => l.name);
       expect(labelNames).toContain('Bug');
       expect(labelNames).toContain('Feature');
       expect(labelNames).toContain('Enhancement');
@@ -452,7 +452,9 @@ describe('LabelController (e2e) - T119', () => {
 
       expect(cardResponse.body.labels).toBeDefined();
       expect(Array.isArray(cardResponse.body.labels)).toBe(true);
-      const labelIds = cardResponse.body.labels.map((l: any) => l.id);
+      const labelIds = cardResponse.body.labels.map(
+        (l: { id: string }) => l.id,
+      );
       expect(labelIds).toContain(testLabelId);
     });
 
@@ -613,7 +615,9 @@ describe('LabelController (e2e) - T119', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const labelIds = (cardResponse.body.labels || []).map((l: any) => l.id);
+      const labelIds = (cardResponse.body.labels || []).map(
+        (l: { id: string }) => l.id,
+      );
       expect(labelIds).not.toContain(testLabelId);
     });
 
@@ -685,7 +689,7 @@ describe('LabelController (e2e) - T119', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const labelIds = response.body.map((l: any) => l.id);
+      const labelIds = response.body.map((l: { id: string }) => l.id);
       expect(labelIds).not.toContain(testLabelId);
     });
 
@@ -708,7 +712,9 @@ describe('LabelController (e2e) - T119', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const labelIds = (cardResponse.body.labels || []).map((l: any) => l.id);
+      const labelIds = (cardResponse.body.labels || []).map(
+        (l: { id: string }) => l.id,
+      );
       expect(labelIds).not.toContain(testLabelId);
     });
 

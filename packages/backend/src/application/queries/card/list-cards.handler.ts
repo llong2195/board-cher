@@ -120,8 +120,9 @@ export class ListCardsHandler implements IQueryHandler<ListCardsQuery> {
   private decodeCursor(cursor: string): CursorData {
     try {
       const json = Buffer.from(cursor, 'base64').toString('utf-8');
-      return JSON.parse(json);
+      return JSON.parse(json) as CursorData;
     } catch (error) {
+      console.error('🚀 ~ decodeCursor ~ error:', error);
       // Invalid cursor, return default
       return { id: '', position: 0 };
     }

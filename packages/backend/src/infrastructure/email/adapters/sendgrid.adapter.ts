@@ -1,4 +1,4 @@
-import sgMail from '@sendgrid/mail';
+import sgMail, { MailDataRequired } from '@sendgrid/mail';
 import { EmailProviderAdapter } from './email-provider.adapter';
 import { EmailMessage } from '../../../domain/shared/value-objects/email-message.vo';
 import { EmailSendResult } from '../../../domain/shared/email.repository';
@@ -88,13 +88,13 @@ export class SendGridAdapter extends EmailProviderAdapter {
       const response = await sgMail.send(msg);
 
       // SendGrid returns array of responses, one per request
-      if (!response || response.length === 0) {
+      if (!response || response.length <= 0) {
         throw new Error('SendGrid did not return any response');
       }
 
       // Extract message ID from headers
       const messageId =
-        response[0].headers['x-message-id'] ||
+        (response[0].headers['x-message-id'] as string) ||
         `sendgrid-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
       this.logSendSuccess(messageId, message.getAllRecipients());
@@ -137,8 +137,8 @@ export class SendGridAdapter extends EmailProviderAdapter {
     const results: EmailSendResult[] = [];
 
     // Convert to SendGrid bulk format
-    const sgMessages = messages.map((message) => {
-      const msg: any = {
+    const sgMessages: MailDataRequired[] = messages.map((message) => {
+      const msg: MailDataRequired = {
         from: this.parseEmailAddress(message.from),
         subject: message.subject,
         html: message.htmlBody,
@@ -172,7 +172,7 @@ export class SendGridAdapter extends EmailProviderAdapter {
       // Create results for each message
       messages.forEach((message, index) => {
         const messageId =
-          response[index]?.headers?.['x-message-id'] ||
+          (response[0]?.headers?.['x-message-id'] as string) ||
           `sendgrid-bulk-${Date.now()}-${index}`;
 
         results.push(this.createSuccessResult(message, messageId));
@@ -180,7 +180,7 @@ export class SendGridAdapter extends EmailProviderAdapter {
 
       this.logger.log(`Bulk send complete: ${messages.length} emails sent`);
     } catch (error) {
-      this.logger.error(`Bulk send failed: ${error.message}`);
+      this.logger.error(`Bulk send failed: `, error);
 
       // Create error results for all messages
       messages.forEach((message) => {

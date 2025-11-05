@@ -1,15 +1,19 @@
-import * as brevo from '@getbrevo/brevo';
-import { EmailProviderAdapter } from './email-provider.adapter';
-import { EmailMessage } from '../../../domain/shared/value-objects/email-message.vo';
+import {
+  SendSmtpEmail,
+  TransactionalEmailsApi,
+  TransactionalEmailsApiApiKeys,
+} from '@getbrevo/brevo';
 import { EmailSendResult } from '../../../domain/shared/email.repository';
 import { EmailProvider } from '../../../domain/shared/enums/email-provider.enum';
+import { EmailMessage } from '../../../domain/shared/value-objects/email-message.vo';
+import { EmailProviderAdapter } from './email-provider.adapter';
 
 /**
  * Brevo (Sendinblue) Email Provider Adapter
  * Uses Brevo SDK for sending transactional emails
  */
 export class BrevoAdapter extends EmailProviderAdapter {
-  private readonly apiInstance: brevo.TransactionalEmailsApi;
+  private readonly apiInstance: TransactionalEmailsApi;
 
   constructor(
     private readonly config: {
@@ -18,11 +22,12 @@ export class BrevoAdapter extends EmailProviderAdapter {
   ) {
     super(EmailProvider.BREVO);
 
-    // Configure Brevo API
-    const apiKey = brevo.TransactionalEmailsApiApiKeys.apiKey;
-    apiKey.apiKey = this.config.apiKey;
-
-    this.apiInstance = new brevo.TransactionalEmailsApi();
+    // Configure Brevo API instance
+    this.apiInstance = new TransactionalEmailsApi();
+    this.apiInstance.setApiKey(
+      TransactionalEmailsApiApiKeys.apiKey,
+      this.config.apiKey,
+    );
 
     this.validateConfiguration();
     this.logger.log('Brevo adapter initialized');
@@ -45,7 +50,7 @@ export class BrevoAdapter extends EmailProviderAdapter {
 
     try {
       // Convert EmailMessage to Brevo format
-      const sendSmtpEmail = new brevo.SendSmtpEmail();
+      const sendSmtpEmail = new SendSmtpEmail();
 
       // Parse sender
       sendSmtpEmail.sender = this.parseEmailAddress(message.from);
@@ -81,12 +86,12 @@ export class BrevoAdapter extends EmailProviderAdapter {
 
       const response = await this.apiInstance.sendTransacEmail(sendSmtpEmail);
 
-      if (!response.messageId) {
+      if (!response.body.messageId) {
         throw new Error('Brevo did not return a message ID');
       }
 
-      this.logSendSuccess(response.messageId, message.getAllRecipients());
-      return this.createSuccessResult(message, response.messageId);
+      this.logSendSuccess(response.body.messageId, message.getAllRecipients());
+      return this.createSuccessResult(message, response.body.messageId);
     } catch (error) {
       this.logSendFailure(error, message.getAllRecipients());
       return this.createErrorResult(message, error);

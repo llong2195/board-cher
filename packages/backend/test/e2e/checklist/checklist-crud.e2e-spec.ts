@@ -744,8 +744,10 @@ describe('ChecklistController (e2e) - T120', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const checklist = response.body.find((c: any) => c.id === checklistId);
-      const itemIds = checklist.items.map((i: any) => i.id);
+      const checklist = response.body.find(
+        (c: { id: string }) => c.id === checklistId,
+      );
+      const itemIds = checklist.items.map((i: { id: string }) => i.id);
       expect(itemIds).not.toContain(testItemId);
     });
 
@@ -821,7 +823,7 @@ describe('ChecklistController (e2e) - T120', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const checklistIds = response.body.map((c: any) => c.id);
+      const checklistIds = response.body.map((c: { id: string }) => c.id);
       expect(checklistIds).not.toContain(testChecklistId);
     });
 

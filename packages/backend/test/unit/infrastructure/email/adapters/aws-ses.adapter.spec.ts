@@ -58,7 +58,7 @@ describe('AwsSesAdapter', () => {
       expect(result.provider).toBe('aws_ses');
       expect(result.messageId).toBe('test-message-id-12345');
       expect(result.recipients).toContain('recipient@example.com');
-      expect(mockSesClient.send).toHaveBeenCalledTimes(1);
+      expect(mockSesClient.send.bind(mockSesClient)).toHaveBeenCalledTimes(1);
 
       const sendCall = mockSesClient.send.mock.calls[0][0];
       expect(sendCall).toBeInstanceOf(SendEmailCommand);
@@ -92,7 +92,7 @@ describe('AwsSesAdapter', () => {
 
       await adapter.sendEmail(message);
 
-      expect(mockSesClient.send).toHaveBeenCalled();
+      expect(mockSesClient.send.bind(mockSesClient)).toHaveBeenCalled();
     });
 
     it('should include BCC recipients in command', async () => {
@@ -110,7 +110,7 @@ describe('AwsSesAdapter', () => {
 
       await adapter.sendEmail(message);
 
-      expect(mockSesClient.send).toHaveBeenCalled();
+      expect(mockSesClient.send.bind(mockSesClient)).toHaveBeenCalled();
     });
 
     it('should use text body as fallback if no HTML', async () => {
@@ -191,7 +191,7 @@ describe('AwsSesAdapter', () => {
       expect(results).toHaveLength(2);
       expect(results[0].success).toBe(true);
       expect(results[1].success).toBe(true);
-      expect(mockSesClient.send).toHaveBeenCalledTimes(2);
+      expect(mockSesClient.send.bind(mockSesClient)).toHaveBeenCalledTimes(2);
     });
 
     it('should continue bulk send even if one fails', async () => {

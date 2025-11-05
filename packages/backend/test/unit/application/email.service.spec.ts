@@ -27,6 +27,7 @@ describe('EmailService', () => {
           'email.local.writeToFile': false, // Don't write files in tests
           'email.local.writeToConsole': true, // Enable console for tests to pass validation
         };
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return config[key] ?? defaultValue;
       },
     );
@@ -120,7 +121,7 @@ describe('EmailService', () => {
       });
     });
 
-    it('should throw error for unsupported provider', async () => {
+    it('should throw error for unsupported provider', () => {
       mockConfigService.get.mockImplementation((key: string) => {
         if (key === 'email.provider') return 'unsupported-provider';
         if (key === 'email.maxRetries') return 3;
@@ -129,9 +130,7 @@ describe('EmailService', () => {
       });
 
       expect(() => {
-        new (require('../../../src/application/services/email.service').EmailService)(
-          mockConfigService,
-        );
+        new EmailService(mockConfigService as unknown as ConfigService);
       }).toThrow();
     });
   });

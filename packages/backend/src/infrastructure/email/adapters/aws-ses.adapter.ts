@@ -117,7 +117,7 @@ export class AwsSesAdapter extends EmailProviderAdapter {
   /**
    * Close the SES client connection
    */
-  async close(): Promise<void> {
+  close(): void {
     this.sesClient.destroy();
     this.logger.log('AWS SES adapter closed');
   }

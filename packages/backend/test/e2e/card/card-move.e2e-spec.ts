@@ -175,7 +175,7 @@ describe('Card Move Operations (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const titles = cards.body.map((c: any) => c.title);
+      const titles = cards.body.map((c: { title: string }) => c.title);
       expect(titles).toEqual(['Card 2', 'Card 3', 'Card 1', 'Card 4']);
     });
 
@@ -198,7 +198,7 @@ describe('Card Move Operations (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const titles = cards.body.map((c: any) => c.title);
+      const titles = cards.body.map((c: { title: string }) => c.title);
       expect(titles).toEqual(['Card 1', 'Card 4', 'Card 2', 'Card 3']);
     });
 
@@ -260,7 +260,7 @@ describe('Card Move Operations (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const titles = cards.body.map((c: any) => c.title);
+      const titles = cards.body.map((c: { title: string }) => c.title);
       expect(titles).toEqual(['Card 1', 'Card 2', 'Card 3', 'Card 4']);
     });
   });
@@ -336,7 +336,9 @@ describe('Card Move Operations (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const list1Titles = list1Cards.body.map((c: any) => c.title);
+      const list1Titles = list1Cards.body.map(
+        (c: { title: string }) => c.title,
+      );
       expect(list1Titles).not.toContain('Card to move across lists');
     });
 
@@ -380,7 +382,7 @@ describe('Card Move Operations (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const titles = list2Cards.body.map((c: any) => c.title);
+      const titles = list2Cards.body.map((c: { title: string }) => c.title);
       expect(titles[1]).toBe('Card to move across lists');
     });
 
@@ -654,7 +656,9 @@ describe('Card Move Operations (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      const positions = finalCards.body.map((c: any) => c.position);
+      const positions = finalCards.body.map(
+        (c: { position: number }) => c.position,
+      );
       const uniquePositions = new Set(positions);
       expect(uniquePositions.size).toBe(positions.length); // All positions should be unique
     });

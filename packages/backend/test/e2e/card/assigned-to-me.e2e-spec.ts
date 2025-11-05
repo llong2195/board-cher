@@ -228,7 +228,9 @@ describe('Assigned Cards Query API (e2e)', () => {
       expect(response.body.data).toHaveLength(3);
       expect(response.body.pagination.total).toBe(3);
 
-      const cardTitles = response.body.data.map((c: any) => c.title);
+      const cardTitles = response.body.data.map(
+        (c: { title: string }) => c.title,
+      ) as string[];
       expect(cardTitles).toContain('Card 1');
       expect(cardTitles).toContain('Card 2');
       expect(cardTitles).toContain('Card 3');
@@ -322,8 +324,12 @@ describe('Assigned Cards Query API (e2e)', () => {
       });
 
       // Verify no overlap
-      const page1Ids = page1.body.data.map((c: any) => c.id);
-      const page2Ids = page2.body.data.map((c: any) => c.id);
+      const page1Ids = page1.body.data.map(
+        (c: { id: string }) => c.id,
+      ) as string[];
+      const page2Ids = page2.body.data.map(
+        (c: { id: string }) => c.id,
+      ) as string[];
       const overlap = page1Ids.filter((id: string) => page2Ids.includes(id));
       expect(overlap).toHaveLength(0);
     });
