@@ -7,6 +7,7 @@ import { OrganizationMemberEntity } from '../../infrastructure/persistence/entit
 import { ListEntity } from '../../infrastructure/persistence/entities/list.entity';
 import { CardEntity } from '../../infrastructure/persistence/entities/card.entity';
 import { BoardRepositoryImpl } from '../../infrastructure/persistence/repositories/board.repository.impl';
+import { BoardAggregateRepositoryImpl } from '../../infrastructure/persistence/repositories/board-aggregate.repository.impl';
 import { BoardController } from '../../presentation/controllers/board.controller';
 import { CreateBoardHandler } from '../../application/commands/board/create-board.handler';
 import { UpdateBoardHandler } from '../../application/commands/board/update-board.handler';
@@ -43,9 +44,13 @@ const QueryHandlers = [GetBoardHandler, ListBoardsHandler];
       provide: 'IBoardRepository',
       useClass: BoardRepositoryImpl,
     },
+    {
+      provide: 'IBoardAggregateRepository',
+      useClass: BoardAggregateRepositoryImpl,
+    },
     ...CommandHandlers,
     ...QueryHandlers,
   ],
-  exports: ['IBoardRepository'],
+  exports: ['IBoardRepository', 'IBoardAggregateRepository'],
 })
 export class BoardModule {}

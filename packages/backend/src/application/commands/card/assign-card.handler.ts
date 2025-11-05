@@ -2,12 +2,13 @@
  * T210 - Assign Card Command Handler
  * User Story 6: Card Assignment and Notifications
  *
- * Handles assigning a user to a card.
+ * Handles assigning a user to a card using CardAggregate.
  * Validates:
  * - Card exists
  * - User to be assigned exists and has board access
- * - User is not already assigned (no duplicates)
+ * - User is not already assigned (no duplicates) - enforced by aggregate
  * - Assigner has permission (member or admin, not guest)
+ * Refactored to use DDD aggregate pattern for better business rule encapsulation.
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -15,13 +16,10 @@ import {
   Inject,
   Injectable,
   NotFoundException,
-  ConflictException,
   ForbiddenException,
 } from '@nestjs/common';
 import { AssignCardCommand } from './assign-card.command';
-import { ICardRepository } from '../../../domain/card/card.repository';
-import { DomainEventEmitter } from '../../../domain/shared/domain-event.emitter';
-import { CardAssignedEvent } from '../../../domain/card/events/card.events';
+import { ICardAggregateRepository } from '../../../domain/card/card-aggregate.repository';
 import { DataSource } from 'typeorm';
 import { CardAssignmentEntity } from '../../../infrastructure/persistence/entities/card-assignment.entity';
 import { UserEntity } from '../../../infrastructure/persistence/entities/user.entity';
@@ -32,14 +30,13 @@ import { CardEntity } from '../../../infrastructure/persistence/entities/card.en
 @CommandHandler(AssignCardCommand)
 export class AssignCardHandler implements ICommandHandler<AssignCardCommand> {
   constructor(
-    @Inject('ICardRepository')
-    private readonly cardRepository: ICardRepository,
-    private readonly eventEmitter: DomainEventEmitter,
+    @Inject('ICardAggregateRepository')
+    private readonly cardAggregateRepository: ICardAggregateRepository,
     private readonly dataSource: DataSource,
   ) {}
 
   async execute(command: AssignCardCommand): Promise<CardAssignmentEntity> {
-    // Start transaction
+    // Start transaction (repository handles aggregate persistence transaction)
     return await this.dataSource.transaction(async (manager) => {
       // Verify card exists and get board info
       const card = await manager.findOne(CardEntity, {
@@ -76,46 +73,32 @@ export class AssignCardHandler implements ICommandHandler<AssignCardCommand> {
         );
       }
 
-      // Check if assignment already exists
-      const existingAssignment = await manager.findOne(CardAssignmentEntity, {
+      // Load card aggregate
+      const cardAggregate = await this.cardAggregateRepository.findById(
+        command.cardId,
+      );
+      if (!cardAggregate) {
+        throw new NotFoundException(`Card with ID ${command.cardId} not found`);
+      }
+
+      // Assign user using aggregate (enforces business rules and emits events)
+      // Aggregate will check for duplicates and MAX_ASSIGNEES_PER_CARD constraint
+      cardAggregate.assignUser(command.userId, command.assignedBy);
+
+      // Save aggregate (persists changes and publishes domain events automatically)
+      await this.cardAggregateRepository.save(cardAggregate);
+
+      // Return the assignment entity (query it back from the database)
+      const savedAssignment = await manager.findOne(CardAssignmentEntity, {
         where: {
           cardId: command.cardId,
           userId: command.userId,
         },
       });
 
-      if (existingAssignment) {
-        throw new ConflictException(
-          `User ${command.userId} is already assigned to card ${command.cardId}`,
-        );
+      if (!savedAssignment) {
+        throw new NotFoundException('Assignment was not saved correctly');
       }
-
-      // Create assignment
-      const assignment = new CardAssignmentEntity();
-      assignment.cardId = command.cardId;
-      assignment.userId = command.userId;
-      assignment.assignedBy = command.assignedBy;
-      assignment.assignedAt = new Date();
-
-      const savedAssignment = await manager.save(
-        CardAssignmentEntity,
-        assignment,
-      );
-
-      // Update domain model
-      const cardDomain = await this.cardRepository.findById(command.cardId);
-      if (cardDomain) {
-        cardDomain.addAssignee(command.userId);
-        await this.cardRepository.save(cardDomain);
-      }
-
-      // Emit domain event
-      const event = new CardAssignedEvent(
-        cardDomain!,
-        command.userId,
-        command.assignedBy,
-      );
-      this.eventEmitter.emit('card.assigned', event);
 
       return savedAssignment;
     });

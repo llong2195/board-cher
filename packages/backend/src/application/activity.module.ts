@@ -25,13 +25,26 @@ import { ActivityRepositoryImpl } from '../infrastructure/persistence/repositori
 import { IActivityRepository } from '../domain/activity/activity.repository';
 import { WebSocketModule } from '../infrastructure/websocket/websocket.module';
 import { AuthModule } from '../infrastructure/auth/auth.module';
+import { BoardEntity } from '../infrastructure/persistence/entities/board.entity';
+import { BoardMemberEntity } from '../infrastructure/persistence/entities/board-member.entity';
+import { OrganizationMemberEntity } from '../infrastructure/persistence/entities/organization-member.entity';
+import { ListEntity } from '../infrastructure/persistence/entities/list.entity';
+import { CardEntity } from '../infrastructure/persistence/entities/card.entity';
 
 @Module({
   imports: [
     CqrsModule,
-    TypeOrmModule.forFeature([ActivityEntity]),
+    TypeOrmModule.forFeature([
+      ActivityEntity,
+      // Import entities needed by BoardPermissionGuard
+      BoardEntity,
+      BoardMemberEntity,
+      OrganizationMemberEntity,
+      ListEntity,
+      CardEntity,
+    ]),
     WebSocketModule, // Import to access BoardGateway for real-time updates
-    AuthModule, // Import for BoardPermissionGuard dependencies
+    AuthModule, // Import for BoardPermissionGuard and auth infrastructure
   ],
   controllers: [ActivityController],
   providers: [

@@ -2,8 +2,9 @@
  * Add Comment Command Handler (T137)
  * User Story 2: Enrich Cards with Details
  *
- * Handles adding a text comment to a card.
- * Emits CommentAddedEvent for real-time updates.
+ * Handles adding a text comment to a card using CardAggregate.
+ * Emits CommentAddedEvent for real-time updates (handled by aggregate).
+ * Refactored to use DDD aggregate pattern for better business rule encapsulation.
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -11,51 +12,38 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { AddCommentCommand } from './add-comment.command';
 import { Comment } from '../../../domain/comment/comment.model';
-import { ICommentRepository } from '../../../domain/comment/comment.repository';
-import { ICardRepository } from '../../../domain/card/card.repository';
-import { DomainEventEmitter } from '../../../domain/shared/domain-event.emitter';
-import { CommentAddedEvent } from '../../../domain/comment/events/comment.events';
+import { ICardAggregateRepository } from '../../../domain/card/card-aggregate.repository';
 
 @Injectable()
 @CommandHandler(AddCommentCommand)
 export class AddCommentHandler implements ICommandHandler<AddCommentCommand> {
   constructor(
-    @Inject('ICommentRepository')
-    private readonly commentRepository: ICommentRepository,
-    @Inject('ICardRepository')
-    private readonly cardRepository: ICardRepository,
-    private readonly eventEmitter: DomainEventEmitter,
+    @Inject('ICardAggregateRepository')
+    private readonly cardAggregateRepository: ICardAggregateRepository,
   ) {}
 
   async execute(command: AddCommentCommand): Promise<Comment> {
-    // Verify card exists
-    const card = await this.cardRepository.findById(command.cardId);
-    if (!card) {
+    // Load card aggregate
+    const cardAggregate = await this.cardAggregateRepository.findById(
+      command.cardId,
+    );
+    if (!cardAggregate) {
       throw new NotFoundException(`Card with ID ${command.cardId} not found`);
     }
 
     // TODO: Add permission check - verify user has access to card
 
-    // Create comment domain model
+    // Add comment using aggregate (enforces business rules and emits events)
     const commentId = uuidv4();
-    const comment = Comment.create(
+    const comment = cardAggregate.addComment(
       commentId,
-      command.cardId,
-      command.userId,
       command.content,
+      command.userId,
     );
 
-    // Persist to database
-    const savedComment = await this.commentRepository.save(comment);
+    // Save aggregate (persists changes and publishes domain events automatically)
+    await this.cardAggregateRepository.save(cardAggregate);
 
-    // Update card with comment reference
-    card.addComment(savedComment.id);
-    await this.cardRepository.save(card);
-
-    // Emit domain event for real-time updates
-    const event = new CommentAddedEvent(savedComment);
-    this.eventEmitter.emit('comment.added', event);
-
-    return savedComment;
+    return comment;
   }
 }

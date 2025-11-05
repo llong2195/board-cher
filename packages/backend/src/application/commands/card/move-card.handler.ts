@@ -25,6 +25,7 @@ export class MoveCardHandler implements ICommandHandler<MoveCardCommand> {
     @Inject('IListRepository')
     private readonly listRepository: IListRepository,
     private readonly eventEmitter: DomainEventEmitter,
+    private readonly positionCalculator: PositionCalculatorService,
   ) {}
 
   async execute(command: MoveCardCommand): Promise<Card> {
@@ -52,9 +53,10 @@ export class MoveCardHandler implements ICommandHandler<MoveCardCommand> {
     if (isSameList) {
       // Moving within the same list
       const cardsInList = await this.cardRepository.findByListId(card.listId);
-      const updatedItems = PositionCalculatorService.calculateMovePositions(
+      const updatedItems = this.positionCalculator.recalculateAfterMove(
         cardsInList.map((c) => ({ id: c.id, position: c.position })),
         command.cardId,
+        oldPosition,
         command.targetPosition,
       );
 
@@ -71,8 +73,8 @@ export class MoveCardHandler implements ICommandHandler<MoveCardCommand> {
       const targetCards = await this.cardRepository.findByListId(
         command.targetListId,
       );
-      const newPosition = PositionCalculatorService.calculateInsertPosition(
-        targetCards.map((c) => c.position),
+      const newPosition = this.positionCalculator.calculateInsertPosition(
+        targetCards.map((c) => ({ position: c.position })),
         command.targetPosition,
       );
 

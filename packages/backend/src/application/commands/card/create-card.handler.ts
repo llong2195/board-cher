@@ -26,6 +26,7 @@ export class CreateCardHandler implements ICommandHandler<CreateCardCommand> {
     @Inject('IListRepository')
     private readonly listRepository: IListRepository,
     private readonly eventEmitter: DomainEventEmitter,
+    private readonly positionCalculator: PositionCalculatorService,
   ) {}
 
   async execute(command: CreateCardCommand): Promise<Card> {
@@ -43,9 +44,11 @@ export class CreateCardHandler implements ICommandHandler<CreateCardCommand> {
       const existingCards = await this.cardRepository.findByListId(
         command.listId,
       );
-      position = PositionCalculatorService.getNextPosition(
-        existingCards.map((c) => c.position),
-      );
+      const maxPosition =
+        existingCards.length > 0
+          ? Math.max(...existingCards.map((c) => c.position))
+          : 0;
+      position = maxPosition + 1;
     }
 
     // Create card domain model

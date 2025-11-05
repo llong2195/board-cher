@@ -2,9 +2,10 @@
  * Apply Label to Card Command Handler (T140)
  * User Story 2: Enrich Cards with Details
  *
- * Handles applying a board-level label to a specific card.
+ * Handles applying a board-level label to a specific card using CardAggregate.
  * Verifies label belongs to the card's board.
- * Emits LabelAppliedEvent for real-time updates.
+ * Emits LabelAppliedEvent for real-time updates (handled by aggregate).
+ * Refactored to use DDD aggregate pattern for better business rule encapsulation.
  */
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -12,15 +13,12 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  ConflictException,
   Inject,
 } from '@nestjs/common';
 import { ApplyLabelToCardCommand } from './apply-label.command';
-import { ICardRepository } from '../../../domain/card/card.repository';
+import { ICardAggregateRepository } from '../../../domain/card/card-aggregate.repository';
 import { ILabelRepository } from '../../../domain/label/label.repository';
 import { IListRepository } from '../../../domain/list/list.repository';
-import { DomainEventEmitter } from '../../../domain/shared/domain-event.emitter';
-import { LabelAppliedEvent } from '../../../domain/label/events/label.events';
 
 @Injectable()
 @CommandHandler(ApplyLabelToCardCommand)
@@ -28,19 +26,20 @@ export class ApplyLabelToCardHandler
   implements ICommandHandler<ApplyLabelToCardCommand>
 {
   constructor(
-    @Inject('ICardRepository')
-    private readonly cardRepository: ICardRepository,
+    @Inject('ICardAggregateRepository')
+    private readonly cardAggregateRepository: ICardAggregateRepository,
     @Inject('ILabelRepository')
     private readonly labelRepository: ILabelRepository,
     @Inject('IListRepository')
     private readonly listRepository: IListRepository,
-    private readonly eventEmitter: DomainEventEmitter,
   ) {}
 
   async execute(command: ApplyLabelToCardCommand): Promise<void> {
-    // Verify card exists
-    const card = await this.cardRepository.findById(command.cardId);
-    if (!card) {
+    // Load card aggregate
+    const cardAggregate = await this.cardAggregateRepository.findById(
+      command.cardId,
+    );
+    if (!cardAggregate) {
       throw new NotFoundException(`Card with ID ${command.cardId} not found`);
     }
 
@@ -51,9 +50,13 @@ export class ApplyLabelToCardHandler
     }
 
     // Verify label belongs to the same board as the card
-    const list = await this.listRepository.findById(card.listId);
+    const list = await this.listRepository.findById(
+      cardAggregate.getCard().listId,
+    );
     if (!list) {
-      throw new NotFoundException(`List with ID ${card.listId} not found`);
+      throw new NotFoundException(
+        `List with ID ${cardAggregate.getCard().listId} not found`,
+      );
     }
 
     if (label.boardId !== list.boardId) {
@@ -64,29 +67,11 @@ export class ApplyLabelToCardHandler
 
     // TODO: Add permission check - verify user has access to card
 
-    // Check if label is already applied
-    const isAlreadyApplied = await this.labelRepository.isAppliedToCard(
-      command.labelId,
-      command.cardId,
-    );
-    if (isAlreadyApplied) {
-      throw new ConflictException('Label is already applied to this card');
-    }
+    // Apply label using aggregate (enforces business rules and emits events)
+    // Aggregate will check for duplicates and MAX_LABELS_PER_CARD constraint
+    cardAggregate.applyLabel(command.labelId, command.userId);
 
-    // Apply label to card (creates many-to-many relationship)
-    await this.labelRepository.applyToCard(command.labelId, command.cardId);
-
-    // Update card domain model
-    card.addLabel(command.labelId);
-    await this.cardRepository.save(card);
-
-    // Emit domain event for real-time updates
-    const event = new LabelAppliedEvent(
-      command.labelId,
-      label.boardId,
-      command.cardId,
-      command.userId,
-    );
-    this.eventEmitter.emit('label.applied', event);
+    // Save aggregate (persists changes and publishes domain events automatically)
+    await this.cardAggregateRepository.save(cardAggregate);
   }
 }
