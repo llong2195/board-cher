@@ -24,6 +24,8 @@ import { LabelModule } from './domain/label/label.module';
 import { ChecklistModule } from './domain/checklist/checklist.module';
 import { SharedModule } from './domain/shared/shared.module';
 import { ActivityModule } from './application/activity.module';
+import { NotificationModule } from './application/notification.module';
+import { EmailModule } from './infrastructure/email/email.module';
 
 @Module({
   imports: [
@@ -68,6 +70,8 @@ import { ActivityModule } from './application/activity.module';
     SharedModule,
     AuthModule,
     ActivityModule,
+    NotificationModule, // T373-T375: Notification with email integration
+    EmailModule, // T365-T372: Multi-provider email service
 
     // Domain modules
     UserModule,

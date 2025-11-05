@@ -8,11 +8,7 @@
 import { CardAggregate } from '../../../../src/domain/card/card-aggregate';
 import { Card } from '../../../../src/domain/card/card.model';
 import { Comment } from '../../../../src/domain/comment/comment.model';
-import {
-  Checklist,
-  ChecklistItem,
-} from '../../../../src/domain/checklist/checklist.model';
-import { Attachment } from '../../../../src/domain/attachment/attachment.model';
+import { Checklist } from '../../../../src/domain/checklist/checklist.model';
 import {
   CommentAddedEvent,
   ChecklistAddedEvent,
@@ -412,7 +408,7 @@ describe('CardAggregate', () => {
       const checklist = aggregate.addChecklist('checklist-1', 'My Checklist');
       aggregate.clearDomainEvents();
 
-      const item = aggregate.addChecklistItem(checklist.id, 'item-1', 'Task 1');
+      aggregate.addChecklistItem(checklist.id, 'item-1', 'Task 1');
       const events = aggregate.getDomainEvents();
 
       expect(events).toHaveLength(1);

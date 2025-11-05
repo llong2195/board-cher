@@ -164,7 +164,7 @@ describe('BoardAggregate', () => {
       const originalTimestamp = aggregate.getBoard().updatedAt;
 
       // Wait a bit to ensure timestamp changes
-      const list = aggregate.addList('To Do', testUserId);
+      aggregate.addList('To Do', testUserId);
 
       expect(aggregate.getBoard().updatedAt.getTime()).toBeGreaterThanOrEqual(
         originalTimestamp.getTime(),
@@ -297,7 +297,7 @@ describe('BoardAggregate', () => {
         testUserId,
       );
 
-      const list1 = aggregate.addList('List 1', testUserId);
+      const _list1 = aggregate.addList('List 1', testUserId);
       const list2 = aggregate.addList('List 2', testUserId);
       const list3 = aggregate.addList('List 3', testUserId);
       aggregate.clearDomainEvents();

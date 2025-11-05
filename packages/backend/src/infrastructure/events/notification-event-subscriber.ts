@@ -52,7 +52,7 @@ export class NotificationEventSubscriber {
       }
 
       // Create notification for the assignee
-      const notification = this.notificationService.createNotification(
+      const notification = await this.notificationService.createNotification(
         event.assignedUserId,
         NotificationType.CARD_ASSIGNED,
         'Card Assigned',
@@ -110,7 +110,7 @@ export class NotificationEventSubscriber {
           continue;
         }
 
-        const notification = this.notificationService.createNotification(
+        const notification = await this.notificationService.createNotification(
           assignment.userId,
           NotificationType.CARD_COMMENT_ADDED,
           'New Comment',
