@@ -4,6 +4,9 @@ Auto-generated from all feature plans. Last updated: 2025-10-31
 
 ## Active Technologies
 
+- Node.js 20.x LTS, TypeScript 5.9.3 (002-mvp-integration-refactor)
+- PostgreSQL (via TypeORM), Redis (ioredis 5.8.2) for caching and WebSocket scaling (002-mvp-integration-refactor)
+
 - TypeScript 5.3+, Node.js 20.x LTS + NestJS 10.x, React 18.x, TypeORM 0.3.x, ioredis 5.x, Socket.io 4.x, shadcn/ui (001-kanban-board)
 
 ## Project Structure
@@ -34,6 +37,10 @@ TypeScript 5.3+, Node.js 20.x LTS: Follow standard conventions
 - Design system: Use shadcn/ui components consistently
 
 ## Recent Changes
+
+- 002-mvp-integration-refactor: Generated task breakdown with 125 tasks across 6 phases (40-50 hours estimated)
+
+- 002-mvp-integration-refactor: Added Node.js 20.x LTS, TypeScript 5.9.3
 
 - 001-kanban-board: Added TypeScript 5.3+, Node.js 20.x LTS + NestJS 10.x, React 18.x, TypeORM 0.3.x, ioredis 5.x, Socket.io 4.x, shadcn/ui
 
