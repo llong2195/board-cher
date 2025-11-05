@@ -6,8 +6,14 @@ import type { AxiosInstance } from 'axios';
  * Handles all HTTP requests related to boards
  */
 
+export interface Label {
+  id: string;
+  name: string;
+  color: string;
+}
+
 export interface Board {
-  labels: any;
+  labels: Label[];
   id: string;
   organizationId: string;
   name: string;

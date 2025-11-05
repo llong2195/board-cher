@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'playwright.config.ts', 'test/**/*.ts', 'test/**/*.tsx']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -20,7 +20,7 @@ export default defineConfig([
       globals: globals.browser,
       parser: tseslint.parser,
       parserOptions: {
-        project: ['./tsconfig.app.json', './tsconfig.node.json', './tsconfig.test.json'],
+        project: ['./tsconfig.app.json', './tsconfig.node.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },

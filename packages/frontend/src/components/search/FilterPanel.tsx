@@ -153,7 +153,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
               <h3 className="text-sm font-semibold">Due Date</h3>
               <RadioGroup
                 value={dueDateFilter}
-                onValueChange={(value) =>
+                onValueChange={(value: string) =>
                   onDueDateFilterChange(value as 'all' | 'today' | 'overdue' | 'none')
                 }
               >

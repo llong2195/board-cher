@@ -287,7 +287,7 @@ describe('Card CRUD Operations (e2e)', () => {
       }
 
       // Verify expected titles in order
-      const titles = response.body.map((card: any) => card.title);
+      const titles = response.body.map((card: { title: string }) => card.title);
       expect(titles).toContain('Card at position 1');
       expect(titles).toContain('Card at position 2');
       expect(titles).toContain('Card at position 3');

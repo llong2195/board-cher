@@ -6,8 +6,21 @@ import type { AxiosInstance } from 'axios';
  * Handles all HTTP requests related to cards
  */
 
+export interface CardAssignment {
+  id: string;
+  cardId: string;
+  userId: string;
+  assignedAt: Date;
+  user?: {
+    id: string;
+    username: string;
+    email: string;
+    avatarUrl?: string;
+  };
+}
+
 export interface Card {
-  assignments: never[];
+  assignments: CardAssignment[];
   id: string;
   listId: string;
   title: string;

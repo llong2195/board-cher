@@ -21,7 +21,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   hasActiveSearch = false,
 }) => {
   const [query, setQuery] = useState(defaultValue);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Update query when defaultValue changes

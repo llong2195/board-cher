@@ -286,6 +286,7 @@ export const useBoardStore = create<BoardState>()(
           description,
           position: (get().cards[listId]?.length || 0) + 1,
           isArchived: false,
+          assignments: [],
           createdBy: '', // Will be filled by server
           createdAt: new Date(),
           updatedAt: new Date(),

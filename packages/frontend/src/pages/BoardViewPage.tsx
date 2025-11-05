@@ -6,7 +6,8 @@ import { FilterPanel, type FilterOption } from '../components/search/FilterPanel
 import { SearchBar } from '../components/search/SearchBar';
 import { BoardSkeleton } from '../components/skeleton/BoardSkeleton';
 import { useBoardRealtime } from '../hooks/useBoardRealtime';
-import type { Card as StoreCard } from '../services/api/card.api';
+import type { Label } from '../services/api/board.api';
+import type { Card as StoreCard, CardAssignment } from '../services/api/card.api';
 import type { List as StoreList } from '../services/api/list.api';
 import {
   organizationApi,
@@ -188,7 +189,7 @@ export function BoardViewPage() {
   // Extract available labels and assignees for filter panel (T241)
   const availableLabels: FilterOption[] = useMemo(() => {
     return (
-      board.labels?.map((label: { id: unknown; name: unknown; color: unknown }) => ({
+      board.labels?.map((label: Label) => ({
         id: label.id,
         name: label.name,
         color: label.color,
@@ -199,12 +200,14 @@ export function BoardViewPage() {
   const allCards = Object.values(cards).flat();
   const availableAssignees: FilterOption[] = Array.from(
     new Set(
-      allCards.flatMap((card) => card.assignments || []).map((assignment) => assignment.userId),
+      allCards
+        .flatMap((card) => card.assignments || [])
+        .map((assignment: CardAssignment) => assignment.userId),
     ),
   ).map((userId) => {
     const assignment = allCards
       .flatMap((card) => card.assignments || [])
-      .find((a) => a.userId === userId);
+      .find((a: CardAssignment) => a.userId === userId);
     return {
       id: userId,
       name: assignment?.user?.username || userId,
