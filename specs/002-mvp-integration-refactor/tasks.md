@@ -33,16 +33,16 @@ Tasks are organized into phases by priority and dependencies:
 
 **Goal**: Establish baseline, verify environment, create new folder structure
 
-- [ ] [T001] [P] Verify development environment setup (Node.js 20.x, pnpm, Git)
-- [ ] [T002] [P] Install/update dependencies to specified versions in `packages/frontend/package.json` (React 19.1.1, Vite 7.1.7, TypeScript 5.9.3, etc.)
+- [x] [T001] [P] Verify development environment setup (Node.js 20.x, pnpm, Git)
+- [x] [T002] [P] Install/update dependencies to specified versions in `packages/frontend/package.json` (React 19.1.1, Vite 7.1.7, TypeScript 5.9.3, etc.)
 - [ ] [T003] [P] Verify backend is running and accessible at API base URL
 - [ ] [T004] [P] Run existing E2E tests to establish baseline functionality in `packages/frontend/test/e2e/`
-- [ ] [T005] Create new folder structure: `packages/frontend/src/features/` with subdirectories `board/`, `card/`, `list/`
-- [ ] [T006] [P] Create new folder structure: `packages/frontend/src/services/api/` and `packages/frontend/src/services/websocket/`
-- [ ] [T007] [P] Create new folder structure: `packages/frontend/src/hooks/api/`, `packages/frontend/src/hooks/websocket/`, `packages/frontend/src/hooks/common/`
-- [ ] [T008] [P] Create barrel exports: `packages/frontend/src/features/board/index.ts`, `packages/frontend/src/features/card/index.ts`, `packages/frontend/src/features/list/index.ts`
-- [ ] [T009] Create TypeScript types directory structure: `packages/frontend/src/types/` with files `board.types.ts`, `card.types.ts`, `list.types.ts`, `api.types.ts`, `websocket.types.ts`
-- [ ] [T010] Configure TypeScript path aliases in `packages/frontend/tsconfig.json` for `@/features/*`, `@/services/*`, `@/hooks/*`, `@/types/*`
+- [x] [T005] Create new folder structure: `packages/frontend/src/features/` with subdirectories `board/`, `card/`, `list/`
+- [x] [T006] [P] Create new folder structure: `packages/frontend/src/services/api/` and `packages/frontend/src/services/websocket/`
+- [x] [T007] [P] Create new folder structure: `packages/frontend/src/hooks/api/`, `packages/frontend/src/hooks/websocket/`, `packages/frontend/src/hooks/common/`
+- [x] [T008] [P] Create barrel exports: `packages/frontend/src/features/board/index.ts`, `packages/frontend/src/features/card/index.ts`, `packages/frontend/src/features/list/index.ts`
+- [x] [T009] Create TypeScript types directory structure: `packages/frontend/src/types/` with files `board.types.ts`, `card.types.ts`, `list.types.ts`, `api.types.ts`, `websocket.types.ts`
+- [x] [T010] Configure TypeScript path aliases in `packages/frontend/tsconfig.json` for `@/features/*`, `@/services/*`, `@/hooks/*`, `@/types/*`
 
 ---
 
@@ -52,43 +52,43 @@ Tasks are organized into phases by priority and dependencies:
 
 ### Error Handling Infrastructure
 
-- [ ] [T011] Define error type hierarchy in `packages/frontend/src/types/error.types.ts` (AppError, ApiError, NetworkError, ValidationError, AuthError, PermissionError, NotFoundError, WebSocketError classes)
-- [ ] [T012] [P] Create type guards and utilities in `packages/frontend/src/lib/errors.ts` (isApiError, isNetworkError, isValidationError, getErrorMessage functions)
-- [ ] [T013] [P] Create ErrorBoundary component in `packages/frontend/src/components/ErrorBoundary.tsx` with fallback UI and reset functionality
-- [ ] [T014] Wrap App component with ErrorBoundary in `packages/frontend/src/main.tsx`
+- [x] [T011] Define error type hierarchy in `packages/frontend/src/types/error.types.ts` (AppError, ApiError, NetworkError, ValidationError, AuthError, PermissionError, NotFoundError, WebSocketError classes)
+- [x] [T012] [P] Create type guards and utilities in `packages/frontend/src/lib/errors.ts` (isApiError, isNetworkError, isValidationError, getErrorMessage functions)
+- [x] [T013] [P] Create ErrorBoundary component in `packages/frontend/src/components/ErrorBoundary.tsx` with fallback UI and reset functionality
+- [x] [T014] Wrap App component with ErrorBoundary in `packages/frontend/src/main.tsx`
 
 ### API Client & HTTP Interceptors
 
-- [ ] [T015] Create axios client instance with configuration in `packages/frontend/src/services/api/client.ts` (base URL, timeout, headers, auth token interceptor)
-- [ ] [T016] Implement response interceptor with retry logic in `packages/frontend/src/services/api/client.ts` (shouldRetry function, exponential backoff, max 3 retries)
-- [ ] [T017] Implement error transformation in `packages/frontend/src/services/api/client.ts` (transformError function mapping axios errors to custom error types)
-- [ ] [T018] [P] Implement error logging utility in `packages/frontend/src/services/api/client.ts` (console logging, production Sentry integration placeholder)
-- [ ] [T019] Add authentication token management in `packages/frontend/src/services/api/client.ts` (request interceptor adding Bearer token from localStorage/auth context)
+- [x] [T015] Create axios client instance with configuration in `packages/frontend/src/services/api/client.ts` (base URL, timeout, headers, auth token interceptor)
+- [x] [T016] Implement response interceptor with retry logic in `packages/frontend/src/services/api/client.ts` (shouldRetry function, exponential backoff, max 3 retries)
+- [x] [T017] Implement error transformation in `packages/frontend/src/services/api/client.ts` (transformError function mapping axios errors to custom error types)
+- [x] [T018] [P] Implement error logging utility in `packages/frontend/src/services/api/client.ts` (console logging, production Sentry integration placeholder)
+- [x] [T019] Add authentication token management in `packages/frontend/src/services/api/client.ts` (request interceptor adding Bearer token from localStorage/auth context)
 
 ### Toast Notification System
 
-- [ ] [T020] Verify shadcn/ui Toast component is installed and configured in `packages/frontend/src/components/ui/`
-- [ ] [T021] Create custom useToast hook in `packages/frontend/src/hooks/common/useToast.ts` (success, error, info, warning methods with retry action support)
+- [x] [T020] Verify shadcn/ui Toast component is installed and configured in `packages/frontend/src/components/ui/`
+- [x] [T021] Create custom useToast hook in `packages/frontend/src/hooks/common/useToast.ts` (success, error, info, warning methods with retry action support)
 - [ ] [T022] Create ToastProvider wrapper component in `packages/frontend/src/providers/ToastProvider.tsx` (if needed for global toast state)
 
 ### WebSocket Service
 
-- [ ] [T023] Define WebSocket event types in `packages/frontend/src/types/websocket.types.ts` (WebSocketConnectionEvent, BoardUpdatedEvent, ListCreatedEvent, CardMovedEvent, etc. - 11 event interfaces)
-- [ ] [T024] Create WebSocketService singleton class in `packages/frontend/src/services/websocket/WebSocketService.ts` (connect, disconnect, on, off, emit, getConnectionStatus methods)
-- [ ] [T025] Implement connection management in WebSocketService (Socket.io initialization with auth, reconnection config, connection event handlers)
-- [ ] [T026] [P] Implement error handling in WebSocketService (connect_error, error event handlers with toast notifications)
-- [ ] [T027] [P] Implement room management in WebSocketService (board:join, board:leave, board:joined event handlers)
-- [ ] [T028] Create base useWebSocket hook in `packages/frontend/src/hooks/websocket/useWebSocket.ts` (connection status state, connect/disconnect effects, status return)
+- [x] [T023] Define WebSocket event types in `packages/frontend/src/types/websocket.types.ts` (WebSocketConnectionEvent, BoardUpdatedEvent, ListCreatedEvent, CardMovedEvent, etc. - 11 event interfaces)
+- [x] [T024] Create WebSocketService singleton class in `packages/frontend/src/services/websocket/WebSocketService.ts` (connect, disconnect, on, off, emit, getConnectionStatus methods)
+- [x] [T025] Implement connection management in WebSocketService (Socket.io initialization with auth, reconnection config, connection event handlers)
+- [x] [T026] [P] Implement error handling in WebSocketService (connect_error, error event handlers with toast notifications)
+- [x] [T027] [P] Implement room management in WebSocketService (board:join, board:leave, board:joined event handlers)
+- [x] [T028] Create base useWebSocket hook in `packages/frontend/src/hooks/websocket/useWebSocket.ts` (connection status state, connect/disconnect effects, status return)
 - [ ] [T029] Add WebSocket connection status indicator component in `packages/frontend/src/components/WebSocketStatus.tsx` (optional: show connection state in UI)
 
 ### Core TypeScript Types
 
-- [ ] [T030] [P] Define core entity interfaces in `packages/frontend/src/types/board.types.ts` (Board, BoardMember, CreateBoardDto, UpdateBoardDto)
-- [ ] [T031] [P] Define list entity interfaces in `packages/frontend/src/types/list.types.ts` (List, CreateListDto, UpdateListDto, ReorderListsDto)
-- [ ] [T032] [P] Define card entity interfaces in `packages/frontend/src/types/card.types.ts` (Card, CardAssignee, CreateCardDto, UpdateCardDto, MoveCardDto)
-- [ ] [T033] [P] Define label and supporting types in `packages/frontend/src/types/card.types.ts` (Label, LabelColor, Attachment, Comment, CreateCommentDto)
-- [ ] [T034] [P] Define API response wrappers in `packages/frontend/src/types/api.types.ts` (ApiResponse<T>, ApiError, PaginatedResponse<T>)
-- [ ] [T035] [P] Define hook state types in `packages/frontend/src/types/api.types.ts` (UseQueryResult<T>, UseMutationResult<TData, TVariables>)
+- [x] [T030] [P] Define core entity interfaces in `packages/frontend/src/types/board.types.ts` (Board, BoardMember, CreateBoardDto, UpdateBoardDto)
+- [x] [T031] [P] Define list entity interfaces in `packages/frontend/src/types/list.types.ts` (List, CreateListDto, UpdateListDto, ReorderListsDto)
+- [x] [T032] [P] Define card entity interfaces in `packages/frontend/src/types/card.types.ts` (Card, CardAssignee, CreateCardDto, UpdateCardDto, MoveCardDto)
+- [x] [T033] [P] Define label and supporting types in `packages/frontend/src/types/card.types.ts` (Label, LabelColor, Attachment, Comment, CreateCommentDto)
+- [x] [T034] [P] Define API response wrappers in `packages/frontend/src/types/api.types.ts` (ApiResponse<T>, ApiError, PaginatedResponse<T>)
+- [x] [T035] [P] Define hook state types in `packages/frontend/src/types/api.types.ts` (UseQueryResult<T>, UseMutationResult<TData, TVariables>)
 
 ---
 
@@ -117,18 +117,18 @@ Tasks are organized into phases by priority and dependencies:
 
 - [ ] [T047] [US1] Create card API service in `packages/frontend/src/services/api/card.service.ts` (getCard, createCard, updateCard, moveCard, deleteCard functions)
 - [ ] [T048] [US1] [P] Create useCreateCard hook in `packages/frontend/src/hooks/api/useCreateCard.ts` (mutation hook with optimistic update, auto-position calculation)
-- [ ] [T049] [US1] [P] Create useUpdateCard hook in `packages/frontend/src/hooks/api/useUpdateCard.ts` (mutation hook with optimistic update, silent operation for minor updates)
-- [ ] [T050] [US1] Create useMoveCard hook in `packages/frontend/src/hooks/api/useMoveCard.ts` (mutation hook with optimistic update, drag-and-drop support)
-- [ ] [T051] [US1] [P] Create useDeleteCard hook in `packages/frontend/src/hooks/api/useDeleteCard.ts` (mutation hook with confirmation, optimistic removal)
+- [x] [T049] [US1] [P] Create useUpdateCard hook in `packages/frontend/src/hooks/api/useUpdateCard.ts` (mutation hook with optimistic update, silent operation for minor updates)
+- [x] [T050] [US1] Create useMoveCard hook in `packages/frontend/src/hooks/api/useMoveCard.ts` (mutation hook with optimistic update, drag-and-drop support)
+- [x] [T051] [US1] [P] Create useDeleteCard hook in `packages/frontend/src/hooks/api/useDeleteCard.ts` (mutation hook with confirmation, optimistic removal)
 
 ### Real-Time Synchronization (WebSocket Events)
 
-- [ ] [T052] [US1] Implement board event handlers in WebSocketService (board:updated, board:member:joined, board:member:left)
-- [ ] [T053] [US1] [P] Implement list event handlers in WebSocketService (list:created, list:updated, list:deleted, lists:reordered)
-- [ ] [T054] [US1] [P] Implement card event handlers in WebSocketService (card:created, card:updated, card:moved, card:deleted)
-- [ ] [T055] [US1] Create useRealtimeBoardUpdates hook in `packages/frontend/src/hooks/websocket/useRealtimeBoardUpdates.ts` (subscribes to board-specific events, deduplication logic)
-- [ ] [T056] [US1] Implement event deduplication logic in useRealtimeBoardUpdates (skip events from current user using updatedBy.userId check)
-- [ ] [T057] [US1] Implement reconnection sync strategy in useWebSocket (refetch board data on reconnect event)
+- [x] [T052] [US1] Implement board event handlers in WebSocketService (board:updated, board:member:joined, board:member:left)
+- [x] [T053] [US1] [P] Implement list event handlers in WebSocketService (list:created, list:updated, list:deleted, lists:reordered)
+- [x] [T054] [US1] [P] Implement card event handlers in WebSocketService (card:created, card:updated, card:moved, card:deleted)
+- [x] [T055] [US1] Create useRealtimeBoardUpdates hook in `packages/frontend/src/hooks/websocket/useRealtimeBoardUpdates.ts` (subscribes to board-specific events, deduplication logic)
+- [x] [T056] [US1] Implement event deduplication logic in useRealtimeBoardUpdates (skip events from current user using updatedBy.userId check)
+- [x] [T057] [US1] Implement reconnection sync strategy in useWebSocket (refetch board data on reconnect event)
 
 ### Integration Testing
 
