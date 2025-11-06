@@ -8,6 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prepare": "cd ../.. && husky packages/backend/.husky",
     "start": "node dist/backend/src/main",
     "dev": "nest start --watch",
     "start:dev": "nest start --watch",
@@ -82,11 +83,14 @@
     "@types/node": "^22.18.13",
     "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^6.0.3",
+    "autocannon": "^8.0.0",
     "eslint": "^9.39.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
     "jest": "^30.2.0",
+    "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
     "socket.io-client": "^4.8.1",
     "source-map-support": "^0.5.21",
@@ -116,6 +120,14 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
+    "coverageThresholds": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^src/(.*)$": "<rootDir>/src/$1"
@@ -126,5 +138,11 @@
         "useESM": true
       }
     }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }

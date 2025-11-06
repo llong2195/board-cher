@@ -1,0 +1,2093 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["App"]
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "description": "Create a new user account with email and password. Returns user details and JWT tokens.",
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/RegisterDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully registered",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
+            }
+          },
+          "400": {
+            "description": "Invalid input data (e.g., invalid email format, weak password)"
+          },
+          "409": { "description": "User with this email already exists" }
+        },
+        "summary": "Register a new user",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "description": "Authenticate user with email and password. Returns user details and JWT tokens.",
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/LoginDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully authenticated",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponseDto" } }
+            }
+          },
+          "400": { "description": "Invalid credentials" },
+          "401": { "description": "Invalid email or password" }
+        },
+        "summary": "Login with credentials",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/auth/me": {
+      "get": {
+        "description": "Retrieve the profile information of the currently authenticated user. Requires valid JWT token.",
+        "operationId": "AuthController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "string", "format": "uuid" },
+                    "email": { "type": "string", "format": "email" },
+                    "name": { "type": "string" },
+                    "createdAt": { "type": "string", "format": "date-time" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid or expired JWT token" }
+        },
+        "security": [{ "JWT-auth": [] }],
+        "summary": "Get current user profile",
+        "tags": ["auth"]
+      }
+    },
+    "/api/v1/cards/{cardId}/activity": {
+      "get": {
+        "operationId": "ActivityController_getCardActivity",
+        "parameters": [
+          {
+            "name": "cardId",
+            "required": true,
+            "in": "path",
+            "description": "Card UUID",
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174000", "type": "string" }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": { "example": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": { "example": 20, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card activity retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedActivityResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Get activity history for a card",
+        "tags": ["activities"]
+      }
+    },
+    "/api/v1/boards/{boardId}/activity": {
+      "get": {
+        "operationId": "ActivityController_getBoardActivity",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "description": "Board UUID",
+            "schema": { "example": "123e4567-e89b-12d3-a456-426614174001", "type": "string" }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number (1-based)",
+            "schema": { "example": 1, "type": "number" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Items per page",
+            "schema": { "example": 20, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Board activity retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PaginatedActivityResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Get activity history for a board",
+        "tags": ["activities"]
+      }
+    },
+    "/api/v1/boards": {
+      "post": {
+        "operationId": "BoardController_createBoard",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateBoardDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Board created successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BoardResponseDto" } }
+            }
+          }
+        },
+        "summary": "Create a new board",
+        "tags": ["boards"]
+      },
+      "get": {
+        "operationId": "BoardController_listBoards",
+        "parameters": [
+          {
+            "name": "organizationId",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          { "name": "page", "required": true, "in": "query", "schema": { "type": "number" } },
+          { "name": "limit", "required": true, "in": "query", "schema": { "type": "number" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Boards retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/BoardResponseDto" }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List boards with pagination",
+        "tags": ["boards"]
+      }
+    },
+    "/api/v1/boards/{id}": {
+      "get": {
+        "operationId": "BoardController_getBoard",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Board retrieved successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BoardResponseDto" } }
+            }
+          }
+        },
+        "summary": "Get board details by ID",
+        "tags": ["boards"]
+      },
+      "put": {
+        "operationId": "BoardController_updateBoard",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateBoardDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Board updated successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/BoardResponseDto" } }
+            }
+          }
+        },
+        "summary": "Update board",
+        "tags": ["boards"]
+      },
+      "delete": {
+        "operationId": "BoardController_deleteBoard",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Board deleted successfully" } },
+        "summary": "Delete board (soft delete)",
+        "tags": ["boards"]
+      }
+    },
+    "/api/v1/organizations": {
+      "post": {
+        "operationId": "OrganizationController_createOrganization",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateOrganizationDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Organization created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OrganizationResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Create a new organization",
+        "tags": ["organizations"]
+      },
+      "get": {
+        "operationId": "OrganizationController_listOrganizations",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Organizations retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/OrganizationResponseDto" }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List organizations for current user",
+        "tags": ["organizations"]
+      }
+    },
+    "/api/v1/organizations/{id}": {
+      "get": {
+        "operationId": "OrganizationController_getOrganization",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organization retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OrganizationResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Get organization by ID",
+        "tags": ["organizations"]
+      }
+    },
+    "/api/v1/organizations/{id}/members": {
+      "get": {
+        "operationId": "OrganizationController_getMembers",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Members retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/OrganizationMemberResponseDto" }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get organization members",
+        "tags": ["organizations"]
+      },
+      "post": {
+        "operationId": "OrganizationController_inviteMember",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/InviteMemberDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Member invited successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OrganizationMemberResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Invite member to organization",
+        "tags": ["organizations"]
+      }
+    },
+    "/api/v1/organizations/{id}/members/{userId}/role": {
+      "put": {
+        "operationId": "OrganizationController_changeMemberRole",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "userId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/ChangeMemberRoleDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Member role changed successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OrganizationMemberResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Change member role",
+        "tags": ["organizations"]
+      }
+    },
+    "/api/v1/organizations/{id}/members/{userId}": {
+      "delete": {
+        "operationId": "OrganizationController_removeMember",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "userId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Member removed successfully" } },
+        "summary": "Remove member from organization",
+        "tags": ["organizations"]
+      }
+    },
+    "/api/v1/boards/{boardId}/lists": {
+      "post": {
+        "operationId": "ListController_createList",
+        "parameters": [
+          { "name": "boardId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateListDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "List created successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ListResponseDto" } }
+            }
+          }
+        },
+        "summary": "Create a new list in a board",
+        "tags": ["lists"]
+      },
+      "get": {
+        "operationId": "ListController_getBoardLists",
+        "parameters": [
+          { "name": "boardId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lists retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/ListResponseDto" }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get all lists in a board",
+        "tags": ["lists"]
+      }
+    },
+    "/api/v1/lists/{id}": {
+      "put": {
+        "operationId": "ListController_moveList",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/MoveListDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List updated successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/ListResponseDto" } }
+            }
+          }
+        },
+        "summary": "Update or move a list",
+        "tags": ["lists"]
+      },
+      "delete": {
+        "operationId": "ListController_deleteList",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "List deleted successfully" } },
+        "summary": "Delete a list",
+        "tags": ["lists"]
+      }
+    },
+    "/api/v1/lists/{listId}/cards": {
+      "post": {
+        "operationId": "CardController_createCard",
+        "parameters": [
+          { "name": "listId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateCardDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Card created successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CardResponseDto" } }
+            }
+          }
+        },
+        "summary": "Create a new card in a list",
+        "tags": ["cards"]
+      },
+      "get": {
+        "description": "Supports cursor-based pagination for large lists",
+        "operationId": "CardController_getListCards",
+        "parameters": [
+          { "name": "listId", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "cursor", "required": true, "in": "query", "schema": { "type": "string" } },
+          { "name": "limit", "required": true, "in": "query", "schema": { "type": "number" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cards retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/CardResponseDto" }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get all cards in a list",
+        "tags": ["cards"]
+      }
+    },
+    "/api/v1/boards/{boardId}/cards/search": {
+      "get": {
+        "description": "Full-text search on card title and description. Case-insensitive with pagination support.",
+        "operationId": "CardController_searchCards",
+        "parameters": [
+          { "name": "boardId", "required": true, "in": "path", "schema": { "type": "string" } },
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "Search term to match against card title and description",
+            "schema": { "example": "bug fix", "type": "string" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Maximum number of results to return",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "example": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Number of results to skip for pagination",
+            "schema": { "minimum": 0, "default": 0, "example": 0, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/CardResponseDto" }
+                    },
+                    "total": { "type": "number", "example": 42 },
+                    "limit": { "type": "number", "example": 50 },
+                    "offset": { "type": "number", "example": 0 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Search cards in a board",
+        "tags": ["cards"]
+      }
+    },
+    "/api/v1/boards/{boardId}/cards": {
+      "get": {
+        "description": "Filter cards by labels (OR), assignees (OR), and due dates (AND logic). Supports pagination.",
+        "operationId": "CardController_filterCards",
+        "parameters": [
+          { "name": "boardId", "required": true, "in": "path", "schema": { "type": "string" } },
+          {
+            "name": "labelId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by label IDs (OR logic)",
+            "schema": {
+              "example": ["550e8400-e29b-41d4-a716-446655440000"],
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          {
+            "name": "assigneeId",
+            "required": false,
+            "in": "query",
+            "description": "Filter by assignee user IDs (OR logic)",
+            "schema": {
+              "example": ["660e8400-e29b-41d4-a716-446655440000"],
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          {
+            "name": "dueDateFilter",
+            "required": false,
+            "in": "query",
+            "description": "Filter by due date (today | overdue | none)",
+            "schema": { "example": "today", "type": "string", "enum": ["today", "overdue", "none"] }
+          },
+          {
+            "name": "dueDateStart",
+            "required": false,
+            "in": "query",
+            "description": "Filter by due date start (ISO 8601 date)",
+            "schema": { "example": "2024-01-01T00:00:00.000Z", "type": "string" }
+          },
+          {
+            "name": "dueDateEnd",
+            "required": false,
+            "in": "query",
+            "description": "Filter by due date end (ISO 8601 date)",
+            "schema": { "example": "2024-12-31T23:59:59.999Z", "type": "string" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Maximum number of results to return",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "example": 50,
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Number of results to skip for pagination",
+            "schema": { "minimum": 0, "default": 0, "example": 0, "type": "number" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Filtered cards retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/CardResponseDto" }
+                    },
+                    "total": { "type": "number", "example": 42 },
+                    "limit": { "type": "number", "example": 50 },
+                    "offset": { "type": "number", "example": 0 }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Filter cards in a board",
+        "tags": ["cards"]
+      }
+    },
+    "/api/v1/cards/{id}": {
+      "get": {
+        "description": "Returns card with enriched details: comments, attachments, labels, and checklists",
+        "operationId": "CardController_getCard",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Card retrieved successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CardResponseDto" } }
+            }
+          }
+        },
+        "summary": "Get card details by ID",
+        "tags": ["cards"]
+      },
+      "put": {
+        "operationId": "CardController_updateCard",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateCardDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Card updated successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CardResponseDto" } }
+            }
+          }
+        },
+        "summary": "Update card",
+        "tags": ["cards"]
+      },
+      "delete": {
+        "operationId": "CardController_deleteCard",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Card deleted successfully" } },
+        "summary": "Delete a card",
+        "tags": ["cards"]
+      }
+    },
+    "/api/v1/cards/{id}/move": {
+      "post": {
+        "operationId": "CardController_moveCard",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/MoveCardDto" } }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Card moved successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/CardResponseDto" } }
+            }
+          }
+        },
+        "summary": "Move card to different list or position",
+        "tags": ["cards"]
+      }
+    },
+    "/api/v1/cards/{id}/assignments/{userId}": {
+      "post": {
+        "operationId": "CardController_assignCard",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "userId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "201": { "description": "User assigned successfully" } },
+        "summary": "Assign a user to a card",
+        "tags": ["cards"]
+      },
+      "delete": {
+        "operationId": "CardController_unassignCard",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "userId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "User unassigned successfully" } },
+        "summary": "Unassign a user from a card",
+        "tags": ["cards"]
+      }
+    },
+    "/api/v1/cards/assigned-to-me": {
+      "get": {
+        "description": "Returns paginated list of cards assigned to the authenticated user",
+        "operationId": "CardController_getAssignedCards",
+        "parameters": [],
+        "responses": { "200": { "description": "Assigned cards retrieved successfully" } },
+        "summary": "Get all cards assigned to current user",
+        "tags": ["cards"]
+      }
+    },
+    "/api/v1/boards/{boardId}/labels": {
+      "get": {
+        "operationId": "LabelController_getBoardLabels",
+        "parameters": [
+          { "name": "boardId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Labels retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/LabelResponseDto" }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get all labels for a board",
+        "tags": ["labels"]
+      },
+      "post": {
+        "operationId": "LabelController_createLabel",
+        "parameters": [
+          { "name": "boardId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateLabelDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Label created successfully",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/LabelResponseDto" } }
+            }
+          }
+        },
+        "summary": "Create a new label for a board",
+        "tags": ["labels"]
+      }
+    },
+    "/api/v1/cards/{cardId}/labels/{labelId}": {
+      "post": {
+        "operationId": "LabelController_applyLabelToCard",
+        "parameters": [
+          { "name": "cardId", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "labelId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Label applied successfully" } },
+        "summary": "Apply a label to a card",
+        "tags": ["labels"]
+      },
+      "delete": {
+        "operationId": "LabelController_removeLabelFromCard",
+        "parameters": [
+          { "name": "cardId", "required": true, "in": "path", "schema": { "type": "string" } },
+          { "name": "labelId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Label removed successfully" } },
+        "summary": "Remove a label from a card",
+        "tags": ["labels"]
+      }
+    },
+    "/api/v1/cards/{cardId}/comments": {
+      "get": {
+        "operationId": "CommentController_getCardComments",
+        "parameters": [
+          { "name": "cardId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comments retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/CommentResponseDto" }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get all comments for a card",
+        "tags": ["comments"]
+      },
+      "post": {
+        "operationId": "CommentController_addComment",
+        "parameters": [
+          { "name": "cardId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateCommentDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comment added successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CommentResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Add a comment to a card",
+        "tags": ["comments"]
+      }
+    },
+    "/api/v1/comments/{id}": {
+      "delete": {
+        "operationId": "CommentController_deleteComment",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Comment deleted successfully" } },
+        "summary": "Delete a comment",
+        "tags": ["comments"]
+      }
+    },
+    "/api/v1/cards/{cardId}/attachments": {
+      "post": {
+        "operationId": "AttachmentController_uploadAttachment",
+        "parameters": [
+          { "name": "cardId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": { "$ref": "#/components/schemas/UploadAttachmentDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Attachment uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AttachmentResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Upload an attachment to a card",
+        "tags": ["attachments"]
+      }
+    },
+    "/api/v1/attachments/{id}/download": {
+      "get": {
+        "operationId": "AttachmentController_downloadAttachment",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Attachment downloaded successfully" } },
+        "summary": "Download an attachment",
+        "tags": ["attachments"]
+      }
+    },
+    "/api/v1/attachments/{id}": {
+      "delete": {
+        "operationId": "AttachmentController_deleteAttachment",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Attachment deleted successfully" } },
+        "summary": "Delete an attachment",
+        "tags": ["attachments"]
+      }
+    },
+    "/api/v1/cards/{cardId}/checklists": {
+      "post": {
+        "operationId": "ChecklistController_createChecklist",
+        "parameters": [
+          { "name": "cardId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/CreateChecklistDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Checklist created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ChecklistResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Create a new checklist for a card",
+        "tags": ["checklists"]
+      }
+    },
+    "/api/v1/checklists/{checklistId}/items": {
+      "post": {
+        "operationId": "ChecklistController_addChecklistItem",
+        "parameters": [
+          { "name": "checklistId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/AddChecklistItemDto" } }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Checklist item added successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ChecklistResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Add an item to a checklist",
+        "tags": ["checklists"]
+      }
+    },
+    "/api/v1/checklist-items/{itemId}/toggle": {
+      "put": {
+        "operationId": "ChecklistController_toggleChecklistItem",
+        "parameters": [
+          { "name": "itemId", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Checklist item toggled successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ChecklistResponseDto" }
+              }
+            }
+          }
+        },
+        "summary": "Toggle a checklist item completion status",
+        "tags": ["checklists"]
+      }
+    },
+    "/api/v1/checklists/{id}": {
+      "delete": {
+        "operationId": "ChecklistController_deleteChecklist",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Checklist deleted successfully" } },
+        "summary": "Delete a checklist",
+        "tags": ["checklists"]
+      }
+    },
+    "/api/v1/checklist-items/{id}": {
+      "delete": {
+        "operationId": "ChecklistController_deleteChecklistItem",
+        "parameters": [
+          { "name": "id", "required": true, "in": "path", "schema": { "type": "string" } }
+        ],
+        "responses": { "204": { "description": "Checklist item deleted successfully" } },
+        "summary": "Delete a checklist item",
+        "tags": ["checklists"]
+      }
+    }
+  },
+  "info": {
+    "title": "Trello Vibe - Kanban Board API",
+    "description": "REST API for collaborative Kanban board application with real-time updates. Supports boards, lists, cards, organizations, users, and team collaboration features.",
+    "version": "1.0",
+    "contact": {
+      "name": "Trello Vibe Team",
+      "url": "https://github.com/llong2195/board-cher",
+      "email": "support@trello-vibe.com"
+    },
+    "license": { "name": "UNLICENSED", "url": "" }
+  },
+  "tags": [
+    { "name": "auth", "description": "Authentication and authorization endpoints" },
+    { "name": "boards", "description": "Board management endpoints" },
+    { "name": "lists", "description": "List management endpoints" },
+    { "name": "cards", "description": "Card management endpoints" },
+    { "name": "organizations", "description": "Organization management endpoints" },
+    { "name": "users", "description": "User management endpoints" }
+  ],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "JWT-auth": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "name": "JWT",
+        "description": "Enter JWT token",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email address",
+            "example": "user@example.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password (minimum 8 characters)",
+            "example": "SecurePassword123!",
+            "minLength": 8,
+            "maxLength": 100
+          },
+          "name": {
+            "type": "string",
+            "description": "User full name",
+            "example": "John Doe",
+            "minLength": 2,
+            "maxLength": 100
+          }
+        },
+        "required": ["email", "password", "name"]
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User unique identifier",
+            "example": "550e8400-e29b-41d4-a716-446655440000",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email address",
+            "example": "user@example.com",
+            "format": "email"
+          },
+          "name": { "type": "string", "description": "User full name", "example": "John Doe" },
+          "avatarUrl": {
+            "type": "object",
+            "description": "User avatar URL",
+            "example": "https://example.com/avatar.jpg",
+            "nullable": true
+          }
+        },
+        "required": ["id", "email", "name", "avatarUrl"]
+      },
+      "TokensResponseDto": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT access token (expires in 15 minutes)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "JWT refresh token (expires in 7 days)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        },
+        "required": ["accessToken", "refreshToken"]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "description": "Authenticated user information",
+            "allOf": [{ "$ref": "#/components/schemas/UserResponseDto" }]
+          },
+          "tokens": {
+            "description": "JWT authentication tokens",
+            "allOf": [{ "$ref": "#/components/schemas/TokensResponseDto" }]
+          }
+        },
+        "required": ["user", "tokens"]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User email address",
+            "example": "user@example.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "SecurePassword123!"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "ActivityResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Activity unique identifier",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID who performed the action",
+            "example": "123e4567-e89b-12d3-a456-426614174001"
+          },
+          "userName": {
+            "type": "string",
+            "description": "User name who performed the action",
+            "example": "John Doe"
+          },
+          "boardId": {
+            "type": "object",
+            "description": "Board ID (if board-level activity)",
+            "example": "123e4567-e89b-12d3-a456-426614174002"
+          },
+          "cardId": {
+            "type": "object",
+            "description": "Card ID (if card-level activity)",
+            "example": "123e4567-e89b-12d3-a456-426614174003"
+          },
+          "actionType": {
+            "type": "string",
+            "description": "Action type performed",
+            "enum": [
+              "BOARD_CREATED",
+              "BOARD_UPDATED",
+              "BOARD_DELETED",
+              "BOARD_ARCHIVED",
+              "LIST_CREATED",
+              "LIST_UPDATED",
+              "LIST_MOVED",
+              "LIST_DELETED",
+              "LIST_ARCHIVED",
+              "CARD_CREATED",
+              "CARD_UPDATED",
+              "CARD_MOVED",
+              "CARD_DELETED",
+              "CARD_ARCHIVED",
+              "COMMENT_ADDED",
+              "COMMENT_EDITED",
+              "COMMENT_DELETED",
+              "ATTACHMENT_ADDED",
+              "ATTACHMENT_DELETED",
+              "LABEL_ADDED",
+              "LABEL_REMOVED",
+              "LABEL_CREATED",
+              "LABEL_DELETED",
+              "MEMBER_ASSIGNED",
+              "MEMBER_UNASSIGNED",
+              "CHECKLIST_CREATED",
+              "CHECKLIST_ITEM_CHECKED",
+              "CHECKLIST_ITEM_UNCHECKED",
+              "DUE_DATE_SET",
+              "DUE_DATE_REMOVED"
+            ],
+            "example": "CARD_CREATED"
+          },
+          "entityType": {
+            "type": "string",
+            "description": "Type of entity affected",
+            "enum": [
+              "BOARD",
+              "LIST",
+              "CARD",
+              "COMMENT",
+              "ATTACHMENT",
+              "LABEL",
+              "CHECKLIST",
+              "USER"
+            ],
+            "example": "CARD"
+          },
+          "entityId": {
+            "type": "string",
+            "description": "ID of the entity affected",
+            "example": "123e4567-e89b-12d3-a456-426614174004"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata about the action",
+            "example": { "name": "New Card Title", "listId": "..." }
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of the activity",
+            "example": "created card \"New Feature\""
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "When the activity occurred",
+            "example": "2025-11-04T10:30:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "actionType",
+          "entityType",
+          "entityId",
+          "description",
+          "createdAt"
+        ]
+      },
+      "PaginatedActivityResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Array of activities",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ActivityResponseDto" }
+          },
+          "pagination": {
+            "type": "object",
+            "description": "Pagination information",
+            "example": { "page": 1, "limit": 20, "total": 150 }
+          }
+        },
+        "required": ["data", "pagination"]
+      },
+      "CreateBoardDto": {
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "description": "The organization ID the board belongs to",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the board",
+            "example": "Sprint Planning Board",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description of the board",
+            "example": "Board for managing sprint tasks"
+          },
+          "color": {
+            "type": "string",
+            "description": "Optional color theme for the board",
+            "example": "#FF5733"
+          }
+        },
+        "required": ["organizationId", "name"]
+      },
+      "BoardResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the board",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "Organization ID the board belongs to",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the board",
+            "example": "Sprint Planning Board"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the board",
+            "example": "Board for managing sprint tasks"
+          },
+          "color": {
+            "type": "string",
+            "description": "Color theme of the board",
+            "example": "#FF5733"
+          },
+          "isArchived": {
+            "type": "boolean",
+            "description": "Whether the board is archived",
+            "example": false
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "User ID who created the board",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the board was created",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the board was last updated",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "organizationId",
+          "name",
+          "isArchived",
+          "createdBy",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateBoardDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the board",
+            "example": "Updated Sprint Planning Board"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the board",
+            "example": "Updated board description"
+          },
+          "color": {
+            "type": "string",
+            "description": "Color theme for the board",
+            "example": "#3498db"
+          }
+        }
+      },
+      "CreateOrganizationDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the organization",
+            "example": "Acme Corporation",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description of the organization",
+            "example": "A leading software development company",
+            "maxLength": 500
+          }
+        },
+        "required": ["name"]
+      },
+      "OrganizationResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the organization",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the organization",
+            "example": "Acme Corporation"
+          },
+          "description": {
+            "type": "object",
+            "description": "Description of the organization",
+            "example": "A leading software development company"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the organization was created",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the organization was last updated",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": ["id", "name", "createdAt", "updatedAt"]
+      },
+      "OrganizationMemberResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the membership",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "organizationId": {
+            "type": "string",
+            "description": "Organization ID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "role": {
+            "type": "string",
+            "description": "Member role in the organization",
+            "enum": ["owner", "admin", "member", "guest"],
+            "example": "member"
+          },
+          "joinedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the member joined",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": ["id", "organizationId", "userId", "role", "joinedAt"]
+      },
+      "InviteMemberDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "The user ID to invite",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "role": {
+            "type": "string",
+            "description": "The role to assign to the member",
+            "enum": ["owner", "admin", "member", "guest"],
+            "example": "member"
+          }
+        },
+        "required": ["userId", "role"]
+      },
+      "ChangeMemberRoleDto": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "The new role to assign to the member",
+            "enum": ["owner", "admin", "member", "guest"],
+            "example": "admin"
+          }
+        },
+        "required": ["role"]
+      },
+      "CreateListDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the list",
+            "example": "To Do",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": ["name"]
+      },
+      "ListResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the list",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "boardId": {
+            "type": "string",
+            "description": "Board ID the list belongs to",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": { "type": "string", "description": "Name of the list", "example": "To Do" },
+          "position": {
+            "type": "number",
+            "description": "Position of the list within the board",
+            "example": 0
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the list was created",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the list was last updated",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": ["id", "boardId", "name", "position", "createdAt", "updatedAt"]
+      },
+      "MoveListDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Updated name of the list",
+            "example": "In Progress"
+          },
+          "position": {
+            "type": "number",
+            "description": "New position of the list within the board",
+            "example": 2,
+            "minimum": 0
+          }
+        }
+      },
+      "CreateCardDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "The title of the card",
+            "example": "Implement user authentication",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description of the card",
+            "example": "Add JWT-based authentication system"
+          }
+        },
+        "required": ["title"]
+      },
+      "CardResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the card",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "listId": {
+            "type": "string",
+            "description": "List ID the card belongs to",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the card",
+            "example": "Implement user authentication"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the card",
+            "example": "Add JWT-based authentication system"
+          },
+          "position": {
+            "type": "number",
+            "description": "Position of the card within the list",
+            "example": 0
+          },
+          "dueDate": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Due date for the card",
+            "example": "2024-12-31T23:59:59.999Z"
+          },
+          "isArchived": {
+            "type": "boolean",
+            "description": "Whether the card is archived",
+            "example": false
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "User ID who created the card",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the card was created",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the card was last updated",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "listId",
+          "title",
+          "position",
+          "isArchived",
+          "createdBy",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MoveCardDto": {
+        "type": "object",
+        "properties": {
+          "targetListId": {
+            "type": "string",
+            "description": "Target list ID to move the card to",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "position": {
+            "type": "number",
+            "description": "New position of the card in the target list",
+            "example": 2,
+            "minimum": 0
+          }
+        },
+        "required": ["targetListId", "position"]
+      },
+      "LabelResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the label",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "boardId": {
+            "type": "string",
+            "description": "Board ID the label belongs to",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "object",
+            "description": "Label name (null for color-only labels)",
+            "example": "Urgent",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "description": "Label color",
+            "example": "red",
+            "enum": [
+              "red",
+              "orange",
+              "yellow",
+              "green",
+              "blue",
+              "purple",
+              "pink",
+              "gray",
+              "brown",
+              "black"
+            ]
+          },
+          "hexColor": {
+            "type": "string",
+            "description": "Hex color code for UI rendering",
+            "example": "#ef4444"
+          },
+          "displayText": {
+            "type": "string",
+            "description": "Display text (name or color)",
+            "example": "Urgent"
+          },
+          "isColorOnly": {
+            "type": "boolean",
+            "description": "Whether this is a color-only label",
+            "example": false
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the label was created",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the label was last updated",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "boardId",
+          "name",
+          "color",
+          "hexColor",
+          "displayText",
+          "isColorOnly",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateLabelDto": {
+        "type": "object",
+        "properties": {
+          "color": {
+            "type": "string",
+            "description": "Label color (predefined palette)",
+            "example": "red",
+            "enum": [
+              "red",
+              "orange",
+              "yellow",
+              "green",
+              "blue",
+              "purple",
+              "pink",
+              "gray",
+              "brown",
+              "black"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Optional label name (color-only labels supported)",
+            "example": "Urgent",
+            "maxLength": 50
+          }
+        },
+        "required": ["color"]
+      },
+      "CommentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the comment",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "cardId": {
+            "type": "string",
+            "description": "Card ID the comment belongs to",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID who created the comment",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "content": {
+            "type": "string",
+            "description": "Comment text content",
+            "example": "Started working on this task"
+          },
+          "isEdited": {
+            "type": "boolean",
+            "description": "Whether the comment has been edited",
+            "example": false
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the comment was created",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the comment was last updated",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": ["id", "cardId", "userId", "content", "isEdited", "createdAt", "updatedAt"]
+      },
+      "CreateCommentDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "Comment text content",
+            "example": "Started working on this task",
+            "minLength": 1,
+            "maxLength": 10000
+          }
+        },
+        "required": ["content"]
+      },
+      "UploadAttachmentDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name for the attachment",
+            "example": "Design Mockup"
+          },
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "File to upload (max 10MB)"
+          }
+        },
+        "required": ["file"]
+      },
+      "AttachmentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the attachment",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "cardId": {
+            "type": "string",
+            "description": "Card ID the attachment belongs to",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User ID who uploaded the attachment",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the attachment",
+            "example": "Design Mockup"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Original filename",
+            "example": "mockup.png"
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "MIME type of the file",
+            "example": "image/png"
+          },
+          "size": { "type": "number", "description": "File size in bytes", "example": 1048576 },
+          "formattedSize": {
+            "type": "string",
+            "description": "Human-readable file size",
+            "example": "1.0 MB"
+          },
+          "url": {
+            "type": "string",
+            "description": "Public URL to access the file",
+            "example": "http://localhost:3000/api/attachments/2024/11/uuid-mockup.png"
+          },
+          "isImage": {
+            "type": "boolean",
+            "description": "Whether this is an image file",
+            "example": true
+          },
+          "extension": { "type": "string", "description": "File extension", "example": "png" },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the attachment was uploaded",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the attachment was last updated",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "cardId",
+          "userId",
+          "name",
+          "filename",
+          "mimeType",
+          "size",
+          "formattedSize",
+          "url",
+          "isImage",
+          "extension",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateChecklistDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Checklist name",
+            "example": "Development Tasks",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "position": {
+            "type": "number",
+            "description": "Position for ordering (auto-calculated if not provided)",
+            "example": 0
+          }
+        },
+        "required": ["name"]
+      },
+      "ChecklistItemResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the checklist item",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "text": { "type": "string", "description": "Item text", "example": "Write unit tests" },
+          "isCompleted": {
+            "type": "boolean",
+            "description": "Whether the item is completed",
+            "example": false
+          },
+          "position": { "type": "number", "description": "Position within checklist", "example": 0 }
+        },
+        "required": ["id", "text", "isCompleted", "position"]
+      },
+      "ChecklistResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the checklist",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "cardId": {
+            "type": "string",
+            "description": "Card ID the checklist belongs to",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "name": {
+            "type": "string",
+            "description": "Checklist name",
+            "example": "Development Tasks"
+          },
+          "position": { "type": "number", "description": "Position for ordering", "example": 0 },
+          "items": {
+            "description": "Checklist items",
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ChecklistItemResponseDto" }
+          },
+          "progress": {
+            "type": "object",
+            "description": "Completion progress",
+            "example": { "completed": 2, "total": 5, "percentage": 40 }
+          },
+          "isComplete": {
+            "type": "boolean",
+            "description": "Whether all items are completed",
+            "example": false
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the checklist was created",
+            "example": "2024-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Timestamp when the checklist was last updated",
+            "example": "2024-01-01T00:00:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "cardId",
+          "name",
+          "position",
+          "items",
+          "progress",
+          "isComplete",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "AddChecklistItemDto": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Item text",
+            "example": "Write unit tests",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "position": { "type": "number", "description": "Position for ordering", "example": 0 }
+        },
+        "required": ["text", "position"]
+      }
+    }
+  }
+}

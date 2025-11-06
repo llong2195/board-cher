@@ -4,6 +4,7 @@ import {
   ConfigModule as NestConfigModule,
   ConfigService,
 } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
@@ -31,6 +32,17 @@ import { EmailModule } from './infrastructure/email/email.module';
   imports: [
     // Configuration (global)
     ConfigModule,
+
+    // Event Emitter for domain events (global)
+    EventEmitterModule.forRoot({
+      // Use wildcards to support namespaced events
+      wildcard: false,
+      // Set max listeners to avoid memory leaks warning
+      maxListeners: 10,
+      // Log emitted events in development
+      verboseMemoryLeak: process.env.NODE_ENV === 'development',
+      global: true,
+    }),
 
     // Rate limiting (global)
     ThrottlerModule.forRoot([
