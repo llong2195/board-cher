@@ -1,11 +1,8 @@
 // Board feature public exports
 // Export components, hooks, and types that should be accessible from outside this feature
 
-// Components will be exported here after implementation
-// export { BoardHeader } from './components/BoardHeader';
-// export { BoardMemberList } from './components/BoardMemberList';
+// Components
+export { Board } from './components';
 
-// Types will be exported here after implementation
-// export type { BoardHeaderProps, CreateBoardFormProps } from './types/props';
-
-export {};
+// Types will be exported here after prop interfaces are defined
+// export type { BoardProps } from './types/props';

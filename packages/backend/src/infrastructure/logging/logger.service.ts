@@ -1,51 +1,53 @@
-import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
+import { Injectable, Logger, LogLevel, Scope } from '@nestjs/common';
 
 /**
  * Logger service with contextual logging
  */
-@Injectable()
-export class LoggerService implements NestLoggerService {
-  private context?: string;
+@Injectable({ scope: Scope.TRANSIENT })
+export class LoggerService extends Logger {
+  constructor() {
+    super();
+    const logLevel = process.env.LOG_LEVEL || 'log,error,warn,debug,verbose';
+    this.localInstanceRef?.setLogLevels?.(logLevel.split(',') as LogLevel[]);
+  }
 
+  /**
+   *
+   * @param context
+   */
   setContext(context: string) {
     this.context = context;
   }
 
+  /**
+   *
   log(message: string, context?: string) {
     const logContext = context || this.context || 'Application';
-    console.log(
-      `[${new Date().toISOString()}] [LOG] [${logContext}] ${message}`,
-    );
+    super.log(message, logContext);
   }
 
   error(message: string, trace?: string, context?: string) {
     const logContext = context || this.context || 'Application';
-    console.error(
-      `[${new Date().toISOString()}] [ERROR] [${logContext}] ${message}`,
-    );
+    super.error(message, trace, logContext);
+
     if (trace) {
-      console.error(`Stack trace: ${trace}`);
+      super.error(`Stack trace: ${trace}`, logContext);
     }
   }
 
   warn(message: string, context?: string) {
     const logContext = context || this.context || 'Application';
-    console.warn(
-      `[${new Date().toISOString()}] [WARN] [${logContext}] ${message}`,
-    );
+    super.warn(message, logContext);
   }
 
   debug(message: string, context?: string) {
     const logContext = context || this.context || 'Application';
-    console.debug(
-      `[${new Date().toISOString()}] [DEBUG] [${logContext}] ${message}`,
-    );
+    super.debug(message, logContext);
   }
 
   verbose(message: string, context?: string) {
     const logContext = context || this.context || 'Application';
-    console.log(
-      `[${new Date().toISOString()}] [VERBOSE] [${logContext}] ${message}`,
-    );
+    super.verbose(message, logContext);
   }
+  */
 }

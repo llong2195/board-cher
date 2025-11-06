@@ -621,6 +621,133 @@ function App() {
 
 ---
 
+## Component Hierarchy & Data Flow (T095)
+
+### Component Architecture
+
+```
+App.tsx (Router + ErrorBoundary + Suspense)
+│
+├── BoardViewPage (Route: /boards/:id)
+│   │
+│   ├── Board (features/board)
+│   │   │
+│   │   ├── List (features/list) [React.memo]
+│   │   │   │
+│   │   │   ├── Card (features/card) [React.memo, drag-and-drop]
+│   │   │   │   └── AssigneeAvatars
+│   │   │   │
+│   │   │   └── CreateCardForm
+│   │   │       └── Form components (shadcn/ui)
+│   │   │
+│   │   └── CreateListForm
+│   │       └── Form components (shadcn/ui)
+│   │
+│   └── CardModal (features/card, opened on card click)
+│       ├── CardDescription
+│       ├── AssigneeSelector
+│       ├── LabelSelector
+│       ├── DueDatePicker
+│       ├── AttachmentList
+│       ├── CommentList (uses ConfirmDialog)
+│       ├── ChecklistSection (uses ConfirmDialog)
+│       └── ActivityFeed (virtual scrolling)
+│
+├── HomePage (Route: /)
+│   └── BoardList
+│       └── Board cards
+│
+└── Other pages (Login, Register, etc.)
+```
+
+### Data Flow Pattern
+
+```
+User Action → Component
+    ↓
+Custom Hook (e.g., useCreateCard)
+    ↓
+API Service (e.g., cardService.createCard)
+    ↓
+Axios Client (with interceptors)
+    ↓
+Backend API
+    ↓
+[Success Path]
+    ↓
+State Update (optimistic or on response)
+    ↓
+Component Re-render
+    ↓
+Toast Notification (success)
+
+[Error Path]
+    ↓
+Error Transformation (ApiError, NetworkError, etc.)
+    ↓
+Error Handler (in hook)
+    ↓
+Toast Notification (error + retry button)
+    ↓
+State Rollback (if optimistic update)
+```
+
+### Real-Time Sync Flow
+
+```
+[User A] Card Update
+    ↓
+API Call → Backend
+    ↓
+WebSocket Event Broadcast
+    ↓
+[User B] WebSocketService receives event
+    ↓
+useRealtimeBoardUpdates hook processes event
+    ↓
+Event Deduplication (skip if from current user)
+    ↓
+Zustand Store Update
+    ↓
+Component Re-render (memoized, only if data changed)
+```
+
+### Performance Optimizations
+
+- **React.memo**: Card and List components memoized to prevent unnecessary re-renders during drag-and-drop
+- **Virtual Scrolling**: List component uses @tanstack/react-virtual for efficient rendering of many cards
+- **ActivityFeed**: Infinite scroll with virtual scrolling for performance
+- **Lazy Loading**: All page components lazy-loaded with React.lazy() and Suspense
+- **Code Splitting**: Automatic route-based code splitting via Vite
+
+### State Management Strategy
+
+```
+Zustand Stores (Global State)
+└── useBoardStore
+    ├── boards: Board[]
+    ├── cards: Record<listId, Card[]>
+    ├── isLoadingLists: boolean
+    ├── isLoadingCards: Record<listId, boolean>
+    └── actions (setBoardData, addCard, moveCard, etc.)
+
+React Local State (Component-Specific)
+└── useState for:
+    ├── Form inputs (newCardTitle, comment text)
+    ├── Modal open/close states
+    ├── Confirm dialog states
+    └── Loading indicators (isSubmitting)
+
+Custom Hooks (Reusable Logic + API State)
+└── useGetBoard, useCreateCard, etc.
+    ├── data: T | null
+    ├── loading: boolean
+    ├── error: Error | null
+    └── mutate/refetch functions
+```
+
+---
+
 ## Next Steps
 
 1. **Read full plan**: [plan.md](./plan.md)

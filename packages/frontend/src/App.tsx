@@ -1,16 +1,60 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from './components/error/ErrorBoundary';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { AppLayout } from './components/layout/AppLayout';
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
-import { BoardsPage } from './pages/BoardsPage';
-import { AssignedToMePage } from './pages/AssignedToMePage';
-import { BoardActivityPage } from './pages/BoardActivityPage';
-import { BoardViewPage } from './pages/BoardViewPage';
-import { OrganizationPage } from './pages/OrganizationPage';
-import { OrganizationsListPage } from './pages/OrganizationsListPage';
+
+// Lazy load page components for better performance
+const LoginPage = lazy(() => import('./pages/LoginPage').then((m) => ({ default: m.LoginPage })));
+const RegisterPage = lazy(() =>
+  import('./pages/RegisterPage').then((m) => ({ default: m.RegisterPage })),
+);
+const BoardsPage = lazy(() =>
+  import('./pages/BoardsPage').then((m) => ({ default: m.BoardsPage })),
+);
+const AssignedToMePage = lazy(() =>
+  import('./pages/AssignedToMePage').then((m) => ({ default: m.AssignedToMePage })),
+);
+const BoardActivityPage = lazy(() =>
+  import('./pages/BoardActivityPage').then((m) => ({ default: m.BoardActivityPage })),
+);
+const BoardViewPage = lazy(() =>
+  import('./pages/BoardViewPage').then((m) => ({ default: m.BoardViewPage })),
+);
+const OrganizationPage = lazy(() =>
+  import('./pages/OrganizationPage').then((m) => ({ default: m.OrganizationPage })),
+);
+const OrganizationsListPage = lazy(() =>
+  import('./pages/OrganizationsListPage').then((m) => ({ default: m.OrganizationsListPage })),
+);
+
+// Loading fallback component
+function PageLoader() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
+    </div>
+  );
+}
+
+// 404 Not Found page component
+function NotFoundPage() {
+  return (
+    <div className="flex items-center justify-center h-full">
+      <div className="text-center">
+        <h1 className="text-6xl font-bold text-gray-300 mb-4">404</h1>
+        <p className="text-xl text-gray-600 mb-8">Page not found</p>
+        <a
+          href="/boards"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Go to Boards
+        </a>
+      </div>
+    </div>
+  );
+}
 
 /**
  * Main Application Component
@@ -31,60 +75,49 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <BrowserRouter>
-          <Routes>
-            {/* Public Routes - Authentication */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              {/* Public Routes - Authentication */}
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-            {/* Protected Routes - Require Authentication */}
-            <Route
-              path="/*"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <Routes>
-                      {/* Default route - redirect to boards */}
-                      <Route path="/" element={<Navigate to="/boards" replace />} />
+              {/* Protected Routes - Require Authentication */}
+              <Route
+                path="/*"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <Routes>
+                        {/* Default route - redirect to boards */}
+                        <Route path="/" element={<Navigate to="/boards" replace />} />
 
-                      {/* Boards Management */}
-                      <Route path="/boards" element={<BoardsPage />} />
-                      <Route path="/boards/:boardId" element={<BoardViewPage />} />
-                      <Route path="/boards/:boardId/activity" element={<BoardActivityPage />} />
+                        {/* Boards Management */}
+                        <Route path="/boards" element={<BoardsPage />} />
+                        <Route path="/boards/:boardId" element={<BoardViewPage />} />
+                        <Route path="/boards/:boardId/activity" element={<BoardActivityPage />} />
 
-                      {/* Assigned Cards - User's tasks */}
-                      <Route path="/assigned-to-me" element={<AssignedToMePage />} />
+                        {/* Assigned Cards - User's tasks */}
+                        <Route path="/assigned-to-me" element={<AssignedToMePage />} />
 
-                      {/* Organization Management */}
-                      <Route path="/organizations" element={<OrganizationsListPage />} />
-                      <Route path="/organizations/:organizationId" element={<OrganizationPage />} />
+                        {/* Organization Management */}
+                        <Route path="/organizations" element={<OrganizationsListPage />} />
+                        <Route
+                          path="/organizations/:organizationId"
+                          element={<OrganizationPage />}
+                        />
 
-                      {/* Activity Feed */}
-                      <Route path="/activity" element={<BoardActivityPage />} />
+                        {/* Activity Feed */}
+                        <Route path="/activity" element={<BoardActivityPage />} />
 
-                      {/* 404 - Not Found */}
-                      <Route
-                        path="*"
-                        element={
-                          <div className="flex items-center justify-center h-full">
-                            <div className="text-center">
-                              <h1 className="text-6xl font-bold text-gray-300 mb-4">404</h1>
-                              <p className="text-xl text-gray-600 mb-8">Page not found</p>
-                              <a
-                                href="/boards"
-                                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                              >
-                                Go to Boards
-                              </a>
-                            </div>
-                          </div>
-                        }
-                      />
-                    </Routes>
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
+                        {/* 404 - Not Found */}
+                        <Route path="*" element={<NotFoundPage />} />
+                      </Routes>
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </AuthProvider>
     </ErrorBoundary>

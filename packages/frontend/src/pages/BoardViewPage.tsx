@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Board } from '../components/board/Board';
+import { Board } from '@/features/board';
 import { FilterChips, type FilterChip } from '../components/search/FilterChips';
 import { FilterPanel, type FilterOption } from '../components/search/FilterPanel';
 import { SearchBar } from '../components/search/SearchBar';

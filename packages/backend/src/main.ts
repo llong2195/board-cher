@@ -15,7 +15,6 @@ async function bootstrap() {
   // Logger
   const logger = new LoggerService();
   logger.setContext('Bootstrap');
-  app.useLogger(logger);
 
   // Security: Helmet - sets various HTTP headers for security
   app.use(
