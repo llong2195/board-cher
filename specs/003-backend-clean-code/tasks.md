@@ -68,23 +68,23 @@
 
 ### Documentation & Code Organization
 
-- [ ] T014 [P] [US1] Create architecture documentation in `packages/backend/docs/architecture.md` explaining DDD layers (domain, application, infrastructure, presentation)
-- [ ] T015 [P] [US1] Create API documentation guide in `packages/backend/docs/api.md` with OpenAPI/Swagger usage instructions
-- [ ] T016 [P] [US1] Create testing guide in `packages/backend/docs/testing.md` documenting unit, integration, and TDD workflow
-- [ ] T017 [P] [US1] Create performance guide in `packages/backend/docs/performance.md` with query optimization and caching strategies
+- [x] T014 [P] [US1] Create architecture documentation in `packages/backend/docs/architecture.md` explaining DDD layers (domain, application, infrastructure, presentation)
+- [x] T015 [P] [US1] Create API documentation guide in `packages/backend/docs/api.md` with OpenAPI/Swagger usage instructions
+- [x] T016 [P] [US1] Create testing guide in `packages/backend/docs/testing.md` documenting unit, integration, and TDD workflow
+- [x] T017 [P] [US1] Create performance guide in `packages/backend/docs/performance.md` with query optimization and caching strategies
 
 ### Module-Level Documentation
 
-- [ ] T018 [P] [US1] Add README.md to `packages/backend/src/domain/board/` documenting module purpose, components, data flow
-- [ ] T019 [P] [US1] Add README.md to `packages/backend/src/domain/card/` documenting module purpose, components, data flow
-- [ ] T020 [P] [US1] Add README.md to `packages/backend/src/domain/list/` documenting module purpose, components, data flow
-- [ ] T021 [P] [US1] Add README.md to `packages/backend/src/domain/user/` documenting module purpose, components, data flow
-- [ ] T022 [P] [US1] Add README.md to `packages/backend/src/domain/activity/` documenting module purpose, components, data flow
-- [ ] T023 [P] [US1] Add README.md to `packages/backend/src/domain/comment/` documenting module purpose, components, data flow
-- [ ] T024 [P] [US1] Add README.md to `packages/backend/src/domain/label/` documenting module purpose, components, data flow
-- [ ] T025 [P] [US1] Add README.md to `packages/backend/src/domain/checklist/` documenting module purpose, components, data flow
-- [ ] T026 [P] [US1] Add README.md to `packages/backend/src/domain/attachment/` documenting module purpose, components, data flow
-- [ ] T027 [P] [US1] Add README.md to `packages/backend/src/domain/organization/` documenting module purpose, components, data flow
+- [x] T018 [P] [US1] Add README.md to `packages/backend/src/domain/board/` documenting module purpose, components, data flow
+- [x] T019 [P] [US1] Add README.md to `packages/backend/src/domain/card/` documenting module purpose, components, data flow
+- [x] T020 [P] [US1] Add README.md to `packages/backend/src/domain/list/` documenting module purpose, components, data flow
+- [x] T021 [P] [US1] Add README.md to `packages/backend/src/domain/user/` documenting module purpose, components, data flow
+- [x] T022 [P] [US1] Add README.md to `packages/backend/src/domain/activity/` documenting module purpose, components, data flow
+- [x] T023 [P] [US1] Add README.md to `packages/backend/src/domain/comment/` documenting module purpose, components, data flow
+- [x] T024 [P] [US1] Add README.md to `packages/backend/src/domain/label/` documenting module purpose, components, data flow
+- [x] T025 [P] [US1] Add README.md to `packages/backend/src/domain/checklist/` documenting module purpose, components, data flow
+- [x] T026 [P] [US1] Add README.md to `packages/backend/src/domain/attachment/` documenting module purpose, components, data flow
+- [x] T027 [P] [US1] Add README.md to `packages/backend/src/domain/organization/` documenting module purpose, components, data flow
 
 ### JSDoc Documentation - Board Module
 
